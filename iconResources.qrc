@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/1367893332_globe_3.png</file>
+        <file>icons/1367893718_arrow_bottom.png</file>
+        <file>icons/1367893725_zoom.png</file>
+        <file>icons/1367893874_playback_reload.png</file>
+        <file>icons/1367895229_folder_open.png</file>
+        <file>icons/1367895375_doc_empty.png</file>
+        <file>icons/delete_icon&amp;48.png</file>
+        <file>icons/save_icon&amp;48.png</file>
+        <file>icons/round_and_up_icon&amp;48.png</file>
+        <file>icons/export_icon&amp;48.png</file>
+        <file>icons/hand_contra_icon&amp;48.png</file>
+        <file>icons/hand_pro_icon&amp;48.png</file>
+        <file>icons/layers_1_icon&amp;48.png</file>
+        <file>icons/download_icon&amp;48.png</file>
+        <file>backgrounds/291.jpg</file>
+    </qresource>
+</RCC>
