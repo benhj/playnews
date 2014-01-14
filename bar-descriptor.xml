@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<qnx xmlns="http://www.qnx.com/schemas/application/1.0">
+    <id>ID</id>
+    <name>NNTP Client</name>
+    <versionNumber>0.1</versionNumber>
+    <description>DESCRIPTION</description>
+    <initialWindow>
+        <aspectRatio>landscape</aspectRatio>
+        <autoOrients>false</autoOrients>
+        <systemChrome>none</systemChrome>
+        <transparent>false</transparent>
+    </initialWindow>
+    <author>None</author>
+    <copyright>COPYRIGHT</copyright>
+    <arg>-style</arg>
+    <arg>qnxlight</arg>
+    <arg>-platform</arg>
+    <arg>blackberry</arg>
+    <!--<env var="QT_DEBUG_PLUGINS" value="1"/> -->
+    <env value="app/native/imports" var="QML_IMPORT_PATH"/>
+    <env value="app/native/plugins" var="QT_PLUGIN_PATH"/>
+    <env value="app/native/lib" var="LD_LIBRARY_PATH"/>
+    <action system="true">run_native</action>
+    <action>access_shared</action>
+    <action>access_internet</action>
+    <!-- PROJECTPATH should point to the project binary, path can be relative -->
+    <asset path="bbNNTP2" type="Qnx/Elf" entry="true">bbNNTP2</asset>
+    <asset path="%QT_INSTALL_LIBS%/libQtCore.so.4.8.3" type="Qnx/Elf">lib/libQtCore.so.4</asset>
+    <asset path="%QT_INSTALL_LIBS%/libQtGui.so.4.8.3" type="Qnx/Elf">lib/libQtGui.so.4</asset>
+    <asset path="%QT_INSTALL_LIBS%/libQtOpenGL.so.4.8.3" type="Qnx/Elf">lib/libQtOpenGL.so.4</asset>
+    <asset path="%QT_INSTALL_LIBS%/libQtNetwork.so.4.8.3" type="Qnx/Elf">lib/libQtNetwork.so.4</asset>
+    <asset path="%QT_INSTALL_PLUGINS%/platforms/libblackberry.so">plugins/platforms/libblackberry.so</asset>
+    <asset path="%QT_INSTALL_PLUGINS%/imageformats/libqjpeg.so">plugins/imageformats/libqjpeg.so</asset>
+    <asset path="/Users/benjones/Downloads/location_news.png">location_news.png</asset>
+    <asset path="/Users/benjones/nntpProject/splash.jpg">splash.jpg</asset>
+    <authorId>gYAAgEPoGeSQhYB6iN_JsL1HTh4</authorId>
+    <icon>
+        <image>location_news.png</image>
+    </icon>
+    <splashscreen>splash.jpg:splash.jpg</splashscreen>
+    <splashscreens>
+        <image>splash.jpg</image>
+    </splashscreens>
+</qnx>
