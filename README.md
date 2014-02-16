@@ -7,4 +7,9 @@ Produced over a couple of months in 2013 when I wanted to explore development on
 The code quality isn't great and I've not incorporated any tests but I added the code here in the hope
 that somebody might find it useful :-)
 
+To contribute:
+
+i) fork
+ii) edit files
+iii) send me a pull request
 
