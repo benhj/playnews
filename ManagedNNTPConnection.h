@@ -39,7 +39,7 @@ namespace core {
 
     class ManagedNNTPConnection;
 
-    typedef QSharedPointer<ManagedNNTPConnection> ConnectionPtr;
+    typedef QSharedPointer<ManagedNNTPConnection> ManagedConnectionPtr;
 
     class ManagedNNTPConnection : public QObject
     {
@@ -96,7 +96,6 @@ namespace core {
         void groupsLoadFinishedSlot();
         void headersReadFinishedSlot(HeadersData);
         void singleArticleExtractedSlot();
-        void moveBackToMainThread();
 
         /**
          * @brief loadGroups does what it says
@@ -154,7 +153,6 @@ namespace core {
         HeaderExtractorPtr m_headerExtractorPtr;
         GroupLoaderPtr m_groupLoaderPtr;
         ArticleReaderPtr m_articleReaderPtr;
-        CompositeArticleLoaderChecker* m_compositeCheckerPtr;
+        CompositeCheckerPtr m_compositeCheckerPtr;
     };
-
 }

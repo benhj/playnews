@@ -189,8 +189,8 @@ namespace core {
                                       m_username,
                                       m_password);
 
-        m_compositeCheckerPtr = new CompositeArticleLoaderChecker(codes, connectionInfo, groupName, this);
-        QObject::connect(m_compositeCheckerPtr, SIGNAL(compositeFinishedSignal()),
+        m_compositeCheckerPtr.reset(new CompositeArticleLoaderChecker(codes, connectionInfo, groupName, this));
+        QObject::connect(m_compositeCheckerPtr.data(), SIGNAL(compositeFinishedSignal()),
                          this, SLOT(compositeReadSlot()));
 
         m_compositeCheckerPtr->doLoad();
@@ -200,7 +200,7 @@ namespace core {
     ManagedNNTPConnection::compositeReadSlot()
     {
         qDebug() << "in compositeReadSlot";
-        QObject::disconnect(m_compositeCheckerPtr, SIGNAL(compositeFinishedSignal()),
+        QObject::disconnect(m_compositeCheckerPtr.data(), SIGNAL(compositeFinishedSignal()),
                          this, SLOT(compositeReadSlot()));
         emit compositeDataReadSignal();
     }
@@ -272,11 +272,4 @@ namespace core {
     {
         emit readBitOfDataSignal();
     }
-
-    void
-    ManagedNNTPConnection::moveBackToMainThread()
-    {
-        this->moveToThread(QApplication::instance()->thread());
-    }
-
 }

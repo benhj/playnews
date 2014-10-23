@@ -35,6 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QObject>
 #include <QString>
 #include <QThread>
+#include <QSharedPointer>
 #include <map>
 
 class ArticleLoaderThread;
@@ -42,18 +43,22 @@ class QWidget;
 class QGridLayout;
 class QTabWidget;
 
+class ManagedGroupTab;
+
+typedef QSharedPointer<ManagedGroupTab> ManagedGroupTabPtr;
+
 class ManagedGroupTab : public QObject
 {
     Q_OBJECT
 public:
     explicit ManagedGroupTab(QObject *parent,
-                    QString const &groupName,
-                    MainWidget &w,
-                    core::ConnectionPtr &connection,
-                    ConnectionInfo const& connectionInfo,
-                    QThread &worker,
-                    StatusMessageDisplayer &statusMessageDisplayer,
-                    core::Headers &headers);
+                             QString const &groupName,
+                             MainWidget &w,
+                             core::ManagedConnectionPtr &connection,
+                             ConnectionInfo const& connectionInfo,
+                             QThread &worker,
+                             StatusMessageDisplayer &statusMessageDisplayer,
+                             core::Headers &headers);
     virtual ~ManagedGroupTab();
     void addGroupTab();
 
@@ -83,7 +88,7 @@ private:
     ArticleLoaderThread *m_articleLoaderThread;
     QString m_groupName;
     MainWidget &m_w;
-    core::ConnectionPtr m_connection;
+    core::ManagedConnectionPtr m_connection;
     core::Headers m_headers;
     QWidget *m_selectedGroupTab;
     QGridLayout *m_gridLayout;

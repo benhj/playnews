@@ -43,7 +43,7 @@ namespace core {
     {
         Q_OBJECT
     public:
-        BulkDownloader(ConnectionPtr &connection, QString const &groupName, QThread &worker);
+        BulkDownloader(ManagedConnectionPtr &connection, QString const &groupName, QThread &worker);
         void addHeader(Header * header);
         void bulkDownload();
         void downloadAndIterate();
@@ -62,7 +62,7 @@ namespace core {
 
     private:
         HeaderPtrs m_headers;
-        ConnectionPtr &m_connection;
+        ManagedConnectionPtr &m_connection;
         QString m_groupName;
         BinaryGrabberPtr m_binaryGrabberPtr;
         HeaderPtrs::iterator m_headerIterator;

@@ -30,7 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace core {
 
-    BulkDownloader::BulkDownloader(ConnectionPtr &connection,
+    BulkDownloader::BulkDownloader(ManagedConnectionPtr &connection,
                                    QString const &groupName,
                                    QThread &worker)
       : m_connection(connection)

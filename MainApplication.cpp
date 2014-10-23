@@ -33,7 +33,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ui_GroupWidget.h"
 #include "ArticleCountDialog.h"
 #include "ui_ArticleCountDialog.h"
-#include "ManagedGroupTab.h"
 #include "SearchDialog.h"
 #include "StatusMessageDisplayer.h"
 #include "ArticleReader.h"
@@ -94,7 +93,7 @@ MainApplication::MainApplication(QObject *parent):
     m_connected(false),
     m_authorized(false),
     m_prefsRead(false),
-    m_connectionPtr(new core::ManagedNNTPConnection),
+    m_managedConPtr(new core::ManagedNNTPConnection),
     m_groupsAdded(false)
 {
     connectSignalsToSlots();
@@ -117,7 +116,7 @@ MainApplication::connectSignalsToSlots()
                      SLOT(extractHeadersSlot()));
 
     // Once active group list has been read from server
-    QObject::connect(m_connectionPtr.data(),
+    QObject::connect(m_managedConPtr.data(),
                      SIGNAL(groupsLoadFinishedSignal()), this,
                      SLOT(groupsLoadFinishedSlot()));
 
@@ -126,24 +125,24 @@ MainApplication::connectSignalsToSlots()
                      this, SLOT(groupSelectedEvent(QListWidgetItem*)));
 
     // When group headers have been read
-    QObject::connect(m_connectionPtr.data(),
+    QObject::connect(m_managedConPtr.data(),
                      SIGNAL(headersReadFinishedSignal(core::HeadersData)), this,
                      SLOT(headersReadFinishedSlot(core::HeadersData)));
 
     // When a group is selected, add it to pane
-    QObject::connect(m_connectionPtr.data(),
+    QObject::connect(m_managedConPtr.data(),
                      SIGNAL(groupAddedSignal(QString)), this,
                      SLOT(groupAddedSlot(QString)));
 
-    QObject::connect(m_connectionPtr.data(),
+    QObject::connect(m_managedConPtr.data(),
                      SIGNAL(singleArticleExtractedSignal()), this,
                      SLOT(singleArticleExtractedSlot()));
 
-    QObject::connect(m_connectionPtr.data(),
+    QObject::connect(m_managedConPtr.data(),
                      SIGNAL(issuedLASTCommandSignal()), this,
                      SLOT(issuedLASTCommandSlot()));
 
-    QObject::connect(m_connectionPtr.data(),
+    QObject::connect(m_managedConPtr.data(),
                      SIGNAL(finishedIssuingLASTCommandsSignal()), this,
                      SLOT(finishedIssuingLASTCommandsSlot()));
 
@@ -162,32 +161,32 @@ MainApplication::connectSignalsToSlots()
                      this,
                      SLOT(showAllButtonSlot()));
 
-    QObject::connect(m_connectionPtr.data(),
+    QObject::connect(m_managedConPtr.data(),
                      SIGNAL(statusSignal(QString)),
                      this,
                      SLOT(statusMessageSlot(QString)));
 
-    QObject::connect(m_connectionPtr.data(),
+    QObject::connect(m_managedConPtr.data(),
                      SIGNAL(headCommandsIssuedSignal()),
                      this,
                      SLOT(headCommandsIssuedSlot()));
 
-    QObject::connect(m_connectionPtr.data(),
+    QObject::connect(m_managedConPtr.data(),
                      SIGNAL(bytesReadSignal(int)),
                      this,
                      SLOT(bytesReadSlot(int)));
 
-    QObject::connect(m_connectionPtr.data(),
+    QObject::connect(m_managedConPtr.data(),
                      SIGNAL(readBeginSignal(int)),
                      this,
                      SLOT(readBeginSlot(int)));
 
-    QObject::connect(m_connectionPtr.data(),
+    QObject::connect(m_managedConPtr.data(),
                      SIGNAL(readBitOfDataSignal()),
                      this,
                      SLOT(readBitOfDataSlot()), Qt::QueuedConnection);
 
-    QObject::connect(m_connectionPtr.data(), SIGNAL(resetBytesReadSignal()),
+    QObject::connect(m_managedConPtr.data(), SIGNAL(resetBytesReadSignal()),
                      this, SLOT(resetBytesReadSlot()), Qt::QueuedConnection);
 }
 
@@ -216,7 +215,7 @@ MainApplication::groupsLoadFinishedSlot()
 
     // All groups have been loaded and cached; insert them into list widget.
     core::Groups().swap(m_groups);
-    m_groups = m_connectionPtr->getLoadedGroups();
+    m_groups = m_managedConPtr->getLoadedGroups();
     for(auto const & it : m_groups) {
          m_w.addItem(QString(it.groupName.c_str()));
     }
@@ -264,7 +263,7 @@ MainApplication::extractHeadersSlot()
         if(acd.exec() == QDialog::Accepted) {
             auto returned = acd.ui->articleCountEdit->text();
             articlesToExtract = atoi(returned.toStdString().c_str());
-            m_connectionPtr->extractNHeadersUsingXOverCommand(m_selectedGroup, articlesToExtract);
+            m_managedConPtr->extractNHeadersUsingXOverCommand(m_selectedGroup, articlesToExtract);
 
             // Setting maximum of progress bar
             m_w.ui->groupWidget->ui->progressBar->setMaximum(articlesToExtract);
@@ -304,17 +303,17 @@ MainApplication::headersReadFinishedSlot(core::HeadersData hd)
                                       m_ssl,
                                       m_username,
                                       m_password);
-        auto *managedGroupTab = new ManagedGroupTab(m_w.ui->tabWidget,
-                                                    m_selectedGroup,
-                                                    m_w,
-                                                    m_connectionPtr,
-                                                    connectionInfo,
-                                                    m_workerThread,
-                                                    m_statusMessageDisplayer,
-                                                    hd.headers);
-        QObject::connect(managedGroupTab, SIGNAL(pictureSavedSignal(QString)), this, SLOT(statusMessageSlot(QString)));
-        QObject::connect(managedGroupTab, SIGNAL(loadingMediaSignal(QString)), this, SLOT(statusMessageSlot(QString)));
-        QObject::connect(managedGroupTab, SIGNAL(resetHeadersList(QString)), this, SLOT(statusMessageSlot(QString)));
+        ManagedGroupTabPtr managedGroupTab(new ManagedGroupTab(m_w.ui->tabWidget,
+                                                               m_selectedGroup,
+                                                               m_w,
+                                                               m_managedConPtr,
+                                                               connectionInfo,
+                                                               m_workerThread,
+                                                               m_statusMessageDisplayer,
+                                                               hd.headers));
+        QObject::connect(managedGroupTab.data(), SIGNAL(pictureSavedSignal(QString)), this, SLOT(statusMessageSlot(QString)));
+        QObject::connect(managedGroupTab.data(), SIGNAL(loadingMediaSignal(QString)), this, SLOT(statusMessageSlot(QString)));
+        QObject::connect(managedGroupTab.data(), SIGNAL(resetHeadersList(QString)), this, SLOT(statusMessageSlot(QString)));
         m_groupTabs.push_back(managedGroupTab);
     }
 }
@@ -331,7 +330,7 @@ MainApplication::loginFinishedSlot(bool authorized) {
         // of m_connectionPtr to the thread and start the thread
         if(!m_groupsAdded) {
             // automatically commits suicide on finish
-            m_connectionPtr->loadGroups();
+            m_managedConPtr->loadGroups();
 
             // Setting maximum of progress bar to 0 swicthes on its busy status
             m_w.ui->groupWidget->ui->progressBar->setMaximum(0);
@@ -517,8 +516,8 @@ void MainApplication::acceptLoginSlot(QString server,
     //m_org = m_prefsWidgetPtr->getOrg();
     //m_deleteCacheOnExit = m_prefsWidgetPtr->deleteCacheOnExit();
     //ConnectorBuilder::setAllowedConnections(m_prefsWidgetPtr->allowedConnections());
-    m_connectionPtr->setServerAndPort(m_server, m_port, m_ssl);
-    m_connectionPtr->setUsernameAndPassword(m_username, m_password);
+    m_managedConPtr->setServerAndPort(m_server, m_port, m_ssl);
+    m_managedConPtr->setUsernameAndPassword(m_username, m_password);
     m_prefsRead = true;
     loginFinishedSlot(true);
     if(!m_w.isVisible()) {

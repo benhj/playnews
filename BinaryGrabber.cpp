@@ -31,7 +31,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace core {
 
-    BinaryGrabber::BinaryGrabber(ConnectionPtr &connection,
+    BinaryGrabber::BinaryGrabber(ManagedConnectionPtr &connection,
                                  QString const &groupName,
                                  Header &header,
                                  QThread &worker,

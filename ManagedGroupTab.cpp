@@ -50,7 +50,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ManagedGroupTab::ManagedGroupTab(QObject *parent,
                                  QString const &groupName,
                                  MainWidget &w,
-                                 core::ConnectionPtr &connection,
+                                 core::ManagedConnectionPtr &connection,
                                  ConnectionInfo const& connectionInfo,
                                  QThread &worker,
                                  StatusMessageDisplayer &statusMessageDisplayer,

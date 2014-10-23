@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #pragma once
 
 #include "MainWidget.h"
+#include "ManagedGroupTab.h"
 #include "ManagedNNTPConnection.h"
 #include "LoginDialog.h"
 #include "StatusMessageDisplayer.h"
@@ -39,24 +40,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QScopedPointer>
 #include <deque>
 
-class ManagedGroupTab;
-
 typedef QScopedPointer<QTimer> TimerPtr;
 
-typedef std::vector<ManagedGroupTab*> GroupTabs;
+typedef std::vector<ManagedGroupTabPtr> GroupTabs;
 
 class MainApplication : public QObject
 {
     Q_OBJECT
-public:
+  public:
     explicit MainApplication(QObject *parent = 0);
     ~MainApplication();
     MainWidget m_w;
 
-signals:
+  signals:
     void statusMessageSignal(QString);
 
-public slots:
+  public slots:
     void displayLoginDialog();
     void groupsLoadFinishedSlot();
     void groupAddedSlot(QString str);
@@ -80,11 +79,9 @@ public slots:
 
     void acceptLoginSlot(QString server, QString username, QString password);
 
+  private:
 
-private:
-
-
-    core::ConnectionPtr m_connectionPtr;
+    core::ManagedConnectionPtr m_managedConPtr;
     QString m_selectedGroup;
     LoginDialogPtr m_loginDialogPtr;
     bool m_connected;
@@ -105,6 +102,7 @@ private:
     std::deque<QString> m_messageBuffer;
     int m_port;
     bool m_groupsAdded;
+
     void disableButtons();
     void connectSignalsToSlots();
     void updateGroupTabProgressBars(int const val);

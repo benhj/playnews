@@ -43,7 +43,7 @@ namespace core {
     {
         Q_OBJECT
     public:
-        BinaryGrabber(ConnectionPtr &connection,
+        BinaryGrabber(ManagedConnectionPtr &connection,
                       QString const& groupName,
                       Header &header,
                       QThread &worker,
@@ -62,7 +62,7 @@ namespace core {
         void partDecodedSignal();
 
     private:
-        ConnectionPtr &m_connection;
+        ManagedConnectionPtr &m_connection;
         QString const &m_groupName;
         Header &m_header;
         QThread &m_worker;

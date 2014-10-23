@@ -65,7 +65,6 @@ namespace core {
                              this, SLOT(partDownloaded(ArticleData&)), Qt::QueuedConnection);
 
             arp->process();
-            //arp->readArticle();
         }
 
         void doLoad()
