@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef GROUPWIDGET_H
-#define GROUPWIDGET_H
+#pragma once
 
 #include <QWidget>
 
@@ -44,5 +43,3 @@ public:
     void addItem(QString const &item);
     Ui::GroupWidget *ui;
 };
-
-#endif // GROUPWIDGET_H

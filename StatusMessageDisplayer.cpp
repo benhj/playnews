@@ -28,9 +28,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ui_StatusMessageDisplayer.h"
 #include <QDebug>
 
-StatusMessageDisplayer::StatusMessageDisplayer(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::StatusMessageDisplayer)
+StatusMessageDisplayer::StatusMessageDisplayer(QWidget *parent)
+  : QWidget(parent)
+  , ui(new Ui::StatusMessageDisplayer)
 {
     ui->setupUi(this);
     QFont f( "Arial", 15, QFont::Bold);

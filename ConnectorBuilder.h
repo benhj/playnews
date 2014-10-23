@@ -24,17 +24,15 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef CONNECTORBUILDER_H
-#define CONNECTORBUILDER_H
+#pragma once
 
 #include "NNTPConnector.h"
 #include "ConnectionInfo.h"
 #include <QString>
 #include <QMutex>
 
-namespace ConnectorBuilder
+namespace core { namespace ConnectorBuilder
 {
-
     static int connections = 0;
     static int allowedConnections = 10; // default -1: unlimited
     static QMutex connectionMutex;
@@ -95,5 +93,4 @@ namespace ConnectorBuilder
         connectionMutex.unlock();
     }
 }
-
-#endif // CONNECTORBUILDER_H
+}

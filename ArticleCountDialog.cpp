@@ -28,9 +28,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ui_ArticleCountDialog.h"
 #include <QPainter>
 
-ArticleCountDialog::ArticleCountDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::ArticleCountDialog)
+ArticleCountDialog::ArticleCountDialog(QWidget *parent)
+  : QDialog(parent)
+  , ui(new Ui::ArticleCountDialog)
 {
     ui->setupUi(this);
 
@@ -38,8 +38,7 @@ ArticleCountDialog::ArticleCountDialog(QWidget *parent) :
 
     int playbookWidthDiv2 = parent->width() / 2;
     int playbookHeightDiv2 = parent->height() / 2;
-    QSize windowSize;
-    windowSize = this->size();
+    auto windowSize = this->size();
     int width = windowSize.width();
     int height = windowSize.height();
     int x = (playbookWidthDiv2 - (width/2));

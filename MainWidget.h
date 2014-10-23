@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef MAINWIDGET_H
-#define MAINWIDGET_H
+#pragma once
 
 #include <QWidget>
 
@@ -44,6 +43,3 @@ public:
     ~MainWidget();
     Ui::MainWidget *ui;
 };
-
-#endif // MAINWIDGET_H
-

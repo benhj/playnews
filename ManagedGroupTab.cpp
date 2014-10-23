@@ -50,7 +50,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ManagedGroupTab::ManagedGroupTab(QObject *parent,
                                  QString const &groupName,
                                  MainWidget &w,
-                                 ConnectionPtr &connection,
+                                 core::ConnectionPtr &connection,
                                  ConnectionInfo const& connectionInfo,
                                  QThread &worker,
                                  StatusMessageDisplayer &statusMessageDisplayer,
@@ -207,11 +207,11 @@ ManagedGroupTab::readArticleSlot()
     } else {
 
         bool compositeReadMode = true;
-        m_binaryGrabberPtr.reset(new BinaryGrabber(m_connection,
-                                                   m_groupName,
-                                                   m_headers[index],
-                                                   m_worker,
-                                                   compositeReadMode));
+        m_binaryGrabberPtr.reset(new core::BinaryGrabber(m_connection,
+                                                         m_groupName,
+                                                         m_headers[index],
+                                                         m_worker,
+                                                         compositeReadMode));
 
 
         QObject::connect(m_binaryGrabberPtr.data(), SIGNAL(binaryHasBeenReadSignal(Header, bool)),
@@ -258,7 +258,7 @@ ManagedGroupTab::updateBytesDisplay(double const val)
 }
 
 void
-ManagedGroupTab::displayArticleSlot(ArticleData &articleData)
+ManagedGroupTab::displayArticleSlot(core::ArticleData &articleData)
 {
     qDebug() << "displayArticleSlot";
     if(articleData.binary == 0) {
@@ -284,11 +284,11 @@ ManagedGroupTab::displayArticleSlot(ArticleData &articleData)
         // (e.g. save... / setup a file queue etc.)
         //
         bool compositeReadMode = false;
-        m_binaryGrabberPtr.reset(new BinaryGrabber(m_connection,
-                                                   m_groupName,
-                                                   m_headers[m_selectedArticleIndex],
-                                                   m_worker,
-                                                   compositeReadMode));
+        m_binaryGrabberPtr.reset(new core::BinaryGrabber(m_connection,
+                                                         m_groupName,
+                                                         m_headers[m_selectedArticleIndex],
+                                                         m_worker,
+                                                         compositeReadMode));
         QObject::connect(m_binaryGrabberPtr.data(), SIGNAL(binaryHasBeenReadSignal(Header, bool)),
                          this, SLOT(openBinary(Header, bool)));
         m_binaryGrabberPtr->handleBinaryData();

@@ -28,35 +28,36 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QThread>
 #include <cassert>
 
-LoginThread::LoginThread(ConnectionPtr &connectionPtr,
-                          QString const &username,
-                          QString const &password) :
-                           m_connectionPtr(connectionPtr)
+namespace core {
 
-{
-    m_connectionPtr->setUsernameAndPassword(username, password);
-    connect(m_connectionPtr.data(), SIGNAL(authorizedSignal(bool)), this, SLOT(quitThread(bool)));
-}
+    LoginThread::LoginThread(ConnectionPtr &connectionPtr,
+                              QString const &username,
+                              QString const &password) :
+                               m_connectionPtr(connectionPtr)
 
-void
-LoginThread::start()
-{
-    qDebug() << "starting login thread";
-
-    //m_connectionPtr->authenticate();
-    connect(&m_worker, SIGNAL(started()), m_connectionPtr.data(), SLOT(authenticate()));
-    m_worker.start();
-}
-
-void
-LoginThread::quitThread(bool)
-{
-    qDebug() << "in LoginThread::quitThread";
-    while(m_worker.isRunning()) {
-        m_worker.quit();
+    {
+        m_connectionPtr->setUsernameAndPassword(username, password);
+        connect(m_connectionPtr.data(), SIGNAL(authorizedSignal(bool)), this, SLOT(quitThread(bool)));
     }
-    disconnect(&m_worker, SIGNAL(started()), m_connectionPtr.data(), SLOT(authenticate()));
-    disconnect(m_connectionPtr.data(), SIGNAL(authorizedSignal(bool)), this, SLOT(quitThread(bool)));
-    delete this;
-}
 
+    void
+    LoginThread::start()
+    {
+        qDebug() << "starting login thread";
+        connect(&m_worker, SIGNAL(started()), m_connectionPtr.data(), SLOT(authenticate()));
+        m_worker.start();
+    }
+
+    void
+    LoginThread::quitThread(bool)
+    {
+        qDebug() << "in LoginThread::quitThread";
+        while(m_worker.isRunning()) {
+            m_worker.quit();
+        }
+        disconnect(&m_worker, SIGNAL(started()), m_connectionPtr.data(), SLOT(authenticate()));
+        disconnect(m_connectionPtr.data(), SIGNAL(authorizedSignal(bool)), this, SLOT(quitThread(bool)));
+        delete this;
+    }
+
+}

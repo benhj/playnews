@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef MANAGEDGROUPTAB_H
-#define MANAGEDGROUPTAB_H
+#pragma once
 
 #include "MainWidget.h"
 #include "ManagedNNTPConnection.h"
@@ -50,7 +49,7 @@ public:
     explicit ManagedGroupTab(QObject *parent,
                     QString const &groupName,
                     MainWidget &w,
-                    ConnectionPtr &connection,
+                    core::ConnectionPtr &connection,
                     ConnectionInfo const& connectionInfo,
                     QThread &worker,
                     StatusMessageDisplayer &statusMessageDisplayer,
@@ -67,7 +66,7 @@ signals:
 public slots:
     void readArticleSlot();
     //void postSlot();
-    void displayArticleSlot(ArticleData &data);
+    void displayArticleSlot(core::ArticleData &data);
     //void replySlot(QString const &articleData);
     void searchSlot();
     void showAllSlot();
@@ -84,7 +83,7 @@ private:
     ArticleLoaderThread *m_articleLoaderThread;
     QString m_groupName;
     MainWidget &m_w;
-    ConnectionPtr m_connection;
+    core::ConnectionPtr m_connection;
     Headers m_headers;
     QWidget *m_selectedGroupTab;
     QGridLayout *m_gridLayout;
@@ -98,9 +97,7 @@ private:
     std::string m_date;
     std::string m_author;
     int m_selectedArticleIndex;
-    BinaryGrabberPtr m_binaryGrabberPtr;
-    BulkDownloaderPtr m_bulkDownloaderPtr;
+    core::BinaryGrabberPtr m_binaryGrabberPtr;
+    core::BulkDownloaderPtr m_bulkDownloaderPtr;
     ConnectionInfo m_connectionInfo;
 };
-
-#endif // MANAGEDGROUPTAB_H

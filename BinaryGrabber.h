@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef BINARYGRABBER_H
-#define BINARYGRABBER_H
+#pragma once
 
 #include "ArticleHeader.h"
 #include "ManagedNNTPConnection.h"
@@ -35,43 +34,46 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 class QThread;
 
-class BinaryGrabber;
-typedef QScopedPointer<BinaryGrabber> BinaryGrabberPtr;
+namespace core {
 
-class BinaryGrabber : public QObject
-{
-    Q_OBJECT
-public:
-    BinaryGrabber(ConnectionPtr &connection,
-                  QString const& groupName,
-                  Header &header,
-                  QThread &worker,
-                  bool const compositeReadMode);
-    void readMultiPartBinary();
-    bool hasFinished();
+    class BinaryGrabber;
+    typedef QScopedPointer<BinaryGrabber> BinaryGrabberPtr;
 
-public slots:
-    void handleBinaryData();
-    void partDecodedSlot();
+    class BinaryGrabber : public QObject
+    {
+        Q_OBJECT
+    public:
+        BinaryGrabber(ConnectionPtr &connection,
+                      QString const& groupName,
+                      Header &header,
+                      QThread &worker,
+                      bool const compositeReadMode);
+        void readMultiPartBinary();
+        bool hasFinished();
 
-signals:
-    void resetProgressBarSignal();
-    void setProgressBarMaximum(int maximum);
-    void binaryHasBeenReadSignal(Header, bool autoSave);
-    void partDecodedSignal();
+    public slots:
+        void handleBinaryData();
+        void partDecodedSlot();
 
-private:
-    ConnectionPtr &m_connection;
-    QString const &m_groupName;
-    Header &m_header;
-    QThread &m_worker;
-    bool m_compositeReadMode;
-    YencDecoder m_yencDecoder;
-    bool m_finished;
-    void handleComposite();
-    void handleSingle();
-    void decodeHeadPart(int const id, std::ofstream &out);
-    void decodePart(int const id, std::ofstream &out);
-};
+    signals:
+        void resetProgressBarSignal();
+        void setProgressBarMaximum(int maximum);
+        void binaryHasBeenReadSignal(Header, bool autoSave);
+        void partDecodedSignal();
 
-#endif // BINARYGRABBER_H
+    private:
+        ConnectionPtr &m_connection;
+        QString const &m_groupName;
+        Header &m_header;
+        QThread &m_worker;
+        bool m_compositeReadMode;
+        YencDecoder m_yencDecoder;
+        bool m_finished;
+        void handleComposite();
+        void handleSingle();
+        void decodeHeadPart(int const id, std::ofstream &out);
+        void decodePart(int const id, std::ofstream &out);
+    };
+
+}
+

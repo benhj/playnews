@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef SEARCHDIALOG_H
-#define SEARCHDIALOG_H
+#pragma once
 
 #include <QDialog>
 
@@ -49,5 +48,3 @@ private:
 protected:
     void paintEvent(QPaintEvent *e);
 };
-
-#endif // SEARCHDIALOG_H

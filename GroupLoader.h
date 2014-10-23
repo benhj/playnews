@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef GROUPLOADER_H
-#define GROUPLOADER_H
+#pragma once
 
 #include "ConnectionInfo.h"
 #include "NNTPConnector.h"
@@ -34,49 +33,51 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <QThread>
 
-/**
- * @brief The Group struct stores data related to a group
- */
-struct Group
-{
-    std::string groupName;
-    int upperArticle;
-    int lowerArticle;
-};
-
-typedef std::vector<Group> Groups;
-
-class GroupLoader;
-typedef QScopedPointer<GroupLoader> GroupLoaderPtr;
-
-class GroupLoader : public QObject
-{
-    Q_OBJECT
-public:
-    GroupLoader(ConnectionInfo const &connectionInfo, QObject *callbackObject);
-
-    ~GroupLoader();
+namespace core {
 
     /**
-     * @brief getLoadedGroups get vector of groups
-     * @return vector of groups
+     * @brief The Group struct stores data related to a group
      */
-    Groups getLoadedGroups();
+    struct Group
+    {
+        std::string groupName;
+        int upperArticle;
+        int lowerArticle;
+    };
 
-    void process();
+    typedef std::vector<Group> Groups;
 
-public slots:
+    class GroupLoader;
+    typedef QScopedPointer<GroupLoader> GroupLoaderPtr;
 
-    void loadGroups();
+    class GroupLoader : public QObject
+    {
+        Q_OBJECT
+    public:
+        GroupLoader(ConnectionInfo const &connectionInfo, QObject *callbackObject);
 
-signals:
-    void groupsLoadFinishedSignal();
+        ~GroupLoader();
 
-private:
-    ConnectionInfo m_connectionInfo;
-    Groups m_groups;
-    QThread m_worker;
-    QObject *m_callbackObject;
-};
+        /**
+         * @brief getLoadedGroups get vector of groups
+         * @return vector of groups
+         */
+        Groups getLoadedGroups();
 
-#endif // GROUPLOADER_H
+        void process();
+
+    public slots:
+
+        void loadGroups();
+
+    signals:
+        void groupsLoadFinishedSignal();
+
+    private:
+        ConnectionInfo m_connectionInfo;
+        Groups m_groups;
+        QThread m_worker;
+        QObject *m_callbackObject;
+    };
+
+}

@@ -39,9 +39,9 @@ LoginDialog::LoginDialog(QWidget *parent) :
 void LoginDialog::setUpGUI(){
     // set up the layout
     setAttribute( Qt::WA_TranslucentBackground, true );
-    QGridLayout* formGridLayout = new QGridLayout( this );
+    auto formGridLayout = new QGridLayout( this );
     editServer = new QLineEdit(this);
-    editServer->setText("nntp.aioe.org:563");
+    editServer->setText("news.gmane.org:119");
 
     // initialize the username combo box so that it is editable
     editUsername = new QLineEdit( this );
@@ -60,8 +60,6 @@ void LoginDialog::setUpGUI(){
     labelUsername->setBuddy( editUsername );
     labelPassword->setText( tr( "Password" ) );
     labelPassword->setBuddy( editPassword );
-
-
 
     // initialize buttons
     buttons = new QDialogButtonBox( this );
@@ -140,8 +138,6 @@ void LoginDialog::setUpGUI(){
     "radius: 1.35, stop: 0 #fff, stop: 1 #ddd);\n"
     "}\n"
     ""));
-
-
 
     int playbookWidthDiv2 = 1024 / 2;
     int playbookHeightDiv2 = 300;

@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef CONNECTIONINFO_H
-#define CONNECTIONINFO_H
+#pragma once
 
 #include <QString>
 
@@ -46,5 +45,3 @@ struct ConnectionInfo
     QString m_username;
     QString m_password;
 };
-
-#endif // CONNECTIONINFO_H

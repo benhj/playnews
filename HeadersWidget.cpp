@@ -34,7 +34,6 @@ HeadersWidget::HeadersWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::HeadersWidget)
 {
-    //m_tableModel = new QStandardItemModel(500, 3);
     ui->setupUi(this);
     ui->headersTableWidget->setColumnWidth(0, 600);
     ui->headersTableWidget->setColumnWidth(1, 180);
@@ -58,7 +57,7 @@ HeadersWidget::removeAllItems()
 void
 HeadersWidget::addItem(Header &header, int const index)
 {
-    int rowCount = ui->headersTableWidget->rowCount();
+    auto rowCount = ui->headersTableWidget->rowCount();
     ui->headersTableWidget->setRowCount(rowCount + 1);
     QTableWidgetItem *subjectItem = new QTableWidgetItem;
     subjectItem->setData(Qt::DisplayRole, QVariant(header.getSubject().c_str()));
@@ -74,7 +73,7 @@ HeadersWidget::addItem(Header &header, int const index)
 void
 HeadersWidget::setBoldFontForItem(int const index)
 {
-    QFont font = ui->headersTableWidget->item(index,0)->font();
+    auto font = ui->headersTableWidget->item(index,0)->font();
     font.setBold(true);
     ui->headersTableWidget->item(index, 0)->setFont(font);
 }
@@ -83,7 +82,7 @@ void
 HeadersWidget::setLightFontForItem(int const index)
 {
 
-    QFont font = ui->headersTableWidget->item(index,0)->font();
+    auto font = ui->headersTableWidget->item(index,0)->font();
     font.setBold(false);
     ui->headersTableWidget->item(index, 0)->setFont(font);
     ui->headersTableWidget->item(index, 1)->setFont(font);

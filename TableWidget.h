@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef TABLE_WIDGET_H__
-#define TABLE_WIDGET_H__
+#pragma once
 
 #include <QSKineticScroller.h>
 #include <QTableWidget>
@@ -118,5 +117,3 @@ private:
     QsKineticScroller kineticScroller;
 
 };
-
-#endif

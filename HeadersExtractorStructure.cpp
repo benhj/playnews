@@ -26,13 +26,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "HeadersExtractorStructure.h"
 
-HeadersExtractorStructure::HeadersExtractorStructure(QString const &groupName_, int const headerCount_, QObject *parent) :
-    QObject(parent),
-    m_groupName(groupName_),
-    m_headerCount(headerCount_)
+HeadersExtractorStructure::HeadersExtractorStructure(QString const &groupName_,
+                                                     int const headerCount_,
+                                                     QObject *parent)
+  : QObject(parent)
+  , m_groupName(groupName_)
+  , m_headerCount(headerCount_)
 {
 }
-
 
 QString
 HeadersExtractorStructure::groupName()

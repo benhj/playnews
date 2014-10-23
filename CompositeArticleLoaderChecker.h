@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef COMPOSITEARTICLELOADER_H
-#define COMPOSITEARTICLELOADER_H
+#pragma once
 
 #include "ArticleReader.h"
 #include "NNTPConnector.h"
@@ -35,72 +34,74 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QMutex>
 #include <vector>
 
-class CompositeArticleLoaderChecker;
+namespace core {
 
-typedef QScopedPointer<CompositeArticleLoaderChecker> CompositeCheckerPtr;
-typedef std::vector<SharedArticleReader> ArticleReaders;
+    class CompositeArticleLoaderChecker;
 
-class CompositeArticleLoaderChecker : public QObject
-{
-    Q_OBJECT
-public:
-    CompositeArticleLoaderChecker(std::vector<int> codes,
-                                  ConnectionInfo &connectionInfo,
-                                  QString const &groupName,
-                                  QObject* callBackObject) :
-        m_codes(codes), m_connectionInfo(connectionInfo),
-        m_groupName(groupName), m_callback(callBackObject),
-        m_partsGrabbed(0) {it = m_codes.begin();}
+    typedef QScopedPointer<CompositeArticleLoaderChecker> CompositeCheckerPtr;
+    typedef std::vector<SharedArticleReader> ArticleReaders;
 
-    void readArticle(int const articleId)
+    class CompositeArticleLoaderChecker : public QObject
     {
-        int isBinary = 1;
-        SharedArticleReader arp(new ArticleReader(m_connectionInfo, m_groupName, articleId, isBinary, m_callback));
-        m_arps.push_back(arp);
-        QObject::connect(arp.data(), SIGNAL(articleDataReadSignal(ArticleData&)),
-                         this, SLOT(partDownloaded(ArticleData&)), Qt::QueuedConnection);
+        Q_OBJECT
+    public:
+        CompositeArticleLoaderChecker(std::vector<int> codes,
+                                      ConnectionInfo &connectionInfo,
+                                      QString const &groupName,
+                                      QObject* callBackObject)
+      : m_codes(codes), m_connectionInfo(connectionInfo)
+      , m_groupName(groupName), m_callback(callBackObject)
+      , m_partsGrabbed(0)
+      {
+            it = m_codes.begin();
+      }
 
-        arp->process();
-        //arp->readArticle();
-    }
+        void readArticle(int const articleId)
+        {
+            int isBinary = 1;
+            SharedArticleReader arp(new ArticleReader(m_connectionInfo, m_groupName, articleId, isBinary, m_callback));
+            m_arps.push_back(arp);
+            QObject::connect(arp.data(), SIGNAL(articleDataReadSignal(ArticleData&)),
+                             this, SLOT(partDownloaded(ArticleData&)), Qt::QueuedConnection);
 
-    void doLoad()
-    {
-        for(it = m_codes.begin() ; it != m_codes.end(); ++it) {
-            readArticle(*it);
+            arp->process();
+            //arp->readArticle();
         }
-    }
 
-public slots:
-    void partDownloaded(ArticleData&)
-    {
-        m_mutex.lock();
-        qDebug() << "part downloaded!";
-        ++m_partsGrabbed;
-
-        if(m_partsGrabbed == m_codes.size()) {
-            qDebug() << "yes finished comp";
-            emit compositeFinishedSignal();
-        } else {
-            //++it;
-            //doLoad();
+        void doLoad()
+        {
+            for(it = m_codes.begin() ; it != m_codes.end(); ++it) {
+                readArticle(*it);
+            }
         }
-        m_mutex.unlock();
-        //
-    }
 
-signals:
-    void compositeFinishedSignal();
+    public slots:
+        void partDownloaded(ArticleData&)
+        {
+            m_mutex.lock();
+            qDebug() << "part downloaded!";
+            ++m_partsGrabbed;
 
-private:
-    std::vector<int> m_codes;
-    ArticleReaders m_arps;
-    int m_partsGrabbed;
-    ConnectionInfo m_connectionInfo;
-    QString m_groupName;
-    QMutex m_mutex;
-    QObject *m_callback;
-    std::vector<int>::iterator it;
-};
+            if(m_partsGrabbed == m_codes.size()) {
+                qDebug() << "yes finished comp";
+                emit compositeFinishedSignal();
+            } else {
+            }
+            m_mutex.unlock();
+        }
 
-#endif // COMPOSITEARTICLELOADER_H
+    signals:
+        void compositeFinishedSignal();
+
+    private:
+        std::vector<int> m_codes;
+        ArticleReaders m_arps;
+        int m_partsGrabbed;
+        ConnectionInfo m_connectionInfo;
+        QString m_groupName;
+        QMutex m_mutex;
+        QObject *m_callback;
+        std::vector<int>::iterator it;
+    };
+
+}

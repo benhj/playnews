@@ -28,9 +28,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ui_SearchDialog.h"
 #include <QPainter>
 
-SearchDialog::SearchDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::SearchDialog)
+SearchDialog::SearchDialog(QWidget *parent)
+  : QDialog(parent)
+  , ui(new Ui::SearchDialog)
 {
     ui->setupUi(this);
 

@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef MANAGEDNNTPCONNECTION_H
-#define MANAGEDNNTPCONNECTION_H
+#pragma once
 
 #include "NNTPConnector.h"
 #include "HeaderExtractor.h"
@@ -36,124 +35,126 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QObject>
 #include <QSharedPointer>
 
-class ManagedNNTPConnection;
+namespace core {
 
-typedef QSharedPointer<ManagedNNTPConnection> ConnectionPtr;
+    class ManagedNNTPConnection;
 
-class ManagedNNTPConnection : public QObject
-{
-    Q_OBJECT
-public:
-    explicit ManagedNNTPConnection();
+    typedef QSharedPointer<ManagedNNTPConnection> ConnectionPtr;
 
-
-    void setServerAndPort(QString const &server, int const port, bool const ssl);
-
-
-    void setUsernameAndPassword(QString const &username, QString const &password);
+    class ManagedNNTPConnection : public QObject
+    {
+        Q_OBJECT
+    public:
+        explicit ManagedNNTPConnection();
 
 
-    /**
-     * @brief getLoadedGroups
-     * @return a vector of loaded groups
-     */
-    Groups getLoadedGroups();
+        void setServerAndPort(QString const &server, int const port, bool const ssl);
 
-    //QString getArticleData();
-    QString getCompositeData();
 
-    void setPostStuff(QString const &postData,
-                      QString const &postGroup,
-                      QString const &postFrom,
-                      QString const &postSubject);
+        void setUsernameAndPassword(QString const &username, QString const &password);
 
-signals:
-    // for resending added group back up to main application
-    void groupAddedSignal(QString);
-    // for indicating when all groups have been loaded
-    void groupsLoadFinishedSignal();
-    // for indicating when group headers have been read
-    void headersReadFinishedSignal(HeadersData);
-    void singleArticleExtractedSignal();
-    void loginFinishedSignal(int);
-    void authorizedSignal(bool);
-    void articleDataReadSignal(ArticleData&);
-    void issuedLASTCommandSignal();
-    void finishedIssuingLASTCommandsSignal();
-    void finishedPostingSignal(int status);
-    void statusSignal(QString);
-    void headCommandsIssuedSignal();
-    void compositeDataReadSignal();
-    void bytesReadSignal(int const bytesRead);
-    void resetBytesReadSignal();
-    void readBeginSignal(int const count);
-    void readBitOfDataSignal();
 
-public slots:
-    // catches from nntpconnector
-    void groupAddedSlot(QString);
-    void groupsLoadFinishedSlot();
-    void headersReadFinishedSlot(HeadersData);
-    void singleArticleExtractedSlot();
-    void moveBackToMainThread();
+        /**
+         * @brief getLoadedGroups
+         * @return a vector of loaded groups
+         */
+        Groups getLoadedGroups();
 
-    /**
-     * @brief loadGroups does what it says
-     */
-    void loadGroups();
+        //QString getArticleData();
+        QString getCompositeData();
 
-    /**
-     * @brief extractNHeadersUsingXOverCommand more efficient way of getting header data
-     */
-    void extractNHeadersUsingXOverCommand(QString const &groupName, int const headerCount);
+        void setPostStuff(QString const &postData,
+                          QString const &postGroup,
+                          QString const &postFrom,
+                          QString const &postSubject);
 
-    /**
-     * @brief readArticle
-     */
-    void readArticle(QString const &group, int const articleId);
-    void finishedReadingArticle(ArticleData &data);
+    signals:
+        // for resending added group back up to main application
+        void groupAddedSignal(QString);
+        // for indicating when all groups have been loaded
+        void groupsLoadFinishedSignal();
+        // for indicating when group headers have been read
+        void headersReadFinishedSignal(HeadersData);
+        void singleArticleExtractedSignal();
+        void loginFinishedSignal(int);
+        void authorizedSignal(bool);
+        void articleDataReadSignal(ArticleData&);
+        void issuedLASTCommandSignal();
+        void finishedIssuingLASTCommandsSignal();
+        void finishedPostingSignal(int status);
+        void statusSignal(QString);
+        void headCommandsIssuedSignal();
+        void compositeDataReadSignal();
+        void bytesReadSignal(int const bytesRead);
+        void resetBytesReadSignal();
+        void readBeginSignal(int const count);
+        void readBitOfDataSignal();
 
-    void selectAndRead(QString const &groupName, int const articleId);
-    void selectAndReadCollection(QString const &groupName, std::vector<int> codes);
+    public slots:
+        // catches from nntpconnector
+        void groupAddedSlot(QString);
+        void groupsLoadFinishedSlot();
+        void headersReadFinishedSlot(HeadersData);
+        void singleArticleExtractedSlot();
+        void moveBackToMainThread();
 
-    /**
-     * @brief doPost posts article data
-     */
-    void doPost();
+        /**
+         * @brief loadGroups does what it says
+         */
+        void loadGroups();
 
-    void issuedLASTCommandSlot();
+        /**
+         * @brief extractNHeadersUsingXOverCommand more efficient way of getting header data
+         */
+        void extractNHeadersUsingXOverCommand(QString const &groupName, int const headerCount);
 
-    void finishedIssuingLASTCommandsSlot();
+        /**
+         * @brief readArticle
+         */
+        void readArticle(QString const &group, int const articleId);
+        void finishedReadingArticle(ArticleData &data);
 
-    void finishedPostingSlot(int const status);
+        void selectAndRead(QString const &groupName, int const articleId);
+        void selectAndReadCollection(QString const &groupName, std::vector<int> codes);
 
-    void statusMessageSlot(QString);
+        /**
+         * @brief doPost posts article data
+         */
+        void doPost();
 
-    void headCommandsIssuedSlot();
+        void issuedLASTCommandSlot();
 
-    void bytesReadSlot(int const bytesRead);
+        void finishedIssuingLASTCommandsSlot();
 
-    void readBeginSlot(int const count);
-    void readBitOfDataSlot();
+        void finishedPostingSlot(int const status);
 
-    void compositeReadSlot();
+        void statusMessageSlot(QString);
 
-private:
-    Groups groups;
-    QString m_server;
-    int m_port;
-    bool m_ssl;
-    QString m_username;
-    QString m_password;
-    QString m_postData;
-    QString m_postGroup;
-    QString m_postFrom;
-    QString m_postSubject;
-    QString m_compositeData;
-    HeaderExtractorPtr m_headerExtractorPtr;
-    GroupLoaderPtr m_groupLoaderPtr;
-    ArticleReaderPtr m_articleReaderPtr;
-    CompositeArticleLoaderChecker* m_compositeCheckerPtr;
-};
+        void headCommandsIssuedSlot();
 
-#endif // MANAGEDNNTPCONNECTION_H
+        void bytesReadSlot(int const bytesRead);
+
+        void readBeginSlot(int const count);
+        void readBitOfDataSlot();
+
+        void compositeReadSlot();
+
+    private:
+        Groups groups;
+        QString m_server;
+        int m_port;
+        bool m_ssl;
+        QString m_username;
+        QString m_password;
+        QString m_postData;
+        QString m_postGroup;
+        QString m_postFrom;
+        QString m_postSubject;
+        QString m_compositeData;
+        HeaderExtractorPtr m_headerExtractorPtr;
+        GroupLoaderPtr m_groupLoaderPtr;
+        ArticleReaderPtr m_articleReaderPtr;
+        CompositeArticleLoaderChecker* m_compositeCheckerPtr;
+    };
+
+}

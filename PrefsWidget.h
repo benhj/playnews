@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef PREFSWIDGET_H
-#define PREFSWIDGET_H
+#pragma once
 
 #include <QWidget>
 #include <QScopedPointer>
@@ -74,5 +73,3 @@ public slots:
 private:
     Ui::PrefsWidget *ui;
 };
-
-#endif // PREFSWIDGET_H

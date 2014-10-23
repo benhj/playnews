@@ -29,156 +29,156 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QThread>
 #include <fstream>
 
-BinaryGrabber::BinaryGrabber(ConnectionPtr &connection,
-                             QString const &groupName,
-                             Header &header,
-                             QThread &worker,
-                             bool const compositeReadMode) :
-                            m_connection(connection),
-                            m_groupName(groupName),
-                            m_header(header),
-                            m_worker(worker),
-                            m_compositeReadMode(compositeReadMode),
-                            m_finished(false)
-{
-    QObject::connect(&m_yencDecoder, SIGNAL(partDecoded()), this, SLOT(partDecodedSlot()));
-}
+namespace core {
 
-void
-BinaryGrabber::readMultiPartBinary()
-{
-    //
-    // Loop over composite article codes
-    //
-    CompositeMessageParts::iterator cmpsIt;
-    std::vector<int> compositeCodes;
-    if(!m_header.compositeMessageParts.empty()) {
-        for(cmpsIt = m_header.compositeMessageParts.begin();
-            cmpsIt!= m_header.compositeMessageParts.end();
-            ++cmpsIt) {
-            compositeCodes.push_back(cmpsIt->articleId);
-        }
-
-        //
-        // make sure codes are in order to preserve ordering of parts
-        // (this is hypothetical and is not certain since parts might
-        // exist in an inconsistent ordering on the server)
-        //
-        //std::sort(compositeCodes.begin(), compositeCodes.end());
-
-        //
-        // check that number of parts matches expected number of parts
-        //
-        int numberOf = compositeCodes.size();
-        if(numberOf == m_header.compositeMessageParts[0].totalParts) {
-            emit resetProgressBarSignal();
-            emit setProgressBarMaximum(numberOf);
-
-            //
-            // Process composite article codes in a CompositeArticleLoaderThread (TODO)
-            // chunking all of the resulting data together and then processing it
-            // as one large chunk (perhaps)
-            //
-            // 26th May 2013 -- m_connection now starts threading process as
-            // m_connection is the connection manager
-            //
-            QObject::connect(m_connection.data(), SIGNAL(compositeDataReadSignal()), this,
-                             SLOT(handleBinaryData()));
-            m_connection->selectAndReadCollection(m_groupName, compositeCodes);
-        } else {
-            //
-            // Not all parts present
-            //
-        }
+    BinaryGrabber::BinaryGrabber(ConnectionPtr &connection,
+                                 QString const &groupName,
+                                 Header &header,
+                                 QThread &worker,
+                                 bool const compositeReadMode)
+      : m_connection(connection)
+      , m_groupName(groupName)
+      , m_header(header)
+      , m_worker(worker)
+      , m_compositeReadMode(compositeReadMode)
+      , m_finished(false)
+    {
+        QObject::connect(&m_yencDecoder, SIGNAL(partDecoded()), this, SLOT(partDecodedSlot()));
     }
-}
 
-void
-BinaryGrabber::decodeHeadPart(int const id, std::ofstream &out)
-{
+    void
+    BinaryGrabber::readMultiPartBinary()
+    {
+        //
+        // Loop over composite article codes
+        //
+        CompositeMessageParts::iterator cmpsIt;
+        std::vector<int> compositeCodes;
+        if(!m_header.compositeMessageParts.empty()) {
+            for(auto const &it : m_header.compositeMessageParts) {
+                compositeCodes.push_back(it.articleId);
+            }
 
-    std::ostringstream ss;
-    ss << "/" << id;
+            //
+            // make sure codes are in order to preserve ordering of parts
+            // (this is hypothetical and is not certain since parts might
+            // exist in an inconsistent ordering on the server)
+            //
+            //std::sort(compositeCodes.begin(), compositeCodes.end());
 
-    QString tempDir = QDir::tempPath() + ss.str().c_str();
-    std::ifstream articleStream(tempDir.toStdString().c_str());
-    if(m_yencDecoder.setHead(articleStream)) { // if not, not a binary file
-        std::string filename = m_yencDecoder.getFileName();
+            //
+            // check that number of parts matches expected number of parts
+            //
+            int numberOf = compositeCodes.size();
+            if(numberOf == m_header.compositeMessageParts[0].totalParts) {
+                emit resetProgressBarSignal();
+                emit setProgressBarMaximum(numberOf);
 
-        QString fileName = QDir::homePath() + "/pbnews/cache/";
-        fileName = fileName + QString(filename.c_str());
-        if (!fileName.isEmpty()) {
-
-            out.open(fileName.toStdString().c_str(),
-                          std::ios_base::binary);
-            m_header.downloadPath = fileName;
-            if(out.is_open()) {
-                qDebug() << "writing to cache..";
-                articleStream.seekg(0, articleStream.beg);
-                m_yencDecoder.decode(articleStream, out);
+                //
+                // Process composite article codes in a CompositeArticleLoaderThread (TODO)
+                // chunking all of the resulting data together and then processing it
+                // as one large chunk (perhaps)
+                //
+                // 26th May 2013 -- m_connection now starts threading process as
+                // m_connection is the connection manager
+                //
+                QObject::connect(m_connection.data(), SIGNAL(compositeDataReadSignal()), this,
+                                 SLOT(handleBinaryData()));
+                m_connection->selectAndReadCollection(m_groupName, compositeCodes);
+            } else {
+                //
+                // Not all parts present
+                //
             }
         }
     }
-    articleStream.close();
-}
 
-void
-BinaryGrabber::decodePart(int const id, std::ofstream &out)
-{
-    std::ostringstream ss;
-    ss << "/" << id;
-    QString tempDir = QDir::tempPath() + ss.str().c_str();
-    std::ifstream articleStream(tempDir.toStdString().c_str());
-    m_yencDecoder.decode(articleStream, out);
-    articleStream.close();
-}
+    void
+    BinaryGrabber::decodeHeadPart(int const id, std::ofstream &out)
+    {
 
-void
-BinaryGrabber::handleComposite()
-{
+        std::ostringstream ss;
+        ss << "/" << id;
 
-    int articleId = m_header.compositeMessageParts.at(0).articleId;
-    std::ofstream out;
-    this->decodeHeadPart(articleId, out);
+        auto tempDir = QDir::tempPath() + ss.str().c_str();
+        std::ifstream articleStream(tempDir.toStdString().c_str());
+        if(m_yencDecoder.setHead(articleStream)) { // if not, not a binary file
+            auto filename = m_yencDecoder.getFileName();
 
-    CompositeMessageParts::iterator codeIt;
-    for(codeIt = m_header.compositeMessageParts.begin() + 1;
-        codeIt != m_header.compositeMessageParts.end();
-        ++codeIt) {
-        this->decodePart(codeIt->articleId, out);
+            auto fileName = QDir::homePath() + "/pbnews/cache/";
+            fileName = fileName + QString(filename.c_str());
+            if (!fileName.isEmpty()) {
+
+                out.open(fileName.toStdString().c_str(),
+                              std::ios_base::binary);
+                m_header.downloadPath = fileName;
+                if(out.is_open()) {
+                    qDebug() << "writing to cache..";
+                    articleStream.seekg(0, articleStream.beg);
+                    m_yencDecoder.decode(articleStream, out);
+                }
+            }
+        }
+        articleStream.close();
     }
-    out.close();
-}
 
-void
-BinaryGrabber::handleSingle()
-{
-    int articleId = m_header.messageId;
-    std::ofstream out;
-    this->decodeHeadPart(articleId, out);
-    out.close();
-}
-
-void
-BinaryGrabber::handleBinaryData()
-{
-    qDebug() << "here "<<m_header.isComposite;
-    if(m_header.isComposite) {
-        this->handleComposite();
-    } else {
-        this->handleSingle();
+    void
+    BinaryGrabber::decodePart(int const id, std::ofstream &out)
+    {
+        std::ostringstream ss;
+        ss << "/" << id;
+        auto tempDir = QDir::tempPath() + ss.str().c_str();
+        std::ifstream articleStream(tempDir.toStdString().c_str());
+        m_yencDecoder.decode(articleStream, out);
+        articleStream.close();
     }
-    emit binaryHasBeenReadSignal(m_header, false);
-}
 
-bool
-BinaryGrabber::hasFinished()
-{
-    return m_finished;
-}
+    void
+    BinaryGrabber::handleComposite()
+    {
 
-void
-BinaryGrabber::partDecodedSlot()
-{
-    emit partDecodedSignal();
+        auto articleId = m_header.compositeMessageParts.at(0).articleId;
+        std::ofstream out;
+        this->decodeHeadPart(articleId, out);
+
+        CompositeMessageParts::iterator codeIt;
+        for(auto const &it : m_header.compositeMessageParts) {
+            this->decodePart(it.articleId, out);
+        }
+        out.close();
+    }
+
+    void
+    BinaryGrabber::handleSingle()
+    {
+        int articleId = m_header.messageId;
+        std::ofstream out;
+        this->decodeHeadPart(articleId, out);
+        out.close();
+    }
+
+    void
+    BinaryGrabber::handleBinaryData()
+    {
+        qDebug() << "here "<<m_header.isComposite;
+        if(m_header.isComposite) {
+            this->handleComposite();
+        } else {
+            this->handleSingle();
+        }
+        emit binaryHasBeenReadSignal(m_header, false);
+    }
+
+    bool
+    BinaryGrabber::hasFinished()
+    {
+        return m_finished;
+    }
+
+    void
+    BinaryGrabber::partDecodedSlot()
+    {
+        emit partDecodedSignal();
+    }
+
 }

@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef MESSAGEREADER_H
-#define MESSAGEREADER_H
+#pragma once
 
 #include <QWidget>
 #include "QSKineticScroller.h"
@@ -53,5 +52,3 @@ public:
     Ui::MessageReader *ui;
     QsKineticScroller kineticScroller;
 };
-
-#endif // MESSAGEREADER_H

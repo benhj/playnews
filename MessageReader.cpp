@@ -49,15 +49,6 @@ MessageReader::~MessageReader()
     delete ui;
 }
 
-/*
-void
-MessageReader::close()
-{
-    qDebug() << "closing...";
-    this->hide();
-    this->setVisible(false);
-}*/
-
 void
 MessageReader::setSubject(QString const& subject)
 {

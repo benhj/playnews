@@ -1,5 +1,4 @@
-#ifndef TAPANDHOLDGESTURE_H
-#define TAPANDHOLDGESTURE_H
+#pragma once
 
 #include <QtCore/QBasicTimer>
 #include <QtGui/QGesture>
@@ -28,5 +27,3 @@ private:
     static const int iterationCount;
     static const int iterationTimeout;
 };
-
-#endif // TAPANDHOLDGESTURE_H

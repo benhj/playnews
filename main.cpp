@@ -45,9 +45,9 @@ void doConfigFileDirCheck()
 
     // Note, on the playbook, the home path is mapped
     // to /accounts/1000/appdata/namespace.application/data
-    QString homeDir = QDir::homePath();
-    QString pbnews = "/pbnews";
-    QString fullPath = homeDir + pbnews;
+    auto homeDir = QDir::homePath();
+    QString pbnews("/pbnews");
+    auto fullPath = homeDir + pbnews;
     {
         QDir dir(fullPath);
         if(!dir.exists()) {
@@ -55,7 +55,7 @@ void doConfigFileDirCheck()
         }
     }
 
-    QString configPath = homeDir + pbnews + "/config";
+    auto configPath = homeDir + pbnews + "/config";
     {
         QDir dir(configPath);
         if(!dir.exists()) {
@@ -63,7 +63,7 @@ void doConfigFileDirCheck()
         }
     }
 
-    QString cachePath = homeDir + pbnews + "/cache";
+    auto cachePath = homeDir + pbnews + "/cache";
     {
         QDir cacheDir(cachePath);
         if(!cacheDir.exists()) {
@@ -86,9 +86,8 @@ int main(int argc, char *argv[])
 
     doConfigFileDirCheck();
 
-    MainApplication *mainApp = new MainApplication(new QObject);
+    auto mainApp = new MainApplication(new QObject);
     splash.finish(&mainApp->m_w);
-        
     return a.exec();
 }
 

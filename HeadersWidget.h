@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef HEADERSWIDGET_H
-#define HEADERSWIDGET_H
+#pragma once
 
 #include "ArticleHeader.h"
 #include "QSKineticScroller.h"
@@ -52,5 +51,3 @@ public:
     void makeBlack(int const index);
     Ui::HeadersWidget *ui;
 };
-
-#endif // HEADERSWIDGET_H

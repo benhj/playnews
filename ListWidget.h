@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef LIST_WIDGET_H__
-#define LIST_WIDGET_H__
+#pragma once
 
 #include <QSKineticScroller.h>
 #include <QListWidget>
@@ -133,25 +132,4 @@ private:
      {
          qDebug() << "TAPANDHOLD";
      }
-
-    /*
-    bool eventFilter(QObject *obj, QEvent *event)
-    {
-        if(event->type() == QEvent::ContextMenu)
-        {
-            QMouseEvent *mouseEvent = static_cast<QMouseEvent*> (event);
-            QMenu *menu = new QMenu(this);
-
-            menu->addAction(new QAction("Load headers",this));
-            menu->addAction(new QAction("Delete group",this));
-            menu->exec(mouseEvent->globalPos());
-
-            return false;
-        }
-        else
-            return QListWidget::eventFilter(obj, event);
-    }*/
-
 };
-
-#endif

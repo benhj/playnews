@@ -29,11 +29,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "NNTPConnector.h"
 #include "ui_PostWidget.h"
 
-PostMaster::PostMaster(ConnectionInfo const &connectionInfo, QString const &groupName, QObject *callbackObject) :
-    m_connectionInfo(connectionInfo),
-    m_groupName(groupName),
-    m_callbackObject(callbackObject),
-    pw(NULL)
+PostMaster::PostMaster(ConnectionInfo const &connectionInfo,
+                       QString const &groupName,
+                       QObject *callbackObject)
+  : m_connectionInfo(connectionInfo)
+  , m_groupName(groupName)
+  , m_callbackObject(callbackObject)
+  , pw(NULL)
 {
 
 }
@@ -71,16 +73,16 @@ PostMaster::displayPostWidget(QString const &data)
 void
 PostMaster::doPost()
 {
-    NNTPConnector connector;
-    ConnectorBuilder::buildReferencedConnector(m_connectionInfo, connector, m_callbackObject);
+    core::NNTPConnector connector;
+    core::ConnectorBuilder::buildReferencedConnector(m_connectionInfo, connector, m_callbackObject);
 
-    QString postData = pw->getText();
+    auto postData = pw->getText();
     pw->close();
     qDebug() << "Post data: " << postData;
 
     connector.doPost(postData, pw->getGroup(), pw->getFrom(), pw->getSubject());
 
-    ConnectorBuilder::tearDownReferencedConnector(connector);
+    core::ConnectorBuilder::tearDownReferencedConnector(connector);
     QObject::disconnect(&m_worker, SIGNAL(started()), this, SLOT(doPost()));
     m_worker.quit();
 }

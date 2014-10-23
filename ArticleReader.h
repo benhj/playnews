@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef ARTICLE_READER_H__
-#define ARTICLE_READER_H__
+#pragma once
 
 #include "NNTPConnector.h"
 #include "ConnectionInfo.h"
@@ -36,46 +35,46 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QThread>
 #include <deque>
 
-class ArticleReader;
+namespace core {
 
-typedef QScopedPointer<ArticleReader> ArticleReaderPtr;
-typedef QSharedPointer<ArticleReader> SharedArticleReader;
-typedef std::deque<ArticleReaderPtr> ArticleReaderPtrs;
+    class ArticleReader;
 
-struct ArticleData
-{
-    int binary;
-    QString data;
-    int id;
-};
+    typedef QScopedPointer<ArticleReader> ArticleReaderPtr;
+    typedef QSharedPointer<ArticleReader> SharedArticleReader;
+    typedef std::deque<ArticleReaderPtr> ArticleReaderPtrs;
 
-
-class ArticleReader : public QObject
-{
-    Q_OBJECT
-public:
-    ArticleReader(ConnectionInfo const & connectionInfo, QString const &group,
-                  int const articleId, int isBinary, QObject *callbackObject);
+    struct ArticleData
+    {
+        int binary;
+        QString data;
+        int id;
+    };
 
 
-    void process();
+    class ArticleReader : public QObject
+    {
+        Q_OBJECT
+    public:
+        ArticleReader(ConnectionInfo const & connectionInfo, QString const &group,
+                      int const articleId, int isBinary, QObject *callbackObject);
 
-public slots:
-    void readArticle();
 
-signals:
-    void articleDataReadSignal(ArticleData&);
-    void binaryPartDownloadedSignal();
+        void process();
 
-private:
-    ConnectionInfo m_connectionInfo;
-    int m_articleId;
-    QThread m_worker;
-    QString m_group;
-    QObject *m_callbackObject;
-    int m_isBinary;
-    QString chopArticleData(QString const &original);
-    void readBinaryArticle(std::ostream &out, NNTPConnector &connector);
-};
+    public slots:
+        void readArticle();
 
-#endif // ARTICLE_READER_H__
+    signals:
+        void articleDataReadSignal(ArticleData&);
+        void binaryPartDownloadedSignal();
+
+    private:
+        ConnectionInfo m_connectionInfo;
+        int m_articleId;
+        QThread m_worker;
+        QString m_group;
+        QObject *m_callbackObject;
+        int m_isBinary;
+    };
+
+}

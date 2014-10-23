@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef CUSTOMTEXTEDIT_H
-#define CUSTOMTEXTEDIT_H
+#pragma once
 
 #include <QPlainTextEdit>
 #include <QMouseEvent>
@@ -44,5 +43,3 @@ protected slots:
     void    highlightLine();
     
 };
-
-#endif // CUSTOMTEXTEDIT_H

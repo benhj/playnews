@@ -27,38 +27,41 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ConnectionThread.h"
 #include <cassert>
 
-ConnectionThread::ConnectionThread(ConnectionPtr &connectionPtr,
-                                   QString const &server,
-                                   int const port,
-                                   bool const ssl,
-                                   QThread &worker) :
-                                   m_worker(worker),
-                                   m_server(server),
-                                   m_port(port),
-                                   m_ssl(ssl),
-                                   m_connectionPtr(connectionPtr)
-{
-    m_connectionPtr->setServerAndPort(server, port, ssl);
-    connect(m_connectionPtr.data(), SIGNAL(loginFinishedSignal(int)), this, SLOT(quitThread(int)));
-}
+namespace core {
 
-void
-ConnectionThread::start()
-{
-    connect(&m_worker, SIGNAL(started()), m_connectionPtr.data(), SLOT(nntpConnect()));
-    m_worker.start();
-    //m_connectionPtr->nntpConnect();
-}
-
-void
-ConnectionThread::quitThread(int)
-{
-
-    qDebug() << "Quitting connection thread..";
-    if(m_worker.isRunning()) {
-        m_worker.quit();
+    ConnectionThread::ConnectionThread(ConnectionPtr &connectionPtr,
+                                       QString const &server,
+                                       int const port,
+                                       bool const ssl,
+                                       QThread &worker)
+      : m_worker(worker)
+      , m_server(server)
+      , m_port(port)
+      , m_ssl(ssl)
+      , m_connectionPtr(connectionPtr)
+    {
+        m_connectionPtr->setServerAndPort(server, port, ssl);
+        connect(m_connectionPtr.data(), SIGNAL(loginFinishedSignal(int)), this, SLOT(quitThread(int)));
     }
-    disconnect(&m_worker, SIGNAL(started()), m_connectionPtr.data(), SLOT(nntpConnect()));
-    disconnect(m_connectionPtr.data(), SIGNAL(loginFinishedSignal(int)), this, SLOT(quitThread(int)));
-    delete this;
+
+    void
+    ConnectionThread::start()
+    {
+        connect(&m_worker, SIGNAL(started()), m_connectionPtr.data(), SLOT(nntpConnect()));
+        m_worker.start();
+    }
+
+    void
+    ConnectionThread::quitThread(int)
+    {
+
+        qDebug() << "Quitting connection thread..";
+        if(m_worker.isRunning()) {
+            m_worker.quit();
+        }
+        disconnect(&m_worker, SIGNAL(started()), m_connectionPtr.data(), SLOT(nntpConnect()));
+        disconnect(m_connectionPtr.data(), SIGNAL(loginFinishedSignal(int)), this, SLOT(quitThread(int)));
+        delete this;
+    }
+
 }

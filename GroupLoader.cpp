@@ -28,78 +28,82 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ConnectorBuilder.h"
 #include <sstream>
 
-GroupLoader::GroupLoader(ConnectionInfo const &connectionInfo,
-                         QObject *callbackObject) :
-                         m_connectionInfo(connectionInfo),
-                         m_callbackObject(callbackObject)
-{
+namespace core {
 
-}
+    GroupLoader::GroupLoader(ConnectionInfo const &connectionInfo,
+                             QObject *callbackObject)
+      : m_connectionInfo(connectionInfo)
+      , m_callbackObject(callbackObject)
+    {
 
-GroupLoader::~GroupLoader()
-{
-    m_worker.quit();
-}
-
-void
-GroupLoader::process()
-{
-    this->moveToThread(&m_worker);
-    QObject::connect(&m_worker, SIGNAL(started()), this, SLOT(loadGroups()));
-    m_worker.start();
-}
-
-bool groupSorter(Group const &left, Group const &right)
-{
-    return left.groupName < right.groupName;
-}
-
-void
-GroupLoader::loadGroups()
-{
-
-    NNTPConnector connector;
-    ConnectorBuilder::buildReferencedConnector(m_connectionInfo, connector, m_callbackObject);
-
-    //
-    // Call the server to LIST the groups
-    //
-    connector.pushCommand("LIST ACTIVE\r\n");
-    connector.popAndIssueCommand();
-    Groups().swap(m_groups);
-    std::vector<int> codeChecks;
-    codeChecks.push_back(215);
-    codeChecks.push_back(503);
-    std::string response = connector.getResponseString(1, "\n.\r\n");
-    int status = connector.getStatus(response);
-    if(status == 215) {
-
-        std::istringstream iss(response);
-        std::string responseLine;
-        int g = 0;
-        while ( getline(iss, responseLine, '\n') ) {
-            if(g > 0) {
-                std::string name;
-                name = responseLine.substr(0, responseLine.find(" "));
-                if(!name.empty()) {
-                    Group group;
-                    group.groupName = name;
-                    m_groups.push_back(group);
-                }
-            }
-            ++g;
-        }
-        std::sort(m_groups.begin(), m_groups.end(), groupSorter);
-        qDebug() << "Finished reading active groups";
-        emit groupsLoadFinishedSignal();
     }
 
-    ConnectorBuilder::tearDownReferencedConnector(connector);
-    QObject::disconnect(&m_worker, SIGNAL(started()), this, SLOT(loadGroups()));
-}
+    GroupLoader::~GroupLoader()
+    {
+        m_worker.quit();
+    }
 
-Groups
-GroupLoader::getLoadedGroups()
-{
-    return m_groups;
+    void
+    GroupLoader::process()
+    {
+        this->moveToThread(&m_worker);
+        QObject::connect(&m_worker, SIGNAL(started()), this, SLOT(loadGroups()));
+        m_worker.start();
+    }
+
+    bool groupSorter(Group const &left, Group const &right)
+    {
+        return left.groupName < right.groupName;
+    }
+
+    void
+    GroupLoader::loadGroups()
+    {
+
+        NNTPConnector connector;
+        ConnectorBuilder::buildReferencedConnector(m_connectionInfo, connector, m_callbackObject);
+
+        //
+        // Call the server to LIST the groups
+        //
+        connector.pushCommand("LIST ACTIVE\r\n");
+        connector.popAndIssueCommand();
+        Groups().swap(m_groups);
+        std::vector<int> codeChecks;
+        codeChecks.push_back(215);
+        codeChecks.push_back(503);
+        std::string response = connector.getResponseString(1, "\n.\r\n");
+        int status = connector.getStatus(response);
+        if(status == 215) {
+
+            std::istringstream iss(response);
+            std::string responseLine;
+            int g = 0;
+            while ( getline(iss, responseLine, '\n') ) {
+                if(g > 0) {
+                    std::string name;
+                    name = responseLine.substr(0, responseLine.find(" "));
+                    if(!name.empty()) {
+                        Group group;
+                        group.groupName = name;
+                        m_groups.push_back(group);
+                    }
+                }
+                ++g;
+            }
+            std::sort(m_groups.begin(), m_groups.end(), groupSorter);
+            qDebug() << "Finished reading active groups";
+            emit groupsLoadFinishedSignal();
+        }
+
+        ConnectorBuilder::tearDownReferencedConnector(connector);
+        QObject::disconnect(&m_worker, SIGNAL(started()), this, SLOT(loadGroups()));
+    }
+
+    Groups
+    GroupLoader::getLoadedGroups()
+    {
+        return m_groups;
+    }
+
 }

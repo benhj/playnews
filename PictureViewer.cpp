@@ -31,10 +31,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QDebug>
 #include <QScrollBar>
 
-PictureViewer::PictureViewer(QString const &path, QWidget *parent) :
-    m_path(path),
-    QWidget(parent),
-    ui(new Ui::PictureViewer)
+PictureViewer::PictureViewer(QString const &path, QWidget *parent)
+  : m_path(path)
+  , QWidget(parent)
+  , ui(new Ui::PictureViewer)
 {
     ui->setupUi(this);
     this->kineticScroller.enableKineticScrollFor(ui->pictureEdit);

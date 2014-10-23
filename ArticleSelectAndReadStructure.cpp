@@ -28,10 +28,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ArticleSelectAndReadStructure::ArticleSelectAndReadStructure(const QString &groupName_,
                                                              const int articleId_,
-                                                             QObject *parent) :
-    QObject(parent),
-    m_groupName(groupName_),
-    m_articleId(articleId_)
+                                                             QObject *parent)
+  : QObject(parent)
+  , m_groupName(groupName_)
+  , m_articleId(articleId_)
 {
 }
 QString ArticleSelectAndReadStructure::groupName()

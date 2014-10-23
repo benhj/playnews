@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef POSTMASTER_H
-#define POSTMASTER_H
+#pragma once
 
 #include "ManagedNNTPConnection.h"
 #include "ConnectionInfo.h"
@@ -58,5 +57,3 @@ private:
 
 
 };
-
-#endif // POSTMASTER_H

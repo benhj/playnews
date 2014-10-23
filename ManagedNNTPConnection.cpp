@@ -33,274 +33,247 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sstream>
 #include <fstream>
 
+namespace core {
 
-ManagedNNTPConnection::ManagedNNTPConnection()
-{
-    /*
-    QObject::connect(&connection, SIGNAL(groupAddedSignal(QString)),
-                     this, SLOT(groupAddedSlot(QString)));
-    QObject::connect(&connection, SIGNAL(singleArticleExtractedSignal()),
-                     this, SLOT(singleArticleExtractedSlot()));
-    QObject::connect(&connection, SIGNAL(issuedLASTCommandSignal()),
-                     this, SLOT(issuedLASTCommandSlot()));
-    QObject::connect(&connection, SIGNAL(finishedIssuingLASTCommandsSignal()),
-                     this, SLOT(finishedIssuingLASTCommandsSlot()));
-    QObject::connect(&connection, SIGNAL(finishedPostingSignal(int)),
-                     this, SLOT(finishedPostingSlot(int)));
-    QObject::connect(&connection, SIGNAL(statusSignal(QString)),
-                     this, SLOT(statusMessageSlot(QString)));
-    QObject::connect(&connection, SIGNAL(headCommandsIssuedSignal()),
-                     this, SLOT(headCommandsIssuedSlot()));
-    QObject::connect(&connection, SIGNAL(readBeginSignal(int const)),
-                     this, SLOT(readBeginSlot(int const)));
-    QObject::connect(&connection, SIGNAL(readOneBitOfDataSignal()),
-                     this, SLOT(readBitOfDataSlot()));
-                     */
-}
+    ManagedNNTPConnection::ManagedNNTPConnection()
+    {
+    }
 
 
-void
-ManagedNNTPConnection::setUsernameAndPassword(QString const &username, QString const &password)
-{
-    m_username = username;
-    m_password = password;
-}
+    void
+    ManagedNNTPConnection::setUsernameAndPassword(QString const &username, QString const &password)
+    {
+        m_username = username;
+        m_password = password;
+    }
 
-void
-ManagedNNTPConnection::loadGroups()
-{
+    void
+    ManagedNNTPConnection::loadGroups()
+    {
 
-    qDebug() << m_server << "\t" << m_port << "\t" << m_ssl << "\t" << m_username << "\t" << m_password;
+        qDebug() << m_server << "\t" << m_port << "\t" << m_ssl << "\t" << m_username << "\t" << m_password;
 
-    emit resetBytesReadSignal();
+        emit resetBytesReadSignal();
 
-    ConnectionInfo connectionInfo(m_server,
-                                  m_port,
-                                  m_ssl,
-                                  m_username,
-                                  m_password);
+        ConnectionInfo connectionInfo(m_server,
+                                      m_port,
+                                      m_ssl,
+                                      m_username,
+                                      m_password);
 
-    //QObject::connect(connectorPtr.data(), SIGNAL(bytesReadSignal(int const)),
-    //                 this, SLOT(bytesReadSlot(int const)));
-    m_groupLoaderPtr.reset(new GroupLoader(connectionInfo, this));
-    QObject::connect(m_groupLoaderPtr.data(), SIGNAL(groupsLoadFinishedSignal()),
-                     this, SLOT(groupsLoadFinishedSlot()));
-    m_groupLoaderPtr->process();
-}
+        m_groupLoaderPtr.reset(new GroupLoader(connectionInfo, this));
+        QObject::connect(m_groupLoaderPtr.data(), SIGNAL(groupsLoadFinishedSignal()),
+                         this, SLOT(groupsLoadFinishedSlot()));
+        m_groupLoaderPtr->process();
+    }
 
-Groups
-ManagedNNTPConnection::getLoadedGroups()
-{
-    return m_groupLoaderPtr->getLoadedGroups();
-}
+    Groups
+    ManagedNNTPConnection::getLoadedGroups()
+    {
+        return m_groupLoaderPtr->getLoadedGroups();
+    }
 
-void
-ManagedNNTPConnection::extractNHeadersUsingXOverCommand(QString const &groupName, int const headerCount)
-{
-    emit resetBytesReadSignal();
+    void
+    ManagedNNTPConnection::extractNHeadersUsingXOverCommand(QString const &groupName, int const headerCount)
+    {
+        emit resetBytesReadSignal();
 
-    ConnectionInfo connectionInfo(m_server,
-                                  m_port,
-                                  m_ssl,
-                                  m_username,
-                                  m_password);
+        ConnectionInfo connectionInfo(m_server,
+                                      m_port,
+                                      m_ssl,
+                                      m_username,
+                                      m_password);
 
-    m_headerExtractorPtr.reset(new HeaderExtractor(groupName, connectionInfo, headerCount, this));
-    QObject::connect(m_headerExtractorPtr.data(), SIGNAL(headersReadFinishedSignal(HeadersData)),
-                     this, SLOT(headersReadFinishedSlot(HeadersData)), Qt::QueuedConnection);
-    m_headerExtractorPtr->process();
-}
+        m_headerExtractorPtr.reset(new HeaderExtractor(groupName, connectionInfo, headerCount, this));
+        QObject::connect(m_headerExtractorPtr.data(), SIGNAL(headersReadFinishedSignal(HeadersData)),
+                         this, SLOT(headersReadFinishedSlot(HeadersData)), Qt::QueuedConnection);
+        m_headerExtractorPtr->process();
+    }
 
-void
-ManagedNNTPConnection::groupAddedSlot(QString str)
-{
-    emit groupAddedSignal(str);
-}
+    void
+    ManagedNNTPConnection::groupAddedSlot(QString str)
+    {
+        emit groupAddedSignal(str);
+    }
 
-void
-ManagedNNTPConnection::groupsLoadFinishedSlot()
-{
-    emit groupsLoadFinishedSignal();
-    QObject::disconnect(m_groupLoaderPtr.data(), SIGNAL(groupsLoadFinishedSignal()),
-                     this, SLOT(groupsLoadFinishedSlot()));
-}
+    void
+    ManagedNNTPConnection::groupsLoadFinishedSlot()
+    {
+        emit groupsLoadFinishedSignal();
+        QObject::disconnect(m_groupLoaderPtr.data(), SIGNAL(groupsLoadFinishedSignal()),
+                         this, SLOT(groupsLoadFinishedSlot()));
+    }
 
-void
-ManagedNNTPConnection::headersReadFinishedSlot(HeadersData hd)
-{
-    qDebug() << "finished reading headers";
-    emit headersReadFinishedSignal(hd);
-    QObject::disconnect(m_headerExtractorPtr.data(), SIGNAL(headersReadFinishedSignal(HeadersData)),
-                     this, SLOT(headersReadFinishedSlot(HeadersData)));
-    //delete m_headerExtractorPtr;
-}
+    void
+    ManagedNNTPConnection::headersReadFinishedSlot(HeadersData hd)
+    {
+        qDebug() << "finished reading headers";
+        emit headersReadFinishedSignal(hd);
+        QObject::disconnect(m_headerExtractorPtr.data(), SIGNAL(headersReadFinishedSignal(HeadersData)),
+                         this, SLOT(headersReadFinishedSlot(HeadersData)));
+    }
 
-void
-ManagedNNTPConnection::readArticle(QString const &group, int const articleId)
-{
-    qDebug() << m_server << "\t" << m_port << "\t" << m_ssl;
-    qDebug() << "Resetting article reader";
+    void
+    ManagedNNTPConnection::readArticle(QString const &group, int const articleId)
+    {
+        qDebug() << m_server << "\t" << m_port << "\t" << m_ssl;
+        qDebug() << "Resetting article reader";
 
-    emit resetBytesReadSignal();
+        emit resetBytesReadSignal();
 
-    ConnectionInfo connectionInfo(m_server,
-                                  m_port,
-                                  m_ssl,
-                                  m_username,
-                                  m_password);
+        ConnectionInfo connectionInfo(m_server,
+                                      m_port,
+                                      m_ssl,
+                                      m_username,
+                                      m_password);
+        int isBinary = 0;
+        m_articleReaderPtr.reset(new ArticleReader(connectionInfo, group, articleId, isBinary, this));
 
+        // return in a struct the article data together with the binaryData int
+        qDebug() << "Reading...";
+        QObject::connect(m_articleReaderPtr.data(), SIGNAL(articleDataReadSignal(ArticleData&)),
+                         this, SLOT(finishedReadingArticle(ArticleData&)));
+        m_articleReaderPtr->process();
+    }
 
-    //ArticleReaderPtr articleReaderPtr(new ArticleReader(connectorPtr, group, articleId));
-    int isBinary = 0;
-    m_articleReaderPtr.reset(new ArticleReader(connectionInfo, group, articleId, isBinary, this));
+    void
+    ManagedNNTPConnection::finishedReadingArticle(ArticleData &data)
+    {
 
-    //QObject::connect(&m_articleReaderPtr->getConnectorRef(), SIGNAL(bytesReadSignal(int const)),
-    //                 this, SLOT(bytesReadSlot(int const)));
+        emit articleDataReadSignal(data);
+        qDebug() << "finished reading";
+        QObject::disconnect(m_articleReaderPtr.data(), SIGNAL(articleDataReadSignal(ArticleData&)),
+                         this, SLOT(finishedReadingArticle(ArticleData&)));
+    }
 
-    // return in a struct the article data together with the binaryData int
-    qDebug() << "Reading...";
-    QObject::connect(m_articleReaderPtr.data(), SIGNAL(articleDataReadSignal(ArticleData&)),
-                     this, SLOT(finishedReadingArticle(ArticleData&)));
-    m_articleReaderPtr->process();
-}
+    void
+    ManagedNNTPConnection::singleArticleExtractedSlot()
+    {
+        emit singleArticleExtractedSignal();
+    }
 
-void
-ManagedNNTPConnection::finishedReadingArticle(ArticleData &data)
-{
+    void
+    ManagedNNTPConnection::issuedLASTCommandSlot()
+    {
+        emit issuedLASTCommandSignal();
+    }
 
-    emit articleDataReadSignal(data);
-    qDebug() << "finished reading";
-    QObject::disconnect(m_articleReaderPtr.data(), SIGNAL(articleDataReadSignal(ArticleData&)),
-                     this, SLOT(finishedReadingArticle(ArticleData&)));
-}
-
-void
-ManagedNNTPConnection::singleArticleExtractedSlot()
-{
-    emit singleArticleExtractedSignal();
-}
-
-void
-ManagedNNTPConnection::issuedLASTCommandSlot()
-{
-    emit issuedLASTCommandSignal();
-}
-
-void
-ManagedNNTPConnection::finishedIssuingLASTCommandsSlot()
-{
-    emit finishedIssuingLASTCommandsSignal();
-}
+    void
+    ManagedNNTPConnection::finishedIssuingLASTCommandsSlot()
+    {
+        emit finishedIssuingLASTCommandsSignal();
+    }
 
 
-void
-ManagedNNTPConnection::selectAndRead(QString const &groupName, int const articleId)
-{
-    qDebug() << "Reading article...";
-    readArticle(groupName, articleId);
-}
+    void
+    ManagedNNTPConnection::selectAndRead(QString const &groupName, int const articleId)
+    {
+        qDebug() << "Reading article...";
+        readArticle(groupName, articleId);
+    }
 
-void
-ManagedNNTPConnection::selectAndReadCollection(QString const &groupName, std::vector<int> codes)
-{
+    void
+    ManagedNNTPConnection::selectAndReadCollection(QString const &groupName, std::vector<int> codes)
+    {
 
-    emit resetBytesReadSignal();
+        emit resetBytesReadSignal();
 
-    qDebug() << "yes collection";
+        qDebug() << "yes collection";
 
+        ConnectionInfo connectionInfo(m_server,
+                                      m_port,
+                                      m_ssl,
+                                      m_username,
+                                      m_password);
 
-    ConnectionInfo connectionInfo(m_server,
-                                  m_port,
-                                  m_ssl,
-                                  m_username,
-                                  m_password);
+        m_compositeCheckerPtr = new CompositeArticleLoaderChecker(codes, connectionInfo, groupName, this);
+        QObject::connect(m_compositeCheckerPtr, SIGNAL(compositeFinishedSignal()),
+                         this, SLOT(compositeReadSlot()));
 
-    m_compositeCheckerPtr = new CompositeArticleLoaderChecker(codes, connectionInfo, groupName, this);
-    QObject::connect(m_compositeCheckerPtr, SIGNAL(compositeFinishedSignal()),
-                     this, SLOT(compositeReadSlot()));
+        m_compositeCheckerPtr->doLoad();
+    }
 
-    m_compositeCheckerPtr->doLoad();
-}
+    void
+    ManagedNNTPConnection::compositeReadSlot()
+    {
+        qDebug() << "in compositeReadSlot";
+        QObject::disconnect(m_compositeCheckerPtr, SIGNAL(compositeFinishedSignal()),
+                         this, SLOT(compositeReadSlot()));
+        emit compositeDataReadSignal();
+    }
 
-void
-ManagedNNTPConnection::compositeReadSlot()
-{
-    qDebug() << "in compositeReadSlot";
-    QObject::disconnect(m_compositeCheckerPtr, SIGNAL(compositeFinishedSignal()),
-                     this, SLOT(compositeReadSlot()));
-    emit compositeDataReadSignal();
-}
+    QString
+    ManagedNNTPConnection::getCompositeData()
+    {
+        return m_compositeData;
+    }
 
-QString
-ManagedNNTPConnection::getCompositeData()
-{
-    return m_compositeData;
-}
+    void
+    ManagedNNTPConnection::setServerAndPort(QString const &server, int const port, bool const ssl)
+    {
+        m_server = server;
+        m_port = port;
+        m_ssl = ssl;
+    }
 
-void
-ManagedNNTPConnection::setServerAndPort(QString const &server, int const port, bool const ssl)
-{
-    m_server = server;
-    m_port = port;
-    m_ssl = ssl;
-}
+    void
+    ManagedNNTPConnection::doPost()
+    {
+        //connection.doPost(m_postData, m_postGroup, m_postFrom, m_postSubject);
+    }
 
-void
-ManagedNNTPConnection::doPost()
-{
-    //connection.doPost(m_postData, m_postGroup, m_postFrom, m_postSubject);
-}
+    void
+    ManagedNNTPConnection::finishedPostingSlot(int const status)
+    {
+        emit finishedPostingSignal(status);
+    }
 
-void
-ManagedNNTPConnection::finishedPostingSlot(int const status)
-{
-    emit finishedPostingSignal(status);
-}
+    void
+    ManagedNNTPConnection::setPostStuff(QString const &postData,
+                                        QString const &postGroup,
+                                        QString const &postFrom,
+                                        QString const &postSubject)
+    {
+        m_postData = postData;
+        m_postGroup = postGroup;
+        m_postFrom = postFrom;
+        m_postSubject = postSubject;
+    }
 
-void
-ManagedNNTPConnection::setPostStuff(QString const &postData,
-                                    QString const &postGroup,
-                                    QString const &postFrom,
-                                    QString const &postSubject)
-{
-    m_postData = postData;
-    m_postGroup = postGroup;
-    m_postFrom = postFrom;
-    m_postSubject = postSubject;
-}
+    void
+    ManagedNNTPConnection::statusMessageSlot(QString message)
+    {
+        emit statusSignal(message);
+    }
 
-void
-ManagedNNTPConnection::statusMessageSlot(QString message)
-{
-    emit statusSignal(message);
-}
+    void
+    ManagedNNTPConnection::headCommandsIssuedSlot()
+    {
+        emit headCommandsIssuedSignal();
+    }
 
-void
-ManagedNNTPConnection::headCommandsIssuedSlot()
-{
-    emit headCommandsIssuedSignal();
-}
+    void
+    ManagedNNTPConnection::bytesReadSlot(int const bytesRead)
+    {
+        emit bytesReadSignal(bytesRead);
+    }
 
-void
-ManagedNNTPConnection::bytesReadSlot(int const bytesRead)
-{
-    emit bytesReadSignal(bytesRead);
-}
+    void
+    ManagedNNTPConnection::readBeginSlot(int const count)
+    {
+        emit readBeginSignal(count);
+    }
 
-void
-ManagedNNTPConnection::readBeginSlot(int const count)
-{
-    emit readBeginSignal(count);
-}
+    void
+    ManagedNNTPConnection::readBitOfDataSlot()
+    {
+        emit readBitOfDataSignal();
+    }
 
-void
-ManagedNNTPConnection::readBitOfDataSlot()
-{
-    emit readBitOfDataSignal();
-}
+    void
+    ManagedNNTPConnection::moveBackToMainThread()
+    {
+        this->moveToThread(QApplication::instance()->thread());
+    }
 
-void
-ManagedNNTPConnection::moveBackToMainThread()
-{
-    this->moveToThread(QApplication::instance()->thread());
 }

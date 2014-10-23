@@ -27,9 +27,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "GroupWidget.h"
 #include "ui_GroupWidget.h"
 
-GroupWidget::GroupWidget(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::GroupWidget)
+GroupWidget::GroupWidget(QWidget *parent)
+  : QWidget(parent)
+  , ui(new Ui::GroupWidget)
 {
     ui->setupUi(this);
 }

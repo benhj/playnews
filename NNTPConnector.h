@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef NNTPCONNECTOR_H
-#define NNTPCONNECTOR_H
+#pragma once
 
 #include <QObject>
 #include <QDebug>
@@ -38,230 +37,232 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QSharedPointer>
 #include <QScopedPointer>
 
-/**
- * Convenience vector typedefs
- */
-typedef std::vector<int> ArticleCodes;
+namespace core {
 
-typedef std::queue<std::string> CommandQueue;
+    /**
+     * Convenience vector typedefs
+     */
+    typedef std::vector<int> ArticleCodes;
 
-class NNTPConnector;
+    typedef std::queue<std::string> CommandQueue;
 
-typedef QSharedPointer<NNTPConnector> NNTPConnectorPtr;
+    class NNTPConnector;
 
-typedef std::deque<NNTPConnectorPtr> NNTPConnectorPtrs;
+    typedef QSharedPointer<NNTPConnector> NNTPConnectorPtr;
 
-class NNTPConnector : public QObject
-{
-    Q_OBJECT
-public:
-    explicit NNTPConnector(QObject *parent = 0);
-    ~NNTPConnector()
+    typedef std::deque<NNTPConnectorPtr> NNTPConnectorPtrs;
+
+    class NNTPConnector : public QObject
     {
-        nntpClose();
-    }
+        Q_OBJECT
+    public:
+        explicit NNTPConnector(QObject *parent = 0);
+        ~NNTPConnector()
+        {
+            nntpClose();
+        }
 
-    void setConnectionData(QString const &str,
-                           int const port,
-                           bool const ssl,
-                           QString const &username,
-                           QString const &password);
+        void setConnectionData(QString const &str,
+                               int const port,
+                               bool const ssl,
+                               QString const &username,
+                               QString const &password);
 
-    /**
-     * @brief nntpConnect
-     * @param str server on which to connect
-     * @param port port on which to connect
-     * @return status of connection attempt (e.g. 200 or 201)
-     */
-    int nntpConnect(QString const &str,
-                    int const port,
-                    bool const ssl);
+        /**
+         * @brief nntpConnect
+         * @param str server on which to connect
+         * @param port port on which to connect
+         * @return status of connection attempt (e.g. 200 or 201)
+         */
+        int nntpConnect(QString const &str,
+                        int const port,
+                        bool const ssl);
 
-    /**
-     * @brief supplyCredentials
-     * @param username
-     * @param password
-     * @return status code of authorization attempt
-     */
-    int supplyCredentials(char const *username,
-                          char const *password);
+        /**
+         * @brief supplyCredentials
+         * @param username
+         * @param password
+         * @return status code of authorization attempt
+         */
+        int supplyCredentials(char const *username,
+                              char const *password);
 
-    /**
-     * @brief nntpClose closes the connection to the nntp server
-     */
-    void nntpClose();
+        /**
+         * @brief nntpClose closes the connection to the nntp server
+         */
+        void nntpClose();
 
-    /**
-     * @brief setGroup sets group using GROUP command
-     * @param group the name of the group
-     * @return status of trying to set group
-     */
-    int setGroup(QString const &group);
+        /**
+         * @brief setGroup sets group using GROUP command
+         * @param group the name of the group
+         * @return status of trying to set group
+         */
+        int setGroup(QString const &group);
 
-    /**
-     * @brief doPost allows posting of text article
-     * @param postData article body
-     * @param postGroup group to post to
-     * @param postFrom author
-     * @param postSubject subject
-     */
-    void doPost(QString const &postData,
-                QString const &postGroup,
-                QString const &postFrom,
-                QString const &postSubject);
+        /**
+         * @brief doPost allows posting of text article
+         * @param postData article body
+         * @param postGroup group to post to
+         * @param postFrom author
+         * @param postSubject subject
+         */
+        void doPost(QString const &postData,
+                    QString const &postGroup,
+                    QString const &postFrom,
+                    QString const &postSubject);
 
-    /**
-     * @brief resetBytesRecorder reset m_bytesAll which records the
-     * number of bytes read from the server since last reset
-     */
-    void resetBytesRecorder();
+        /**
+         * @brief resetBytesRecorder reset m_bytesAll which records the
+         * number of bytes read from the server since last reset
+         */
+        void resetBytesRecorder();
 
-signals:
-    /**
-     * @brief groupAddedSignal signals when a new group has been added
-     */
-    void groupAddedSignal(QString);
+        void getResponseStream(std::ostream &out, int const count, std::string const &escapeSequence);
 
-    /**
-     * @brief singleArticleExtractedSignal signals when one header has been read
-     */
-    void singleArticleExtractedSignal();
+    signals:
+        /**
+         * @brief groupAddedSignal signals when a new group has been added
+         */
+        void groupAddedSignal(QString);
 
-    /**
-     * @brief issuedLASTCommandSignal indicates when a LAST command has been issues
-     */
-    void issuedLASTCommandSignal();
+        /**
+         * @brief singleArticleExtractedSignal signals when one header has been read
+         */
+        void singleArticleExtractedSignal();
 
-    /**
-     * @brief finishedIssuingLASTCommandsSignal indicates when all LAST commands
-     * have been issued
-     */
-    void finishedIssuingLASTCommandsSignal();
+        /**
+         * @brief issuedLASTCommandSignal indicates when a LAST command has been issues
+         */
+        void issuedLASTCommandSignal();
 
-    /**
-     * @brief finishedPostingSignal indicates when article has been posted
-     * @param status status of posting
-     */
-    void finishedPostingSignal(int status);
+        /**
+         * @brief finishedIssuingLASTCommandsSignal indicates when all LAST commands
+         * have been issued
+         */
+        void finishedIssuingLASTCommandsSignal();
 
-    /**
-     * @brief statusSignal a signal reporting the status string returned by the server
-     * @param statusString the status string
-     */
-    void statusSignal(QString statusString);
+        /**
+         * @brief finishedPostingSignal indicates when article has been posted
+         * @param status status of posting
+         */
+        void finishedPostingSignal(int status);
 
-    /**
-     * @brief headCommandsIssuedSignal indicates when all head commands have been issued
-     */
-    void headCommandsIssuedSignal();
+        /**
+         * @brief statusSignal a signal reporting the status string returned by the server
+         * @param statusString the status string
+         */
+        void statusSignal(QString statusString);
 
-    /**
-     * @brief bytesReadSignal indicates bytes read
-     * @param bytesRead
-     */
-    void bytesReadSignal(int bytesRead);
+        /**
+         * @brief headCommandsIssuedSignal indicates when all head commands have been issued
+         */
+        void headCommandsIssuedSignal();
 
-    /**
-     * @brief readBeginSignal indicates that a server read is about to begin
-     * @param count the number of escape sequences to account for in read operation
-     */
-    void readBeginSignal(int count);
+        /**
+         * @brief bytesReadSignal indicates bytes read
+         * @param bytesRead
+         */
+        void bytesReadSignal(int bytesRead);
 
-    /**
-     * @brief readOneBitOfDataSignal when a single item of data has been read
-     * determined to be the presence of one escape sequence
-     */
-    void readOneBitOfDataSignal();
+        /**
+         * @brief readBeginSignal indicates that a server read is about to begin
+         * @param count the number of escape sequences to account for in read operation
+         */
+        void readBeginSignal(int count);
 
-private:
+        /**
+         * @brief readOneBitOfDataSignal when a single item of data has been read
+         * determined to be the presence of one escape sequence
+         */
+        void readOneBitOfDataSignal();
 
-    friend class HeaderExtractor;
-    friend class GroupLoader;
-    friend class ArticleReader;
+    private:
 
-    QSslSocket nntp;
-    bool connected;
-    bool authorized;
-    std::string m_lastArticleId;
-    long m_bytesAll;
+        friend class HeaderExtractor;
+        friend class GroupLoader;
+        friend class ArticleReader;
 
-    QString m_server;
-    int m_port;
-    bool m_ssl;
-    std::string m_username;
-    std::string m_password;
+        QSslSocket nntp;
+        bool connected;
+        bool authorized;
+        std::string m_lastArticleId;
+        long m_bytesAll;
 
-    // For storing commands to be issued sequentially to the server
-    CommandQueue m_commandQueue;
+        QString m_server;
+        int m_port;
+        bool m_ssl;
+        std::string m_username;
+        std::string m_password;
 
-    QMutex m_sockMutex;
+        // For storing commands to be issued sequentially to the server
+        CommandQueue m_commandQueue;
 
-    /**
-     * @brief issueNextCommand issues the NEXT command to get article id of
-     * next message in group
-     */
-    void issueLASTCommand();
+        QMutex m_sockMutex;
 
-    /**
-     * @brief issueStatCommand issues STAT command to get article id of current message
-     */
-    void issueStatCommand();
+        /**
+         * @brief issueNextCommand issues the NEXT command to get article id of
+         * next message in group
+         */
+        void issueLASTCommand();
 
-    /**
-     * @brief getStatReturn get the article id returned by server after stat
-     * @return stat article code
-     */
-    int getStatReturn();
+        /**
+         * @brief issueStatCommand issues STAT command to get article id of current message
+         */
+        void issueStatCommand();
 
-    /**
-     * @brief issueXOverCommand A more effective way of grabbing the header data is to issue
-     * an xover command which allows one to specify a range of headers rather than having
-     * to iteratively issue N head commands sequentially
-     * @param lower article id lower
-     * @param upper article id upper
-     */
-    void issueXOverCommand(int const lower, int const upper);
+        /**
+         * @brief getStatReturn get the article id returned by server after stat
+         * @return stat article code
+         */
+        int getStatReturn();
 
-    /**
-     * @brief issueHeadCommand
-     * @param aritlceId
-     */
-    void issueHeadCommand(int const aritlceId);
+        /**
+         * @brief issueXOverCommand A more effective way of grabbing the header data is to issue
+         * an xover command which allows one to specify a range of headers rather than having
+         * to iteratively issue N head commands sequentially
+         * @param lower article id lower
+         * @param upper article id upper
+         */
+        void issueXOverCommand(int const lower, int const upper);
 
-     /**
-      * @brief issueCommand send a string of command data to the server
-      * @param data the data to send
-      */
-     void popAndIssueCommand();
+        /**
+         * @brief issueHeadCommand
+         * @param aritlceId
+         */
+        void issueHeadCommand(int const aritlceId);
 
-     void pushCommand(std::string const& command);
+         /**
+          * @brief issueCommand send a string of command data to the server
+          * @param data the data to send
+          */
+         void popAndIssueCommand();
 
-    /**
-     * @brief readFromSocket reads data from the socket while it is available
-     * @return array of data read from socket
-     */
-    void readFromSocket(std::ostream &writeToMe,
-                        int const count = -1, std::string const &escapeSequence = "\r\n.\r\n");
+         void pushCommand(std::string const& command);
 
-    /**
-     * @brief getResponseString get response from server
-     * @param count number of escape sequences to search for before breaking
-     * @param escapeSequence what to escape on
-     * @param doEmit whether to emit statusSignal
-     * @return
-     */
-    std::string getResponseString(int const count, std::string const &escapeSequence,
-                                  bool const doEmit = true);
+        /**
+         * @brief readFromSocket reads data from the socket while it is available
+         * @return array of data read from socket
+         */
+        void readFromSocket(std::ostream &writeToMe,
+                            int const count = -1, std::string const &escapeSequence = "\r\n.\r\n");
 
-    void getResponseStream(std::ostream &out, int const count, std::string const &escapeSequence);
+        /**
+         * @brief getResponseString get response from server
+         * @param count number of escape sequences to search for before breaking
+         * @param escapeSequence what to escape on
+         * @param doEmit whether to emit statusSignal
+         * @return
+         */
+        std::string getResponseString(int const count, std::string const &escapeSequence,
+                                      bool const doEmit = true);
 
-    /**
-     * @brief getStatus parses status integer from status response string
-     * @param response string containing status integer at its beginning
-     * @return status number
-     */
-    int getStatus(std::string const &response);
+        /**
+         * @brief getStatus parses status integer from status response string
+         * @param response string containing status integer at its beginning
+         * @return status number
+         */
+        int getStatus(std::string const &response);
 
-};
+    };
 
-#endif // NNTPCONNECTOR_H
+}

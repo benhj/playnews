@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef HEADEREXTRACTOR_H
-#define HEADEREXTRACTOR_H
+#pragma once
 
 #include "NNTPConnector.h"
 #include "ConnectionInfo.h"
@@ -34,65 +33,68 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QScopedPointer>
 #include <QThread>
 
-typedef std::map<std::string, CompositeMessageParts> CompositeMessageStore;
+namespace core {
 
-class HeaderExtractor;
-typedef QScopedPointer<HeaderExtractor> HeaderExtractorPtr;
+    typedef std::map<std::string, CompositeMessageParts> CompositeMessageStore;
 
-class HeaderExtractor : public QObject
-{
-    Q_OBJECT
-public:
-    /**
-     * @brief HeaderExtractor extracts a bunch of headers from designated group
-     * @param groupName the name of the group from which to extract
-     * @param connection an NNTPConnector that wraps around a QTcpSocket
-     */
-    HeaderExtractor(QString const& groupName, ConnectionInfo const &connectionInfo, int const count,
-                    QObject *callbackObject);
+    class HeaderExtractor;
+    typedef QScopedPointer<HeaderExtractor> HeaderExtractorPtr;
 
-    ~HeaderExtractor();
+    class HeaderExtractor : public QObject
+    {
+        Q_OBJECT
+    public:
+        /**
+         * @brief HeaderExtractor extracts a bunch of headers from designated group
+         * @param groupName the name of the group from which to extract
+         * @param connection an NNTPConnector that wraps around a QTcpSocket
+         */
+        HeaderExtractor(QString const& groupName, ConnectionInfo const &connectionInfo, int const count,
+                        QObject *callbackObject);
+
+        ~HeaderExtractor();
 
 
 
-    void process();
+        void process();
 
-public slots:
+    public slots:
 
-    /**
-     * @brief extractNHeadersUsingXOverCommand extracts count sets of article headers
-     * @param count number of articles for which headers will be extracted
-     */
-    void extractNHeadersUsingXOverCommand();
+        /**
+         * @brief extractNHeadersUsingXOverCommand extracts count sets of article headers
+         * @param count number of articles for which headers will be extracted
+         */
+        void extractNHeadersUsingXOverCommand();
 
-    /**
-     * @brief processXOverData processes the header data returned from the server
-     * after having issued an xover command
-     */
-    void processXOverData(NNTPConnector &connector);
+        /**
+         * @brief processXOverData processes the header data returned from the server
+         * after having issued an xover command
+         */
+        void processXOverData(NNTPConnector &connector);
 
-signals:
-    void headersReadFinishedSignal(HeadersData);
+    signals:
+        void headersReadFinishedSignal(HeadersData);
 
-private:
-    QThread m_worker;
-    QString m_groupName;
-    ConnectionInfo m_connectionInfo;
-    Headers m_headers;
-    int m_count;
-    QObject *m_callbackObject;
+    private:
+        QThread m_worker;
+        QString m_groupName;
+        ConnectionInfo m_connectionInfo;
+        Headers m_headers;
+        int m_count;
+        QObject *m_callbackObject;
 
-    /**
-     * @brief articleIsComposite based on the subject line of the header, determines whether the
-     * article specified by articleId is likely to be part of a composite message (e.g. multi-part
-     * binary). If the subject line contains a string on the end (a/b) e.g. (1/2) then this
-     * function will indicate that 'this' is part 1 of 2 parts
-     * @param subjectLine the subject line to check for (a/b)
-     * @param articleId the id of the article
-     * @return a CompositeMessagePart if the article is determined to be a composite part
-     */
-    OptionalCompositeMessagePart articleIsComposite(std::string &subjectLine, int const articleId,
-                                                    std::string &author, std::string &date);
-};
+        /**
+         * @brief articleIsComposite based on the subject line of the header, determines whether the
+         * article specified by articleId is likely to be part of a composite message (e.g. multi-part
+         * binary). If the subject line contains a string on the end (a/b) e.g. (1/2) then this
+         * function will indicate that 'this' is part 1 of 2 parts
+         * @param subjectLine the subject line to check for (a/b)
+         * @param articleId the id of the article
+         * @return a CompositeMessagePart if the article is determined to be a composite part
+         */
+        OptionalCompositeMessagePart articleIsComposite(std::string &subjectLine, int const articleId,
+                                                        std::string &author, std::string &date);
+    };
 
-#endif // HEADEREXTRACTOR_H
+}
+

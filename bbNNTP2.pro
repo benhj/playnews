@@ -77,8 +77,6 @@ HEADERS += MainWidget.h \
     CompositeArticleLoaderChecker.h \
     ConnectorBuilder.h \
     ConnectionInfo.h
-    #SocketReader.h \
-    #StreamWriter.h
 FORMS   += \
     MainWidget.ui \
     GroupWidget.ui \

@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef STATUSMESSAGEDISPLAYER_H
-#define STATUSMESSAGEDISPLAYER_H
+#pragma once
 
 #include <QWidget>
 #include <QScopedPointer>
@@ -49,5 +48,3 @@ public:
 private:
     Ui::StatusMessageDisplayer *ui;
 };
-
-#endif // STATUSMESSAGEDISPLAYER_H

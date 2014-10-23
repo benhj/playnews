@@ -28,9 +28,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ui_PrefsWidget.h"
 #include <sstream>
 
-PrefsWidget::PrefsWidget(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::PrefsWidget)
+PrefsWidget::PrefsWidget(QWidget *parent)
+  : QWidget(parent)
+  , ui(new Ui::PrefsWidget)
 {
     ui->setupUi(this);
     QObject::connect(ui->cancelbutton, SIGNAL(clicked()), this, SLOT(closeSlot()));

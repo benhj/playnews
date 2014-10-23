@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef PICTUREVIEWER_H
-#define PICTUREVIEWER_H
+#pragma once
 
 #include "QSKineticScroller.h"
 #include <QWidget>
@@ -51,5 +50,3 @@ public:
     QsKineticScroller kineticScroller;
     QString m_path;
 };
-
-#endif // PICTUREVIEWER_H

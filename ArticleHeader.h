@@ -24,9 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef ARTICLEHEADER_H
-#define ARTICLEHEADER_H
-
+#pragma once
 
 #include "CompositeMessagePart.h"
 #include <QString>
@@ -98,5 +96,3 @@ struct Header
 
 
 };
-
-#endif // ARTICLEHEADER_H

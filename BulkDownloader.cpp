@@ -28,110 +28,114 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "BulkDownloader.h"
 #include <QThread>
 
-BulkDownloader::BulkDownloader(ConnectionPtr &connection,
-                               QString const &groupName,
-                               QThread &worker) :
-                                m_connection(connection),
-                                m_groupName(groupName),
-                                m_worker(worker)
-{
-}
+namespace core {
 
-void
-BulkDownloader::addHeader(Header *header)
-{
-    m_headers.push_back(header);
-}
-
-void
-BulkDownloader::bulkDownload()
-{
-
-    m_headerIterator = m_headers.begin();
-    this->downloadAndIterate();
-
-}
-
-void
-BulkDownloader::downloadAndIterate()
-{
-    if(m_headerIterator != m_headers.end()) {
-        if((*m_headerIterator)->isComposite) {
-
-            m_binaryGrabberPtr.reset(new BinaryGrabber(m_connection,
-                                                       m_groupName,
-                                                       *(*m_headerIterator),
-                                                       m_worker,
-                                                       true));
-
-            QObject::connect(m_binaryGrabberPtr.data(), SIGNAL(binaryHasBeenReadSignal(Header, bool)),
-                             this, SLOT(openBinary(Header, bool)));
-
-            QObject::connect(m_binaryGrabberPtr.data(), SIGNAL(resetProgressBarSignal()),
-                             this, SLOT(resetProgressBar()));
-
-            QObject::connect(m_binaryGrabberPtr.data(), SIGNAL(setProgressBarMaximum(int)),
-                             this, SLOT(setProgressBarMaximum(int)));
-
-            QObject::connect(m_binaryGrabberPtr.data(), SIGNAL(partDecodedSignal()),
-                             this, SLOT(partDecodedSlot()));
-
-            m_binaryGrabberPtr->readMultiPartBinary();
-
-        } else {
-            m_binaryGrabberPtr.reset(new BinaryGrabber(m_connection,
-                                                       m_groupName,
-                                                       *(*m_headerIterator),
-                                                       m_worker,
-                                                       false));
-            QObject::connect(m_binaryGrabberPtr.data(), SIGNAL(binaryHasBeenReadSignal(Header, bool)),
-                             this, SLOT(openBinary(Header, bool)));
-            m_binaryGrabberPtr->handleBinaryData();
-        }
-        ++m_headerIterator;
+    BulkDownloader::BulkDownloader(ConnectionPtr &connection,
+                                   QString const &groupName,
+                                   QThread &worker)
+      : m_connection(connection)
+      , m_groupName(groupName)
+      , m_worker(worker)
+    {
     }
-}
 
-void
-BulkDownloader::openBinary(Header header, bool)
-{
-    qDebug() << "in BulkDownloader openBinary..";
-    QObject::disconnect(m_binaryGrabberPtr.data(), SIGNAL(binaryHasBeenReadSignal(Header, bool)),
-                     this, SLOT(openBinary(Header, bool)));
+    void
+    BulkDownloader::addHeader(Header *header)
+    {
+        m_headers.push_back(header);
+    }
 
-    QObject::disconnect(m_binaryGrabberPtr.data(), SIGNAL(resetProgressBarSignal()),
-                     this, SLOT(resetProgressBar()));
+    void
+    BulkDownloader::bulkDownload()
+    {
 
-    QObject::disconnect(m_binaryGrabberPtr.data(), SIGNAL(setProgressBarMaximum(int)),
-                     this, SLOT(setProgressBarMaximum(int)));
+        m_headerIterator = m_headers.begin();
+        this->downloadAndIterate();
 
-    QObject::disconnect(m_binaryGrabberPtr.data(), SIGNAL(partDecodedSignal()),
-                     this, SLOT(partDecodedSlot()));
+    }
+
+    void
+    BulkDownloader::downloadAndIterate()
+    {
+        if(m_headerIterator != m_headers.end()) {
+            if((*m_headerIterator)->isComposite) {
+
+                m_binaryGrabberPtr.reset(new BinaryGrabber(m_connection,
+                                                           m_groupName,
+                                                           *(*m_headerIterator),
+                                                           m_worker,
+                                                           true));
+
+                QObject::connect(m_binaryGrabberPtr.data(), SIGNAL(binaryHasBeenReadSignal(Header, bool)),
+                                 this, SLOT(openBinary(Header, bool)));
+
+                QObject::connect(m_binaryGrabberPtr.data(), SIGNAL(resetProgressBarSignal()),
+                                 this, SLOT(resetProgressBar()));
+
+                QObject::connect(m_binaryGrabberPtr.data(), SIGNAL(setProgressBarMaximum(int)),
+                                 this, SLOT(setProgressBarMaximum(int)));
+
+                QObject::connect(m_binaryGrabberPtr.data(), SIGNAL(partDecodedSignal()),
+                                 this, SLOT(partDecodedSlot()));
+
+                m_binaryGrabberPtr->readMultiPartBinary();
+
+            } else {
+                m_binaryGrabberPtr.reset(new BinaryGrabber(m_connection,
+                                                           m_groupName,
+                                                           *(*m_headerIterator),
+                                                           m_worker,
+                                                           false));
+                QObject::connect(m_binaryGrabberPtr.data(), SIGNAL(binaryHasBeenReadSignal(Header, bool)),
+                                 this, SLOT(openBinary(Header, bool)));
+                m_binaryGrabberPtr->handleBinaryData();
+            }
+            ++m_headerIterator;
+        }
+    }
+
+    void
+    BulkDownloader::openBinary(Header header, bool)
+    {
+        qDebug() << "in BulkDownloader openBinary..";
+        QObject::disconnect(m_binaryGrabberPtr.data(), SIGNAL(binaryHasBeenReadSignal(Header, bool)),
+                         this, SLOT(openBinary(Header, bool)));
+
+        QObject::disconnect(m_binaryGrabberPtr.data(), SIGNAL(resetProgressBarSignal()),
+                         this, SLOT(resetProgressBar()));
+
+        QObject::disconnect(m_binaryGrabberPtr.data(), SIGNAL(setProgressBarMaximum(int)),
+                         this, SLOT(setProgressBarMaximum(int)));
+
+        QObject::disconnect(m_binaryGrabberPtr.data(), SIGNAL(partDecodedSignal()),
+                         this, SLOT(partDecodedSlot()));
 
 
-    qDebug() <<"a";
-    emit openBinarySignal(header, true);
-    qDebug() <<"b";
-    sleep(1);
-    downloadAndIterate();
-    qDebug() <<"c";
+        qDebug() <<"a";
+        emit openBinarySignal(header, true);
+        qDebug() <<"b";
+        sleep(1);
+        downloadAndIterate();
+        qDebug() <<"c";
 
-}
+    }
 
-void
-BulkDownloader::resetProgressBar()
-{
-    emit resetProgressBarSignal();
-}
+    void
+    BulkDownloader::resetProgressBar()
+    {
+        emit resetProgressBarSignal();
+    }
 
-void
-BulkDownloader::setProgressBarMaximum(int maximum)
-{
-    emit setProgressBarMaximumSignal(maximum);
-}
+    void
+    BulkDownloader::setProgressBarMaximum(int maximum)
+    {
+        emit setProgressBarMaximumSignal(maximum);
+    }
 
-void
-BulkDownloader::partDecodedSlot()
-{
-    emit partDecodedSignal();
+    void
+    BulkDownloader::partDecodedSlot()
+    {
+        emit partDecodedSignal();
+    }
+
 }

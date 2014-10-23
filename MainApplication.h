@@ -24,12 +24,11 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef MAINAPPLICATION_H
-#define MAINAPPLICATION_H
+#pragma once
 
 #include "MainWidget.h"
 #include "ManagedNNTPConnection.h"
-#include "PrefsWidget.h"
+#include "LoginDialog.h"
 #include "StatusMessageDisplayer.h"
 
 
@@ -60,7 +59,7 @@ signals:
     void statusMessageSignal(QString);
 
 public slots:
-    void displayPrefsWidget();
+    void displayLoginDialog();
     void groupsLoadFinishedSlot();
     void groupAddedSlot(QString str);
     void groupSelectedEvent(QListWidgetItem* itme);
@@ -68,7 +67,6 @@ public slots:
     void headersReadFinishedSlot(HeadersData hd);
     void singleArticleExtractedSlot();
     void loginFinishedSlot(bool);
-    void prefsUpdatedSlot();
     void issuedLASTCommandSlot();
     void finishedIssuingLASTCommandsSlot();
     void closeTabSlot(int index);
@@ -82,19 +80,22 @@ public slots:
     void readBitOfDataSlot();
     void resetBytesReadSlot();
 
+    void acceptLoginSlot(QString server, QString username, QString password);
+
+
 private:
 
 
-    ConnectionPtr m_connectionPtr;
+    core::ConnectionPtr m_connectionPtr;
     QString m_selectedGroup;
     ConnectionThread *m_connectionThread;
     LoginThread *m_loginThread;
-    PrefsWidgetPtr m_prefsWidgetPtr;
+    LoginDialogPtr m_loginDialogPtr;
     bool m_connected;
     bool m_authorized;
     bool m_prefsRead;
     GroupTabs m_groupTabs;
-    Groups m_groups;
+    core::Groups m_groups;
     QString m_server;
     QString m_username;
     QString m_password;
@@ -114,5 +115,3 @@ private:
     void setGroupTabProgressBarMaximums(int const val);
     void resetGroupTabProgressBars();
 };
-
-#endif // MAINAPPLICATION_H

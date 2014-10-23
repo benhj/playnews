@@ -24,28 +24,29 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef LOGINTHREAD_H
-#define LOGINTHREAD_H
+#pragma once
 
 #include "ManagedNNTPConnection.h"
 #include <QThread>
 
-class LoginThread : public QObject
-{
-    Q_OBJECT
-public:
-    explicit LoginThread(ConnectionPtr &connectionPtr,
-                         QString const &username,
-                         QString const &password);
-    void start();
+namespace core {
 
-public slots:
-    void quitThread(bool);
+    class LoginThread : public QObject
+    {
+        Q_OBJECT
+    public:
+        explicit LoginThread(ConnectionPtr &connectionPtr,
+                             QString const &username,
+                             QString const &password);
+        void start();
 
-private:
-    QThread m_worker;
-    ConnectionPtr &m_connectionPtr;
+    public slots:
+        void quitThread(bool);
 
-};
+    private:
+        ::QThread m_worker;
+        ConnectionPtr &m_connectionPtr;
 
-#endif // LOGINTHREAD_H
+    };
+
+}

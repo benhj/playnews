@@ -28,10 +28,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 CompositeSelectAndReadStructure::CompositeSelectAndReadStructure(QString const &groupName_,
                                                                  std::vector<int> const &compositeCodes_,
-                                                                 QObject *parent) :
-    QObject(parent),
-    m_groupName(groupName_),
-    m_compositeCodes(compositeCodes_)
+                                                                 QObject *parent)
+  : QObject(parent)
+  , m_groupName(groupName_)
+  , m_compositeCodes(compositeCodes_)
 {
 }
 

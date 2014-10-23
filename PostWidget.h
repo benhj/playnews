@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef POSTWIDGET_H
-#define POSTWIDGET_H
+#pragma once
 
 #include "QSKineticScroller.h"
 #include <QWidget>
@@ -49,5 +48,3 @@ public:
     Ui::PostWidget *ui;
     QsKineticScroller kineticScroller;
 };
-
-#endif // POSTWIDGET_H

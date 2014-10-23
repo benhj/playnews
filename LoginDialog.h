@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef LOGINDIALOG_H
-#define LOGINDIALOG_H
+#pragma once
 
 #include <QDialog>
 #include <QLabel>
@@ -112,7 +111,7 @@ signals:
       * \param username the username entered in the dialog
       * \param password the password entered in the dialog
       */
-    void acceptLogin( QString &server, QString& username, QString& password );
+    void acceptLogin( QString server, QString username, QString password );
 
 public slots:
     /*!
@@ -124,5 +123,3 @@ protected:
     void paintEvent(QPaintEvent *e);
 
 };
-
-#endif // LOGINDIALOG_H

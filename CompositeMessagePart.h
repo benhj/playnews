@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef COMPOSITEMESSAGEPART_H
-#define COMPOSITEMESSAGEPART_H
+#pragma once
 
 #include <boost/optional.hpp>
 #include <map>
@@ -47,5 +46,3 @@ struct CompositeMessagePart
     std::string author;
     std::string date;
 };
-
-#endif // COMPOSITEMESSAGEPART_H

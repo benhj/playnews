@@ -24,48 +24,49 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef BULKDOWNLOADER_H
-#define BULKDOWNLOADER_H
+#pragma once
 
 #include "ArticleHeader.h"
 #include "ManagedNNTPConnection.h"
 #include "BinaryGrabber.h"
 #include <QScopedPointer>
 
-class BulkDownloader;
-
-typedef QScopedPointer<BulkDownloader> BulkDownloaderPtr;
-
 class QThread;
 
-class BulkDownloader : public QObject
-{
-    Q_OBJECT
-public:
-    BulkDownloader(ConnectionPtr &connection, QString const &groupName, QThread &worker);
-    void addHeader(Header * header);
-    void bulkDownload();
-    void downloadAndIterate();
+namespace core {
 
-public slots:
-    void openBinary(Header, bool autoSave = true);
-    void resetProgressBar();
-    void setProgressBarMaximum(int);
-    void partDecodedSlot();
+    class BulkDownloader;
 
-signals:
-    void openBinarySignal(Header, bool const);
-    void resetProgressBarSignal();
-    void setProgressBarMaximumSignal(int);
-    void partDecodedSignal();
+    typedef QScopedPointer<BulkDownloader> BulkDownloaderPtr;
 
-private:
-    HeaderPtrs m_headers;
-    ConnectionPtr &m_connection;
-    QString m_groupName;
-    BinaryGrabberPtr m_binaryGrabberPtr;
-    HeaderPtrs::iterator m_headerIterator;
-    QThread &m_worker;
-};
+    class BulkDownloader : public QObject
+    {
+        Q_OBJECT
+    public:
+        BulkDownloader(ConnectionPtr &connection, QString const &groupName, QThread &worker);
+        void addHeader(Header * header);
+        void bulkDownload();
+        void downloadAndIterate();
 
-#endif // BULKDOWNLOADER_H
+    public slots:
+        void openBinary(Header, bool autoSave = true);
+        void resetProgressBar();
+        void setProgressBarMaximum(int);
+        void partDecodedSlot();
+
+    signals:
+        void openBinarySignal(Header, bool const);
+        void resetProgressBarSignal();
+        void setProgressBarMaximumSignal(int);
+        void partDecodedSignal();
+
+    private:
+        HeaderPtrs m_headers;
+        ConnectionPtr &m_connection;
+        QString m_groupName;
+        BinaryGrabberPtr m_binaryGrabberPtr;
+        HeaderPtrs::iterator m_headerIterator;
+        QThread &m_worker;
+    };
+
+}

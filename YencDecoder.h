@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef YENCDECODER_H
-#define YENCDECODER_H
+#pragma once
 
 #include <QObject>
 #include <iostream>
@@ -55,5 +54,3 @@ private:
     int m_crc;
     
 };
-
-#endif // YENCDECODER_H
