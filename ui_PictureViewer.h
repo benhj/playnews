@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'PictureViewer.ui'
 **
-** Created by: Qt User Interface Compiler version 5.3.2
+** Created by: Qt User Interface Compiler version 4.8.6
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,16 +10,16 @@
 #define UI_PICTUREVIEWER_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QFrame>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QTextEdit>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QWidget>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QFrame>
+#include <QtGui/QGridLayout>
+#include <QtGui/QHeaderView>
+#include <QtGui/QPushButton>
+#include <QtGui/QTextEdit>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QWidget>
 
 QT_BEGIN_NAMESPACE
 
@@ -36,21 +36,21 @@ public:
     void setupUi(QWidget *PictureViewer)
     {
         if (PictureViewer->objectName().isEmpty())
-            PictureViewer->setObjectName(QStringLiteral("PictureViewer"));
+            PictureViewer->setObjectName(QString::fromUtf8("PictureViewer"));
         PictureViewer->resize(400, 300);
-        PictureViewer->setStyleSheet(QStringLiteral("background:white"));
+        PictureViewer->setStyleSheet(QString::fromUtf8("background:white"));
         verticalLayout = new QVBoxLayout(PictureViewer);
         verticalLayout->setContentsMargins(0, 0, 0, 0);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         pictureEdit = new QTextEdit(PictureViewer);
-        pictureEdit->setObjectName(QStringLiteral("pictureEdit"));
-        pictureEdit->setStyleSheet(QStringLiteral("border:none"));
+        pictureEdit->setObjectName(QString::fromUtf8("pictureEdit"));
+        pictureEdit->setStyleSheet(QString::fromUtf8("border:none"));
 
         verticalLayout->addWidget(pictureEdit);
 
         buttonFrame = new QFrame(PictureViewer);
-        buttonFrame->setObjectName(QStringLiteral("buttonFrame"));
-        buttonFrame->setStyleSheet(QLatin1String("\n"
+        buttonFrame->setObjectName(QString::fromUtf8("buttonFrame"));
+        buttonFrame->setStyleSheet(QString::fromUtf8("\n"
 "#buttonFrame {\n"
 "background-image: url(:icons/backgrounds/291.jpg);\n"
 "border: none;\n"
@@ -91,20 +91,20 @@ public:
         buttonFrame->setFrameShape(QFrame::StyledPanel);
         buttonFrame->setFrameShadow(QFrame::Raised);
         gridLayout = new QGridLayout(buttonFrame);
-        gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         saveButton = new QPushButton(buttonFrame);
-        saveButton->setObjectName(QStringLiteral("saveButton"));
+        saveButton->setObjectName(QString::fromUtf8("saveButton"));
         QIcon icon;
-        icon.addFile(QStringLiteral(":/icons/icons/save_icon&48.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QString::fromUtf8(":/icons/icons/save_icon&48.png"), QSize(), QIcon::Normal, QIcon::Off);
         saveButton->setIcon(icon);
         saveButton->setIconSize(QSize(32, 32));
 
         gridLayout->addWidget(saveButton, 0, 0, 1, 1);
 
         closeButton = new QPushButton(buttonFrame);
-        closeButton->setObjectName(QStringLiteral("closeButton"));
+        closeButton->setObjectName(QString::fromUtf8("closeButton"));
         QIcon icon1;
-        icon1.addFile(QStringLiteral(":/icons/icons/delete_icon&48.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon1.addFile(QString::fromUtf8(":/icons/icons/delete_icon&48.png"), QSize(), QIcon::Normal, QIcon::Off);
         closeButton->setIcon(icon1);
         closeButton->setIconSize(QSize(32, 32));
 
@@ -121,7 +121,7 @@ public:
 
     void retranslateUi(QWidget *PictureViewer)
     {
-        PictureViewer->setWindowTitle(QApplication::translate("PictureViewer", "Form", 0));
+        PictureViewer->setWindowTitle(QApplication::translate("PictureViewer", "Form", 0, QApplication::UnicodeUTF8));
         saveButton->setText(QString());
         closeButton->setText(QString());
     } // retranslateUi

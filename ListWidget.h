@@ -28,16 +28,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define LIST_WIDGET_H__
 
 #include <QSKineticScroller.h>
-#include <QtWidgets/QListWidget>
-#include <QtWidgets/QFrame>
+#include <QListWidget>
+#include <QFrame>
 #include <QPropertyAnimation>
-#include <QtWidgets/QStyledItemDelegate>
-#include <QtWidgets/QMenu>
+#include <QStyledItemDelegate>
+#include <QMenu>
 #include <QMouseEvent>
-#include <QtWidgets/QTapAndHoldGesture>
-#include <QtWidgets/QGestureEvent>
+#include <QTapAndHoldGesture>
+#include <QGestureEvent>
 #include <QDebug>
-#include <QtWidgets/QScrollBar>
+#include <QScrollBar>
 
 class RemoveSelectionDelegate : public QStyledItemDelegate {
 public:

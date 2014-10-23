@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define POSTWIDGET_H
 
 #include "QSKineticScroller.h"
-#include <QtWidgets/QWidget>
+#include <QWidget>
 
 namespace Ui {
 class PostWidget;

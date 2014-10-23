@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "HeadersWidget.h"
 #include "ui_HeadersWidget.h"
-#include <QtWidgets/QListWidgetItem>
+#include <QListWidgetItem>
 #include <QStandardItem>
 #include <cassert>
 

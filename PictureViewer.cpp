@@ -29,7 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QFileInfo>
 #include <QDir>
 #include <QDebug>
-#include <QtWidgets/QScrollBar>
+#include <QScrollBar>
 
 PictureViewer::PictureViewer(QString const &path, QWidget *parent) :
     m_path(path),

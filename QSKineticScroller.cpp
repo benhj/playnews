@@ -24,12 +24,12 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "QSKineticScroller.h"
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QScrollBar>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QTextEdit>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QAbstractScrollArea>
+#include <QApplication>
+#include <QScrollBar>
+#include <QLineEdit>
+#include <QTextEdit>
+#include <QComboBox>
+#include <QAbstractScrollArea>
 #include <QMouseEvent>
 #include <QEvent>
 #include <QTimer>

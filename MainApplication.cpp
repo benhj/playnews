@@ -39,10 +39,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "SearchDialog.h"
 #include "StatusMessageDisplayer.h"
 #include "ArticleReader.h"
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QWidget>
+#include <QGridLayout>
+#include <QWidget>
 #include <QScopedPointer>
-#include <QtWidgets/QDesktopWidget>
+#include <QDesktopWidget>
 #include <QDir>
 #include <QFile>
 #include <sstream>
@@ -190,7 +190,6 @@ MainApplication::displayPrefsWidget()
              SLOT(prefsUpdatedSlot()));
     m_prefsWidgetPtr->show();
     m_prefsWidgetPtr->resize(1024,600);
-
 }
 
 void

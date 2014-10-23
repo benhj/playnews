@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'MainWidget.ui'
 **
-** Created by: Qt User Interface Compiler version 5.3.2
+** Created by: Qt User Interface Compiler version 4.8.6
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,13 +10,13 @@
 #define UI_MAINWIDGET_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QTabWidget>
-#include <QtWidgets/QWidget>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QGridLayout>
+#include <QtGui/QHeaderView>
+#include <QtGui/QTabWidget>
+#include <QtGui/QWidget>
 #include "GroupWidget.h"
 
 QT_BEGIN_NAMESPACE
@@ -33,7 +33,7 @@ public:
     void setupUi(QWidget *MainWidget)
     {
         if (MainWidget->objectName().isEmpty())
-            MainWidget->setObjectName(QStringLiteral("MainWidget"));
+            MainWidget->setObjectName(QString::fromUtf8("MainWidget"));
         MainWidget->resize(1024, 600);
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
@@ -42,13 +42,13 @@ public:
         MainWidget->setSizePolicy(sizePolicy);
         MainWidget->setMinimumSize(QSize(1024, 600));
         MainWidget->setMaximumSize(QSize(1024, 600));
-        MainWidget->setStyleSheet(QStringLiteral("background:white"));
+        MainWidget->setStyleSheet(QString::fromUtf8("background:white"));
         gridLayout_3 = new QGridLayout(MainWidget);
         gridLayout_3->setContentsMargins(0, 0, 0, 0);
-        gridLayout_3->setObjectName(QStringLiteral("gridLayout_3"));
+        gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
         tabWidget = new QTabWidget(MainWidget);
-        tabWidget->setObjectName(QStringLiteral("tabWidget"));
-        tabWidget->setStyleSheet(QLatin1String(" QTabWidget::pane { /* The tab widget frame */\n"
+        tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
+        tabWidget->setStyleSheet(QString::fromUtf8(" QTabWidget::pane { /* The tab widget frame */\n"
 "     border-top: 2px solid #C2C7CB;\n"
 " }\n"
 "\n"
@@ -116,13 +116,13 @@ public:
         tabWidget->setDocumentMode(false);
         tabWidget->setTabsClosable(true);
         tab = new QWidget();
-        tab->setObjectName(QStringLiteral("tab"));
+        tab->setObjectName(QString::fromUtf8("tab"));
         gridLayout = new QGridLayout(tab);
         gridLayout->setContentsMargins(0, 0, 0, 0);
-        gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         groupWidget = new GroupWidget(tab);
-        groupWidget->setObjectName(QStringLiteral("groupWidget"));
-        groupWidget->setStyleSheet(QStringLiteral("border: none"));
+        groupWidget->setObjectName(QString::fromUtf8("groupWidget"));
+        groupWidget->setStyleSheet(QString::fromUtf8("border: none"));
 
         gridLayout->addWidget(groupWidget, 1, 0, 1, 1);
 
@@ -141,8 +141,8 @@ public:
 
     void retranslateUi(QWidget *MainWidget)
     {
-        MainWidget->setWindowTitle(QApplication::translate("MainWidget", "Form", 0));
-        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainWidget", "Group list", 0));
+        MainWidget->setWindowTitle(QApplication::translate("MainWidget", "Form", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainWidget", "Group list", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef SEARCHDIALOG_H
 #define SEARCHDIALOG_H
 
-#include <QtWidgets/QDialog>
+#include <QDialog>
 
 namespace Ui {
 class SearchDialog;

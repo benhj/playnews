@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'HeadersWidget.ui'
 **
-** Created by: Qt User Interface Compiler version 5.3.2
+** Created by: Qt User Interface Compiler version 4.8.6
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,17 +10,17 @@
 #define UI_HEADERSWIDGET_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QFrame>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QLCDNumber>
-#include <QtWidgets/QProgressBar>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QWidget>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QFrame>
+#include <QtGui/QGridLayout>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLCDNumber>
+#include <QtGui/QProgressBar>
+#include <QtGui/QPushButton>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QWidget>
 #include <TableWidget.h>
 
 QT_BEGIN_NAMESPACE
@@ -43,17 +43,17 @@ public:
     void setupUi(QWidget *HeadersWidget)
     {
         if (HeadersWidget->objectName().isEmpty())
-            HeadersWidget->setObjectName(QStringLiteral("HeadersWidget"));
+            HeadersWidget->setObjectName(QString::fromUtf8("HeadersWidget"));
         HeadersWidget->resize(606, 300);
-        HeadersWidget->setStyleSheet(QStringLiteral("background:white"));
+        HeadersWidget->setStyleSheet(QString::fromUtf8("background:white"));
         verticalLayout = new QVBoxLayout(HeadersWidget);
         verticalLayout->setContentsMargins(0, 0, 0, 0);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         headersTableWidget = new TableWidget(HeadersWidget);
         if (headersTableWidget->columnCount() < 3)
             headersTableWidget->setColumnCount(3);
-        headersTableWidget->setObjectName(QStringLiteral("headersTableWidget"));
-        headersTableWidget->setStyleSheet(QLatin1String("border:none;\n"
+        headersTableWidget->setObjectName(QString::fromUtf8("headersTableWidget"));
+        headersTableWidget->setStyleSheet(QString::fromUtf8("border:none;\n"
 "selection-background-color: rgba(0, 0, 125, 100);"));
         headersTableWidget->setAlternatingRowColors(true);
         headersTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -68,8 +68,8 @@ public:
         verticalLayout->addWidget(headersTableWidget);
 
         buttonFrame = new QFrame(HeadersWidget);
-        buttonFrame->setObjectName(QStringLiteral("buttonFrame"));
-        buttonFrame->setStyleSheet(QLatin1String("\n"
+        buttonFrame->setObjectName(QString::fromUtf8("buttonFrame"));
+        buttonFrame->setStyleSheet(QString::fromUtf8("\n"
 "#buttonFrame {\n"
 "background-image: url(:icons/backgrounds/291.jpg);\n"
 "border: none;\n"
@@ -111,9 +111,9 @@ public:
         buttonFrame->setFrameShadow(QFrame::Raised);
         gridLayout_2 = new QGridLayout(buttonFrame);
         gridLayout_2->setContentsMargins(0, 0, 0, 0);
-        gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
+        gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
         progressBar = new QProgressBar(buttonFrame);
-        progressBar->setObjectName(QStringLiteral("progressBar"));
+        progressBar->setObjectName(QString::fromUtf8("progressBar"));
         progressBar->setEnabled(true);
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
@@ -129,52 +129,52 @@ public:
         gridLayout_2->addWidget(progressBar, 1, 7, 1, 1);
 
         readButton = new QPushButton(buttonFrame);
-        readButton->setObjectName(QStringLiteral("readButton"));
+        readButton->setObjectName(QString::fromUtf8("readButton"));
         QIcon icon;
-        icon.addFile(QStringLiteral(":/icons/icons/1367895229_folder_open.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QString::fromUtf8(":/icons/icons/1367895229_folder_open.png"), QSize(), QIcon::Normal, QIcon::Off);
         readButton->setIcon(icon);
         readButton->setIconSize(QSize(32, 32));
 
         gridLayout_2->addWidget(readButton, 1, 1, 1, 1);
 
         bytesDisplay = new QLCDNumber(buttonFrame);
-        bytesDisplay->setObjectName(QStringLiteral("bytesDisplay"));
-        bytesDisplay->setDigitCount(10);
+        bytesDisplay->setObjectName(QString::fromUtf8("bytesDisplay"));
+        bytesDisplay->setNumDigits(10);
         bytesDisplay->setSegmentStyle(QLCDNumber::Flat);
 
         gridLayout_2->addWidget(bytesDisplay, 1, 6, 1, 1);
 
         postButton = new QPushButton(buttonFrame);
-        postButton->setObjectName(QStringLiteral("postButton"));
+        postButton->setObjectName(QString::fromUtf8("postButton"));
         QIcon icon1;
-        icon1.addFile(QStringLiteral(":/icons/icons/1367895375_doc_empty.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon1.addFile(QString::fromUtf8(":/icons/icons/1367895375_doc_empty.png"), QSize(), QIcon::Normal, QIcon::Off);
         postButton->setIcon(icon1);
         postButton->setIconSize(QSize(32, 32));
 
         gridLayout_2->addWidget(postButton, 1, 3, 1, 1);
 
         searchButton = new QPushButton(buttonFrame);
-        searchButton->setObjectName(QStringLiteral("searchButton"));
+        searchButton->setObjectName(QString::fromUtf8("searchButton"));
         QIcon icon2;
-        icon2.addFile(QStringLiteral(":/icons/icons/1367893725_zoom.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon2.addFile(QString::fromUtf8(":/icons/icons/1367893725_zoom.png"), QSize(), QIcon::Normal, QIcon::Off);
         searchButton->setIcon(icon2);
         searchButton->setIconSize(QSize(32, 32));
 
         gridLayout_2->addWidget(searchButton, 1, 4, 1, 1);
 
         showAllButton = new QPushButton(buttonFrame);
-        showAllButton->setObjectName(QStringLiteral("showAllButton"));
+        showAllButton->setObjectName(QString::fromUtf8("showAllButton"));
         QIcon icon3;
-        icon3.addFile(QStringLiteral(":/icons/icons/1367893874_playback_reload.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon3.addFile(QString::fromUtf8(":/icons/icons/1367893874_playback_reload.png"), QSize(), QIcon::Normal, QIcon::Off);
         showAllButton->setIcon(icon3);
         showAllButton->setIconSize(QSize(32, 32));
 
         gridLayout_2->addWidget(showAllButton, 1, 5, 1, 1);
 
         bulkDLButton = new QPushButton(buttonFrame);
-        bulkDLButton->setObjectName(QStringLiteral("bulkDLButton"));
+        bulkDLButton->setObjectName(QString::fromUtf8("bulkDLButton"));
         QIcon icon4;
-        icon4.addFile(QStringLiteral(":/icons/icons/layers_1_icon&48.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon4.addFile(QString::fromUtf8(":/icons/icons/layers_1_icon&48.png"), QSize(), QIcon::Normal, QIcon::Off);
         bulkDLButton->setIcon(icon4);
         bulkDLButton->setIconSize(QSize(32, 32));
 
@@ -191,7 +191,7 @@ public:
 
     void retranslateUi(QWidget *HeadersWidget)
     {
-        HeadersWidget->setWindowTitle(QApplication::translate("HeadersWidget", "Form", 0));
+        HeadersWidget->setWindowTitle(QApplication::translate("HeadersWidget", "Form", 0, QApplication::UnicodeUTF8));
         readButton->setText(QString());
         postButton->setText(QString());
         searchButton->setText(QString());

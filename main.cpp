@@ -29,9 +29,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <QtWidgets/QApplication>
+#include <QApplication>
 #include <QDir>
-#include <QtWidgets/QSplashScreen>
+#include <QSplashScreen>
 
 /**
  * @brief doConfigFileDirCheck checks if configuration file path

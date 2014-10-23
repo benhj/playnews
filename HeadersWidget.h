@@ -29,7 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "ArticleHeader.h"
 #include "QSKineticScroller.h"
-#include <QtWidgets/QWidget>
+#include <QWidget>
 
 
 namespace Ui {

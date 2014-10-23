@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef MESSAGEREADER_H
 #define MESSAGEREADER_H
 
-#include <QtWidgets/QWidget>
+#include <QWidget>
 #include "QSKineticScroller.h"
 
 namespace Ui {

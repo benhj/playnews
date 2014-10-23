@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef MAINWIDGET_H
 #define MAINWIDGET_H
 
-#include <QtWidgets/QWidget>
+#include <QWidget>
 
 namespace Ui {
     class MainWidget;

@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef STATUSMESSAGEDISPLAYER_H
 #define STATUSMESSAGEDISPLAYER_H
 
-#include <QtWidgets/QWidget>
+#include <QWidget>
 #include <QScopedPointer>
 
 namespace Ui {

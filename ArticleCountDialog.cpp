@@ -36,8 +36,8 @@ ArticleCountDialog::ArticleCountDialog(QWidget *parent) :
 
     setAttribute( Qt::WA_TranslucentBackground, true );
 
-    int playbookWidthDiv2 = 1024 / 2;
-    int playbookHeightDiv2 = 300;
+    int playbookWidthDiv2 = parent->width() / 2;
+    int playbookHeightDiv2 = parent->height() / 2;
     QSize windowSize;
     windowSize = this->size();
     int width = windowSize.width();

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'SearchDialog.ui'
 **
-** Created by: Qt User Interface Compiler version 5.3.2
+** Created by: Qt User Interface Compiler version 4.8.6
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,16 +10,16 @@
 #define UI_SEARCHDIALOG_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QDialogButtonBox>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QWidget>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QDialog>
+#include <QtGui/QDialogButtonBox>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
+#include <QtGui/QWidget>
 
 QT_BEGIN_NAMESPACE
 
@@ -35,9 +35,9 @@ public:
     void setupUi(QDialog *SearchDialog)
     {
         if (SearchDialog->objectName().isEmpty())
-            SearchDialog->setObjectName(QStringLiteral("SearchDialog"));
+            SearchDialog->setObjectName(QString::fromUtf8("SearchDialog"));
         SearchDialog->resize(396, 75);
-        SearchDialog->setStyleSheet(QLatin1String("\n"
+        SearchDialog->setStyleSheet(QString::fromUtf8("\n"
 "#SearchDialog {\n"
 "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,\n"
@@ -65,23 +65,23 @@ public:
 "}\n"
 ""));
         buttonBox = new QDialogButtonBox(SearchDialog);
-        buttonBox->setObjectName(QStringLiteral("buttonBox"));
+        buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
         buttonBox->setGeometry(QRect(50, 40, 341, 32));
         buttonBox->setOrientation(Qt::Horizontal);
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
         horizontalLayoutWidget = new QWidget(SearchDialog);
-        horizontalLayoutWidget->setObjectName(QStringLiteral("horizontalLayoutWidget"));
+        horizontalLayoutWidget->setObjectName(QString::fromUtf8("horizontalLayoutWidget"));
         horizontalLayoutWidget->setGeometry(QRect(60, 10, 324, 24));
         horizontalLayout = new QHBoxLayout(horizontalLayoutWidget);
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         horizontalLayout->setContentsMargins(0, 0, 0, 0);
         label = new QLabel(horizontalLayoutWidget);
-        label->setObjectName(QStringLiteral("label"));
+        label->setObjectName(QString::fromUtf8("label"));
 
         horizontalLayout->addWidget(label);
 
         searchEdit = new QLineEdit(horizontalLayoutWidget);
-        searchEdit->setObjectName(QStringLiteral("searchEdit"));
+        searchEdit->setObjectName(QString::fromUtf8("searchEdit"));
 
         horizontalLayout->addWidget(searchEdit);
 
@@ -95,8 +95,8 @@ public:
 
     void retranslateUi(QDialog *SearchDialog)
     {
-        SearchDialog->setWindowTitle(QApplication::translate("SearchDialog", "Dialog", 0));
-        label->setText(QApplication::translate("SearchDialog", "Search term:", 0));
+        SearchDialog->setWindowTitle(QApplication::translate("SearchDialog", "Dialog", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("SearchDialog", "Search term:", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

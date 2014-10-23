@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'StatusMessageDisplayer.ui'
 **
-** Created by: Qt User Interface Compiler version 5.3.2
+** Created by: Qt User Interface Compiler version 4.8.6
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,13 +10,13 @@
 #define UI_STATUSMESSAGEDISPLAYER_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QWidget>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QWidget>
 
 QT_BEGIN_NAMESPACE
 
@@ -29,17 +29,17 @@ public:
     void setupUi(QWidget *StatusMessageDisplayer)
     {
         if (StatusMessageDisplayer->objectName().isEmpty())
-            StatusMessageDisplayer->setObjectName(QStringLiteral("StatusMessageDisplayer"));
+            StatusMessageDisplayer->setObjectName(QString::fromUtf8("StatusMessageDisplayer"));
         StatusMessageDisplayer->resize(1024, 102);
         StatusMessageDisplayer->setMinimumSize(QSize(1024, 102));
         StatusMessageDisplayer->setMaximumSize(QSize(1024, 102));
-        StatusMessageDisplayer->setStyleSheet(QStringLiteral(""));
+        StatusMessageDisplayer->setStyleSheet(QString::fromUtf8(""));
         horizontalLayout = new QHBoxLayout(StatusMessageDisplayer);
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         horizontalLayout->setContentsMargins(80, -1, 80, -1);
         label = new QLabel(StatusMessageDisplayer);
-        label->setObjectName(QStringLiteral("label"));
-        label->setStyleSheet(QLatin1String("color: #333;\n"
+        label->setObjectName(QString::fromUtf8("label"));
+        label->setStyleSheet(QString::fromUtf8("color: #333;\n"
 "border: hidden;\n"
 "border-radius: 11px;\n"
 "padding: 5px;\n"
@@ -58,8 +58,8 @@ public:
 
     void retranslateUi(QWidget *StatusMessageDisplayer)
     {
-        StatusMessageDisplayer->setWindowTitle(QApplication::translate("StatusMessageDisplayer", "Form", 0));
-        label->setText(QApplication::translate("StatusMessageDisplayer", "Server status:", 0));
+        StatusMessageDisplayer->setWindowTitle(QApplication::translate("StatusMessageDisplayer", "Form", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("StatusMessageDisplayer", "Server status:", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

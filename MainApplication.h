@@ -35,7 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <QObject>
 #include <QThread>
-#include <QtWidgets/QListWidgetItem>
+#include <QListWidgetItem>
 #include <QTimer>
 #include <QScopedPointer>
 #include <deque>

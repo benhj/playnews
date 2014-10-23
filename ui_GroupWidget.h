@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'GroupWidget.ui'
 **
-** Created by: Qt User Interface Compiler version 5.3.2
+** Created by: Qt User Interface Compiler version 4.8.6
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,17 +10,17 @@
 #define UI_GROUPWIDGET_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QFrame>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QLCDNumber>
-#include <QtWidgets/QProgressBar>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QWidget>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QFrame>
+#include <QtGui/QGridLayout>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLCDNumber>
+#include <QtGui/QProgressBar>
+#include <QtGui/QPushButton>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QWidget>
 #include "ListWidget.h"
 
 QT_BEGIN_NAMESPACE
@@ -42,21 +42,21 @@ public:
     void setupUi(QWidget *GroupWidget)
     {
         if (GroupWidget->objectName().isEmpty())
-            GroupWidget->setObjectName(QStringLiteral("GroupWidget"));
+            GroupWidget->setObjectName(QString::fromUtf8("GroupWidget"));
         GroupWidget->resize(606, 300);
-        GroupWidget->setStyleSheet(QStringLiteral("background:white"));
+        GroupWidget->setStyleSheet(QString::fromUtf8("background:white"));
         verticalLayout = new QVBoxLayout(GroupWidget);
         verticalLayout->setContentsMargins(0, 0, 0, 0);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         groupsView = new ListWidget(GroupWidget);
-        groupsView->setObjectName(QStringLiteral("groupsView"));
-        groupsView->setStyleSheet(QStringLiteral("border: 0px solid white"));
+        groupsView->setObjectName(QString::fromUtf8("groupsView"));
+        groupsView->setStyleSheet(QString::fromUtf8("border: 0px solid white"));
 
         verticalLayout->addWidget(groupsView);
 
         buttonFrame = new QFrame(GroupWidget);
-        buttonFrame->setObjectName(QStringLiteral("buttonFrame"));
-        buttonFrame->setStyleSheet(QLatin1String("\n"
+        buttonFrame->setObjectName(QString::fromUtf8("buttonFrame"));
+        buttonFrame->setStyleSheet(QString::fromUtf8("\n"
 "#buttonFrame {\n"
 "background-image: url(:icons/backgrounds/291.jpg);\n"
 "border: none;\n"
@@ -101,9 +101,9 @@ public:
         buttonFrame->setFrameShadow(QFrame::Raised);
         gridLayout_2 = new QGridLayout(buttonFrame);
         gridLayout_2->setContentsMargins(0, 0, 0, 0);
-        gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
+        gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
         progressBar = new QProgressBar(buttonFrame);
-        progressBar->setObjectName(QStringLiteral("progressBar"));
+        progressBar->setObjectName(QString::fromUtf8("progressBar"));
         progressBar->setEnabled(true);
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
@@ -119,45 +119,45 @@ public:
         gridLayout_2->addWidget(progressBar, 0, 5, 1, 1);
 
         groupLoadButton = new QPushButton(buttonFrame);
-        groupLoadButton->setObjectName(QStringLiteral("groupLoadButton"));
+        groupLoadButton->setObjectName(QString::fromUtf8("groupLoadButton"));
         QIcon icon;
-        icon.addFile(QStringLiteral(":/icons/icons/1367893718_arrow_bottom.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QString::fromUtf8(":/icons/icons/1367893718_arrow_bottom.png"), QSize(), QIcon::Normal, QIcon::Off);
         groupLoadButton->setIcon(icon);
         groupLoadButton->setIconSize(QSize(32, 32));
 
         gridLayout_2->addWidget(groupLoadButton, 0, 1, 1, 1);
 
         connectButton = new QPushButton(buttonFrame);
-        connectButton->setObjectName(QStringLiteral("connectButton"));
-        connectButton->setStyleSheet(QStringLiteral(""));
+        connectButton->setObjectName(QString::fromUtf8("connectButton"));
+        connectButton->setStyleSheet(QString::fromUtf8(""));
         QIcon icon1;
-        icon1.addFile(QStringLiteral(":/icons/icons/1367893332_globe_3.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon1.addFile(QString::fromUtf8(":/icons/icons/1367893332_globe_3.png"), QSize(), QIcon::Normal, QIcon::Off);
         connectButton->setIcon(icon1);
         connectButton->setIconSize(QSize(48, 32));
 
         gridLayout_2->addWidget(connectButton, 0, 0, 1, 1);
 
         showAllButton = new QPushButton(buttonFrame);
-        showAllButton->setObjectName(QStringLiteral("showAllButton"));
+        showAllButton->setObjectName(QString::fromUtf8("showAllButton"));
         QIcon icon2;
-        icon2.addFile(QStringLiteral(":/icons/icons/1367893874_playback_reload.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon2.addFile(QString::fromUtf8(":/icons/icons/1367893874_playback_reload.png"), QSize(), QIcon::Normal, QIcon::Off);
         showAllButton->setIcon(icon2);
         showAllButton->setIconSize(QSize(32, 32));
 
         gridLayout_2->addWidget(showAllButton, 0, 3, 1, 1);
 
         searchButton = new QPushButton(buttonFrame);
-        searchButton->setObjectName(QStringLiteral("searchButton"));
+        searchButton->setObjectName(QString::fromUtf8("searchButton"));
         QIcon icon3;
-        icon3.addFile(QStringLiteral(":/icons/icons/1367893725_zoom.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon3.addFile(QString::fromUtf8(":/icons/icons/1367893725_zoom.png"), QSize(), QIcon::Normal, QIcon::Off);
         searchButton->setIcon(icon3);
         searchButton->setIconSize(QSize(32, 32));
 
         gridLayout_2->addWidget(searchButton, 0, 2, 1, 1);
 
         byteDisplay = new QLCDNumber(buttonFrame);
-        byteDisplay->setObjectName(QStringLiteral("byteDisplay"));
-        byteDisplay->setDigitCount(10);
+        byteDisplay->setObjectName(QString::fromUtf8("byteDisplay"));
+        byteDisplay->setNumDigits(10);
         byteDisplay->setDigitCount(10);
         byteDisplay->setSegmentStyle(QLCDNumber::Flat);
 
@@ -174,7 +174,7 @@ public:
 
     void retranslateUi(QWidget *GroupWidget)
     {
-        GroupWidget->setWindowTitle(QApplication::translate("GroupWidget", "Form", 0));
+        GroupWidget->setWindowTitle(QApplication::translate("GroupWidget", "Form", 0, QApplication::UnicodeUTF8));
         groupLoadButton->setText(QString());
         connectButton->setText(QString());
         showAllButton->setText(QString());

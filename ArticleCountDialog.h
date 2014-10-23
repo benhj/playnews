@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef ARTICLECOUNTDIALOG_H
 #define ARTICLECOUNTDIALOG_H
 
-#include <QtWidgets/QDialog>
+#include <QDialog>
 
 namespace Ui {
     class ArticleCountDialog;

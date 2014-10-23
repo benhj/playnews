@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ArticleCountDialog.ui'
 **
-** Created by: Qt User Interface Compiler version 5.3.2
+** Created by: Qt User Interface Compiler version 4.8.6
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,16 +10,16 @@
 #define UI_ARTICLECOUNTDIALOG_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QDialogButtonBox>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QWidget>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QDialog>
+#include <QtGui/QDialogButtonBox>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
+#include <QtGui/QWidget>
 
 QT_BEGIN_NAMESPACE
 
@@ -35,9 +35,9 @@ public:
     void setupUi(QDialog *ArticleCountDialog)
     {
         if (ArticleCountDialog->objectName().isEmpty())
-            ArticleCountDialog->setObjectName(QStringLiteral("ArticleCountDialog"));
+            ArticleCountDialog->setObjectName(QString::fromUtf8("ArticleCountDialog"));
         ArticleCountDialog->resize(392, 87);
-        ArticleCountDialog->setStyleSheet(QLatin1String("\n"
+        ArticleCountDialog->setStyleSheet(QString::fromUtf8("\n"
 "#ArticleCountDialog {\n"
 "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
 "stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,\n"
@@ -65,23 +65,23 @@ public:
 "}\n"
 ""));
         buttonBox = new QDialogButtonBox(ArticleCountDialog);
-        buttonBox->setObjectName(QStringLiteral("buttonBox"));
+        buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
         buttonBox->setGeometry(QRect(110, 50, 271, 32));
         buttonBox->setOrientation(Qt::Horizontal);
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
         horizontalLayoutWidget = new QWidget(ArticleCountDialog);
-        horizontalLayoutWidget->setObjectName(QStringLiteral("horizontalLayoutWidget"));
+        horizontalLayoutWidget->setObjectName(QString::fromUtf8("horizontalLayoutWidget"));
         horizontalLayoutWidget->setGeometry(QRect(60, 10, 324, 24));
         horizontalLayout = new QHBoxLayout(horizontalLayoutWidget);
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         horizontalLayout->setContentsMargins(0, 0, 0, 0);
         label = new QLabel(horizontalLayoutWidget);
-        label->setObjectName(QStringLiteral("label"));
+        label->setObjectName(QString::fromUtf8("label"));
 
         horizontalLayout->addWidget(label);
 
         articleCountEdit = new QLineEdit(horizontalLayoutWidget);
-        articleCountEdit->setObjectName(QStringLiteral("articleCountEdit"));
+        articleCountEdit->setObjectName(QString::fromUtf8("articleCountEdit"));
 
         horizontalLayout->addWidget(articleCountEdit);
 
@@ -95,8 +95,8 @@ public:
 
     void retranslateUi(QDialog *ArticleCountDialog)
     {
-        ArticleCountDialog->setWindowTitle(QApplication::translate("ArticleCountDialog", "Dialog", 0));
-        label->setText(QApplication::translate("ArticleCountDialog", "Number of articles to load:", 0));
+        ArticleCountDialog->setWindowTitle(QApplication::translate("ArticleCountDialog", "Dialog", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("ArticleCountDialog", "Number of articles to load:", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

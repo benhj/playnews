@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef CUSTOMTEXTEDIT_H
 #define CUSTOMTEXTEDIT_H
 
-#include <QtWidgets/QPlainTextEdit>
+#include <QPlainTextEdit>
 #include <QMouseEvent>
 
 class CustomTextEdit : public QPlainTextEdit

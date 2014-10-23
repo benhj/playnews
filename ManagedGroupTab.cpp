@@ -38,10 +38,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "PictureViewer.h"
 #include "ui_PictureViewer.h"
 #include "MessageReader.h"
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QFileDialog>
+#include <QWidget>
+#include <QGridLayout>
+#include <QApplication>
+#include <QFileDialog>
 #include <QUrl>
 #include <QImageReader>
 #include <sstream>
