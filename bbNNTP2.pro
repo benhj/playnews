@@ -1,13 +1,16 @@
-QMAKE_LFLAGS += '-Wl,-rpath,\'./app/native/lib\''
+#QMAKE_CXXFLAGS = -std=c++11 -stdlib=libstdc++ -mmacosx-version-min=10.7
+#QMAKE_LFLAGS = -std=c++11 -stdlib=libstdc++ -mmacosx-version-min=10.7
 
-QMAKE_CFLAGS_X86_64 += -mmacosx-version-min=10.7
-QMAKE_CXXFLAGS_X86_64 = $$QMAKE_CFLAGS_X86_64
+QT += network core gui
 
-QT       += network
-QT       += gui
-QT       += core
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-INCLUDEPATH += /usr/local/boost_1_53_0/
+TARGET = gui
+TEMPLATE = app
+
+CONFIG += c++11
+
+INCLUDEPATH += /usr/local/include/
 
 SOURCES += main.cpp MainWidget.cpp \
     MainApplication.cpp \
@@ -76,16 +79,17 @@ HEADERS += MainWidget.h \
     ConnectionInfo.h
     #SocketReader.h \
     #StreamWriter.h
-FORMS   += mainwidget.ui \
-    messagereader.ui \
-    groupwidget.ui \
-    headerswidget.ui \
-    articlecountdialog.ui \
-    postwidget.ui \
-    searchdialog.ui \
-    statusmessagedisplayer.ui \
-    pictureviewer.ui \
-    prefswidget.ui
+FORMS   += \
+    MainWidget.ui \
+    GroupWidget.ui \
+    ArticleCountDialog.ui \
+    MessageReader.ui \
+    HeadersWidget.ui \
+    PostWidget.ui \
+    PictureViewer.ui \
+    SearchDialog.ui \
+    StatusMessageDisplayer.ui \
+    PrefsWidget.ui
 
 OTHER_FILES += \
     bar-descriptor.xml

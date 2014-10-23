@@ -64,9 +64,7 @@ namespace ConnectorBuilder
     static void tearDownReferencedConnector(NNTPConnector &connector)
     {
         connector.nntpClose();
-
         --connections;
-
     }
 
     static void buildReferencedConnector(ConnectionInfo const &connectionInfo, NNTPConnector &connector, QObject *callbackObject)

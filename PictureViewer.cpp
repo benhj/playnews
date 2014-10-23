@@ -25,11 +25,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include "PictureViewer.h"
-#include "ui_pictureviewer.h"
+#include "ui_PictureViewer.h"
 #include <QFileInfo>
 #include <QDir>
 #include <QDebug>
-#include <QScrollBar>
+#include <QtWidgets/QScrollBar>
 
 PictureViewer::PictureViewer(QString const &path, QWidget *parent) :
     m_path(path),

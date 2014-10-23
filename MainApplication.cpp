@@ -27,23 +27,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "MainApplication.h"
 #include "LoginDialog.h"
 #include "ManagedNNTPConnection.h"
-#include "ui_mainwidget.h"
+#include "ui_MainWidget.h"
 #include "MessageReader.h"
 #include "ui_MessageReader.h"
-#include "ui_groupwidget.h"
+#include "ui_GroupWidget.h"
 #include "ArticleCountDialog.h"
-#include "ui_articlecountdialog.h"
+#include "ui_ArticleCountDialog.h"
 #include "ManagedGroupTab.h"
 #include "ConnectionThread.h"
 #include "LoginThread.h"
 #include "SearchDialog.h"
 #include "StatusMessageDisplayer.h"
 #include "ArticleReader.h"
-#include <QGridLayout>
-#include <QWidget>
-#include <QTapAndHoldGesture>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QWidget>
 #include <QScopedPointer>
-#include <QDesktopWidget>
+#include <QtWidgets/QDesktopWidget>
 #include <QDir>
 #include <QFile>
 #include <sstream>
@@ -63,14 +62,8 @@ MainApplication::MainApplication(QObject *parent):
     connectSignalsToSlots();
     qRegisterMetaType<ArticleData>("ArticleData&");
     qRegisterMetaType<HeadersData>("HeadersData");
-    checkForPrefsFile();
-    checkForGroupCache();
-
-/*
-    tapper = new QTapAndHoldGesture(w.ui->groupsView);
-    tapper->setTimeout(300);
-    tapper->installEventFilter(this);
-*/
+    displayPrefsWidget();
+    loginFinishedSlot(true);
 }
 
 void
@@ -91,18 +84,6 @@ MainApplication::connectSignalsToSlots()
     QObject::connect(m_connectionPtr.data(),
                      SIGNAL(groupsLoadFinishedSignal()), this,
                      SLOT(groupsLoadFinishedSlot()));
-
-    /*
-    QObject::connect(m_connectionPtr.data(),
-                     SIGNAL(loginFinishedSignal(int)), this,
-                     SLOT(connectFinishedSlot(int)));
-                     */
-
-    /*
-    QObject::connect(m_connectionPtr.data(),
-                     SIGNAL(authorizedSignal(bool)), this,
-                     SLOT(loginFinishedSlot(bool)));
-                     */
 
     //
     // Not really used in practice (for future imp if required)
@@ -181,75 +162,6 @@ MainApplication::connectSignalsToSlots()
 }
 
 void
-MainApplication::checkForGroupCache()
-{
-    QString homeDir = QDir::homePath();
-    QString configDir = "/pbnews/config";
-    QString cacheFile = "/groupList.txt";
-    QString fullPath = homeDir + configDir + cacheFile;
-    QFile filePath(fullPath);
-    if(filePath.exists()) {
-        std::fstream groupStream(fullPath.toStdString().c_str(), std::fstream::in);
-        std::string line;
-        while(std::getline(groupStream, line)) {
-            Group group;
-            group.groupName = line;
-            m_groups.push_back(group);
-            m_w.addItem(QString(line.c_str()));
-        }
-        groupStream.close();
-        m_groupsAdded = true;
-    } else {
-        if(m_prefsRead) {
-            loginFinishedSlot(true);
-        }
-    }
-}
-
-void
-MainApplication::checkForPrefsFile()
-{
-    QString homeDir = QDir::homePath();
-    QString configDir = "/pbnews/config";
-    QString prefsFile = "/prefs.txt";
-    QString fullPath = homeDir + configDir + prefsFile;
-    QFile filePath(fullPath);
-    if(filePath.exists()) {
-        std::fstream credStream(fullPath.toStdString().c_str(), std::fstream::in);
-        std::string line;
-        std::getline(credStream, line);
-        m_server = QString(line.c_str());
-        std::getline(credStream, line);
-        m_port = atoi(line.c_str());
-        std::getline(credStream, line);
-        m_ssl = atoi(line.c_str());
-        std::getline(credStream, line);
-        m_username = QString(line.c_str());
-        std::getline(credStream, line);
-        m_password = QString(line.c_str());
-        std::getline(credStream, line);
-        m_from = QString(line.c_str());
-        std::getline(credStream, line);
-        m_org = QString(line.c_str());
-        std::getline(credStream, line);
-        m_deleteCacheOnExit = atoi(line.c_str());
-        std::getline(credStream, line);
-        int connections = atoi(line.c_str());
-        ConnectorBuilder::setAllowedConnections(connections);
-        credStream.close();
-        m_prefsRead = true;
-        m_connectionPtr->setServerAndPort(m_server, m_port, m_ssl);
-        m_connectionPtr->setUsernameAndPassword(m_username, m_password);
-        if(!m_w.isVisible()) {
-            m_w.resize(1024,600);
-            m_w.show();
-        }
-    } else {
-        displayPrefsWidget();
-    }
-}
-
-void
 MainApplication::disableButtons()
 {
     m_w.ui->groupWidget->ui->searchButton->setEnabled(false);
@@ -272,12 +184,6 @@ MainApplication::displayPrefsWidget()
         m_prefsWidgetPtr->setAllowedConnections(ConnectorBuilder::allowedConnections);
     }
 
-    //
-    // To force re-caching of group list
-    //
-    //m_groupsAdded = false;
-
-    //loginDialog->setUsername( "Luca" );  // optional
     connect( m_prefsWidgetPtr->getConnectButton(),
              SIGNAL(clicked()),
              this,
@@ -285,43 +191,6 @@ MainApplication::displayPrefsWidget()
     m_prefsWidgetPtr->show();
     m_prefsWidgetPtr->resize(1024,600);
 
-}
-
-//
-// Need to trigger this once all groups have been loaded!
-//
-void
-MainApplication::createPersistentGroupsFile()
-{
-    QString homeDir = QDir::homePath();
-    QString configDir = "/pbnews/config";
-    QString cacheFile = "/groupList.txt";
-    QString fullPath = homeDir + configDir + cacheFile;
-    std::fstream groupStream(fullPath.toStdString().c_str(), std::fstream::out);
-    for(Groups::iterator it = m_groups.begin(); it != m_groups.end(); ++it) {
-        groupStream << it->groupName << "\n";
-    }
-    groupStream.close();
-}
-
-void
-MainApplication::createPersistentPrefsFile()
-{
-    QString homeDir = QDir::homePath();
-    QString configDir = "/pbnews/config";
-    QString prefsFile = "/prefs.txt";
-    QString fullPath = homeDir + configDir + prefsFile;
-    std::fstream out(fullPath.toStdString().c_str(), std::fstream::out);
-    out << std::string(m_server.toStdString()) << "\n"
-        << m_port << "\n"
-        << m_ssl << "\n"
-        << std::string(m_username.toStdString()) << "\n"
-        << std::string(m_password.toStdString()) <<"\n"
-        << std::string(m_from.toStdString()) << "\n"
-        << std::string(m_org.toStdString()) << "\n"
-        << m_deleteCacheOnExit << "\n"
-        << ConnectorBuilder::allowedConnections << "\n";
-    out.close();
 }
 
 void
@@ -341,7 +210,6 @@ MainApplication::prefsUpdatedSlot()
     m_connectionPtr->setUsernameAndPassword(m_username, m_password);
     m_prefsRead = true;
     loginFinishedSlot(true);
-    createPersistentPrefsFile();
     if(!m_w.isVisible()) {
         m_w.resize(1024,600);
         m_w.show();
@@ -360,8 +228,6 @@ MainApplication::groupsLoadFinishedSlot()
     for(Groups::iterator it = m_groups.begin(); it != m_groups.end(); ++it) {
         m_w.addItem(QString(it->groupName.c_str()));
     }
-
-    createPersistentGroupsFile();
 
     m_groupsAdded = true;
 
@@ -397,26 +263,6 @@ MainApplication::groupSelectedEvent(QListWidgetItem* item)
     qDebug() << "in groupSelectedEvent function";
     m_selectedGroup = item->text();
     qDebug() << m_selectedGroup;
-}
-
-void
-MainApplication::tapGestureSlot()
-{
-    if(tapper->state() == Qt::GestureFinished) {
-        qDebug() << "in tap gesture slot";
-    }
-}
-
-bool
-MainApplication::eventFilter(QObject *obj, QGestureEvent *event)
-{
-    if (QGesture *tapAndHold = event->gesture(Qt::TapAndHoldGesture)) {
-        qDebug() << "gesture event!";
-        return true;
-    } else {
-        // standard event processing
-        return QObject::eventFilter(obj, event);
-    }
 }
 
 void
@@ -480,36 +326,18 @@ MainApplication::headersReadFinishedSlot(HeadersData hd)
                                       m_username,
                                       m_password);
         ManagedGroupTab *managedGroupTab = new ManagedGroupTab(m_w.ui->tabWidget,
-                                                  m_selectedGroup,
-                                                  m_w,
-                                                  m_connectionPtr,
-                                                  connectionInfo,
-                                                  m_workerThread,
-                                                  m_statusMessageDisplayer,
-                                                  hd.headers);
+                                                               m_selectedGroup,
+                                                               m_w,
+                                                               m_connectionPtr,
+                                                               connectionInfo,
+                                                               m_workerThread,
+                                                               m_statusMessageDisplayer,
+                                                               hd.headers);
         QObject::connect(managedGroupTab, SIGNAL(pictureSavedSignal(QString)), this, SLOT(statusMessageSlot(QString)));
         QObject::connect(managedGroupTab, SIGNAL(loadingMediaSignal(QString)), this, SLOT(statusMessageSlot(QString)));
         QObject::connect(managedGroupTab, SIGNAL(resetHeadersList(QString)), this, SLOT(statusMessageSlot(QString)));
         m_groupTabs.push_back(managedGroupTab);
     }
-}
-
-void
-MainApplication::connectFinishedSlot(int status)
-{
-    /*
-    if(status == 200 || status == 201) {
-        m_connected = true;
-        //
-        // automatically commits suicide on finish
-        //
-        if(!m_username.toStdString().empty() && !m_password.toStdString().empty()) {
-            m_loginThread = new LoginThread(m_connectionPtr, m_username, m_password);
-            m_loginThread->start();
-        } else {
-            loginFinishedSlot(true);
-        }
-    }*/
 }
 
 void
@@ -643,22 +471,6 @@ MainApplication::statusMessageSlot(QString statusMessage)
         m_statusMessageDisplayer.hide();
     }
 
-    /*
-    m_messageBuffer.push_front(statusMessage);
-    if(m_messageBuffer.size() > 1) {
-        m_messageBuffer.pop_back();
-    }
-
-    QString concat("");
-    std::deque<QString>::iterator it;
-    for(it = m_messageBuffer.begin(); it != m_messageBuffer.end(); ++it) {
-        concat += *it;
-        concat += "\n";
-    }
-
-    qDebug() << "concat: "<<concat;
-*/
-
     m_statusMessageDisplayer.setMessage(statusMessage);
     m_statusMessageDisplayer.showMaximized();
     centerWidget(&m_w, &m_statusMessageDisplayer);
@@ -768,33 +580,4 @@ MainApplication::readBitOfDataSlot()
 
 MainApplication::~MainApplication()
 {
-    //
-    // Remove cache on program exit
-    //
-    /*
-    QString homeDir = QDir::homePath();
-    QString pbnews = "/pbnews";
-    QString cachePath = homeDir + pbnews + "/cache";
-    QDir dir(cachePath);
-    if (dir.exists(cachePath)) {
-        Q_FOREACH(QFileInfo info, dir.entryInfoList(QDir::NoDotAndDotDot
-                                                    | QDir::System
-                                                    | QDir::Hidden
-                                                    | QDir::AllDirs
-                                                    | QDir::Files,
-                                                    QDir::DirsFirst)) {
-            if (info.isDir()) {
-                result = removeDir(info.absoluteFilePath());
-            }
-            else {
-                result = QFile::remove(info.absoluteFilePath());
-            }
-
-            if (!result) {
-                return result;
-            }
-        }
-        result = dir.rmdir(dirName);
-    }
-    */
 }

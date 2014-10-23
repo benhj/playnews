@@ -27,13 +27,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef LOGINDIALOG_H
 #define LOGINDIALOG_H
 
-#include <QDialog>
-#include <QLabel>
-#include <QPushButton>
-#include <QDialogButtonBox>
-#include <QLineEdit>
-#include <QComboBox>
-#include <QGridLayout>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QGridLayout>
 #include <QStringList>
 #include <QDebug>
 #include <QScopedPointer>

@@ -66,9 +66,9 @@ signals:
 
 public slots:
     void readArticleSlot();
-    void postSlot();
+    //void postSlot();
     void displayArticleSlot(ArticleData &data);
-    void replySlot(QString const &articleData);
+    //void replySlot(QString const &articleData);
     void searchSlot();
     void showAllSlot();
     void partDecodedSlot();
@@ -78,7 +78,7 @@ public slots:
     void setProgressBarMaximum(int const val);
     void updateBytesDisplay(double const val);
     void resetProgressBar();
-    void bulkDownloadSlot();
+    //void bulkDownloadSlot();
 
 private:
     ArticleLoaderThread *m_articleLoaderThread;

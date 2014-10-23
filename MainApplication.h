@@ -27,22 +27,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef MAINAPPLICATION_H
 #define MAINAPPLICATION_H
 
-#include "mainwidget.h"
-#include "managednntpconnection.h"
-#include "prefswidget.h"
-#include "statusmessagedisplayer.h"
+#include "MainWidget.h"
+#include "ManagedNNTPConnection.h"
+#include "PrefsWidget.h"
+#include "StatusMessageDisplayer.h"
 
 
 #include <QObject>
 #include <QThread>
-#include <QListWidgetItem>
-#include <QTapAndHoldGesture>
-#include <QGestureEvent>
+#include <QtWidgets/QListWidgetItem>
 #include <QTimer>
 #include <QScopedPointer>
 #include <deque>
 
-class QTapAndHoldGesture;
 class ManagedGroupTab;
 class ConnectionThread;
 class LoginThread;
@@ -57,9 +54,6 @@ class MainApplication : public QObject
 public:
     explicit MainApplication(QObject *parent = 0);
     ~MainApplication();
-
-    void createPersistentPrefsFile();
-    void createPersistentGroupsFile();
     MainWidget m_w;
 
 signals:
@@ -70,11 +64,9 @@ public slots:
     void groupsLoadFinishedSlot();
     void groupAddedSlot(QString str);
     void groupSelectedEvent(QListWidgetItem* itme);
-    void tapGestureSlot();
     void extractHeadersSlot();
     void headersReadFinishedSlot(HeadersData hd);
     void singleArticleExtractedSlot();
-    void connectFinishedSlot(int status);
     void loginFinishedSlot(bool);
     void prefsUpdatedSlot();
     void issuedLASTCommandSlot();
@@ -94,7 +86,6 @@ private:
 
 
     ConnectionPtr m_connectionPtr;
-    QTapAndHoldGesture *tapper;
     QString m_selectedGroup;
     ConnectionThread *m_connectionThread;
     LoginThread *m_loginThread;
@@ -119,15 +110,9 @@ private:
     bool m_groupsAdded;
     void disableButtons();
     void connectSignalsToSlots();
-    void checkForGroupCache();
-    void checkForPrefsFile();
     void updateGroupTabProgressBars(int const val);
     void setGroupTabProgressBarMaximums(int const val);
     void resetGroupTabProgressBars();
-
-protected:
-    bool eventFilter(QObject *obj, QGestureEvent *event);
-
 };
 
 #endif // MAINAPPLICATION_H

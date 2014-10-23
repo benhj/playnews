@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include "PostWidget.h"
-#include "ui_postwidget.h"
+#include "ui_PostWidget.h"
 
 PostWidget::PostWidget(QWidget *parent) :
     QWidget(parent),

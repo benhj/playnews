@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include "StatusMessageDisplayer.h"
-#include "ui_statusmessagedisplayer.h"
+#include "ui_StatusMessageDisplayer.h"
 #include <QDebug>
 
 StatusMessageDisplayer::StatusMessageDisplayer(QWidget *parent) :

@@ -25,9 +25,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include "MessageReader.h"
-#include "ui_messagereader.h"
+#include "ui_MessageReader.h"
 #include <QDebug>
-#include <QScrollBar>
+#include <QtWidgets/QScrollBar>
 
 MessageReader::MessageReader(QWidget *parent) :
     QWidget(parent),

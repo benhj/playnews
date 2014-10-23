@@ -25,23 +25,23 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include "ManagedGroupTab.h"
-#include "ui_mainwidget.h"
+#include "ui_MainWidget.h"
 #include "HeadersWidget.h"
-#include "ui_headerswidget.h"
+#include "ui_HeadersWidget.h"
 #include "PostWidget.h"
-#include "ui_postwidget.h"
+#include "ui_PostWidget.h"
 #include "MessageReader.h"
-#include "ui_messagereader.h"
+#include "ui_MessageReader.h"
 #include "PostMaster.h"
 #include "SearchDialog.h"
 #include "StatusMessageDisplayer.h"
 #include "PictureViewer.h"
-#include "ui_pictureviewer.h"
+#include "ui_PictureViewer.h"
 #include "MessageReader.h"
-#include <QWidget>
-#include <QGridLayout>
-#include <QApplication>
-#include <QFileDialog>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QFileDialog>
 #include <QUrl>
 #include <QImageReader>
 #include <sstream>
@@ -105,7 +105,6 @@ ManagedGroupTab::addGroupTab()
     //
     m_selectedGroupTab = new QWidget();
     m_selectedGroupTab->setAttribute(Qt::WA_DeleteOnClose);
-    //selectedGroupTab->set
     m_gridLayout = new QGridLayout(m_selectedGroupTab);
     m_gridLayout->setContentsMargins(0, 0, 0, 0);
     m_gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
@@ -120,8 +119,8 @@ ManagedGroupTab::addGroupTab()
     //
     // For posting a new article to the group
     //
-    QObject::connect(m_headersWidget->ui->postButton, SIGNAL(clicked()), this,
-                     SLOT(postSlot()));
+//    QObject::connect(m_headersWidget->ui->postButton, SIGNAL(clicked()), this,
+//                     SLOT(postSlot()));
 
     QObject::connect(m_headersWidget->ui->searchButton, SIGNAL(clicked()), this,
                      SLOT(searchSlot()));
@@ -129,8 +128,8 @@ ManagedGroupTab::addGroupTab()
     QObject::connect(m_headersWidget->ui->showAllButton, SIGNAL(clicked()), this,
                      SLOT(showAllSlot()));
 
-    QObject::connect(m_headersWidget->ui->bulkDLButton, SIGNAL(clicked()), this,
-                     SLOT(bulkDownloadSlot()));
+//    QObject::connect(m_headersWidget->ui->bulkDLButton, SIGNAL(clicked()), this,
+//                     SLOT(bulkDownloadSlot()));
 
 
     m_headersWidget->setObjectName(QString::fromUtf8("headersWidget"));
@@ -141,8 +140,7 @@ ManagedGroupTab::addGroupTab()
     m_w.ui->tabWidget->setTabText(m_w.ui->tabWidget->indexOf(m_selectedGroupTab),
                                   QApplication::translate("MainWidget",
                                                           m_groupName.toStdString().c_str(),
-                                                          0,
-                                                          QApplication::UnicodeUTF8));
+                                                          0));
 
     //
     // Add headers to tab
@@ -267,13 +265,6 @@ ManagedGroupTab::displayArticleSlot(ArticleData &articleData)
         QString article = articleData.data;
         MessageReader *m_mr = new MessageReader;
         m_mr->setAttribute(Qt::WA_DeleteOnClose);
-        /*
-        QSignalMapper mapper;
-        mapper.setMapping(m_mr->ui->replyButton, articleData.second);
-        QObject::connect(m_mr->ui->replyButton, SIGNAL(clicked()), &mapper, SLOT(map()));
-        QObject::connect(&mapper, SIGNAL(mapped(QString)), this,
-                SLOT(replySlot(QString)));
-                */
 
         //mr->ui->messageEdit->insertHtml(article);
         m_mr->ui->messageEdit->clear();
@@ -309,13 +300,13 @@ ManagedGroupTab::displayArticleSlot(ArticleData &articleData)
                      SLOT(displayArticleSlot(ArticleData&)));
 }
 
-bool copyFile_(const QString& sourceFile, const QString& destinationDir)
-{
-    QFileInfo fileInfo(sourceFile);
-    QString destinationFile = destinationDir + QDir::separator() + fileInfo.fileName();
-    bool result = QFile::copy(sourceFile, destinationFile);
-    return result;
-}
+//bool copyFile_(const QString& sourceFile, const QString& destinationDir)
+//{
+//    QFileInfo fileInfo(sourceFile);
+//    QString destinationFile = destinationDir + QDir::separator() + fileInfo.fileName();
+//    bool result = QFile::copy(sourceFile, destinationFile);
+//    return result;
+//}
 
 void ManagedGroupTab::openBinary(Header header, bool const autoSave)
 {
@@ -338,15 +329,16 @@ void ManagedGroupTab::openBinary(Header header, bool const autoSave)
         cursor.insertImage("image");
         m_parentWidget->addTab(pictureViewer, QString(filename.c_str()));
         m_statusMessageDisplayer.raise();
-    } else { // some other binary file, just save to disk
+    } /* else { // some other binary file, just save to disk
         QString savePath = "/accounts/1000/shared/downloads";
         qDebug() <<"a2";
         (void)copyFile_(fileName, savePath);
         qDebug() <<"a3";
         emit pictureSavedSignal("Media saved to downloads folder...");
         qDebug() <<"a4";
-    }
+    }*/
     this->setProgressBarMaximum(1);
+
     if(!autoSave) {
         QObject::disconnect(m_binaryGrabberPtr.data(), SIGNAL(binaryHasBeenReadSignal(Header, bool)),
                             this, SLOT(openBinary(Header, bool)));
@@ -364,29 +356,29 @@ void ManagedGroupTab::openBinary(Header header, bool const autoSave)
     qDebug() <<"a5";
 }
 
-void
-ManagedGroupTab::postSlot()
-{
-    PostMaster *pm = new PostMaster(m_connectionInfo, m_groupName, this);
-    pm->displayPostWidget();
-}
+//void
+//ManagedGroupTab::postSlot()
+//{
+//    PostMaster *pm = new PostMaster(m_connectionInfo, m_groupName, this);
+//    pm->displayPostWidget();
+//}
 
-void
-ManagedGroupTab::replySlot(QString const &articleData)
-{
+//void
+//ManagedGroupTab::replySlot(QString const &articleData)
+//{
 
-    PostMaster *pm = new PostMaster(m_connectionInfo, m_groupName, this);
-    std::stringstream ss(articleData.toStdString());
-    std::string articleLine;
-    std::stringstream processed;
-    processed << "\n\n";
-    while(std::getline(ss, articleLine)) {
-        processed << ">" << articleLine << "\n";
-    }
+//    PostMaster *pm = new PostMaster(m_connectionInfo, m_groupName, this);
+//    std::stringstream ss(articleData.toStdString());
+//    std::string articleLine;
+//    std::stringstream processed;
+//    processed << "\n\n";
+//    while(std::getline(ss, articleLine)) {
+//        processed << ">" << articleLine << "\n";
+//    }
 
-    pm->displayPostWidget(QString(processed.str().c_str()));
+//    pm->displayPostWidget(QString(processed.str().c_str()));
 
-}
+//}
 
 void
 ManagedGroupTab::searchSlot()
@@ -482,26 +474,26 @@ ManagedGroupTab::pictureSavedSlot(QString message)
     emit pictureSavedSignal(message);
 }
 
-void
-ManagedGroupTab::bulkDownloadSlot()
-{
-    QWidget widget;
-    SearchDialog sd(&widget);
-    sd.setLabelText("Bulk DL mask: ");
+//void
+//ManagedGroupTab::bulkDownloadSlot()
+//{
+//    QWidget widget;
+//    SearchDialog sd(&widget);
+//    sd.setLabelText("Bulk DL mask: ");
 
-    if(sd.exec() == QDialog::Accepted) {
-        m_bulkDownloaderPtr.reset(new BulkDownloader(m_connection, m_groupName, m_worker));
-        QObject::connect(m_bulkDownloaderPtr.data(), SIGNAL(openBinarySignal(Header,bool)), this,
-                         SLOT(openBinary(Header,bool)));
-        std::string mask = sd.getText().toStdString();
-        Headers::iterator it;
-        for(it = m_headers.begin(); it != m_headers.end(); ++it) {
-            std::string subjectLine = it->subject;
-            if(subjectLine.find(mask) != std::string::npos) {
-                m_bulkDownloaderPtr->addHeader(&(*it));
-                qDebug() << "added header with subjectline "<<(it->subject).c_str();
-            }
-        }
-        m_bulkDownloaderPtr->bulkDownload();
-    }
-}
+//    if(sd.exec() == QDialog::Accepted) {
+//        m_bulkDownloaderPtr.reset(new BulkDownloader(m_connection, m_groupName, m_worker));
+//        QObject::connect(m_bulkDownloaderPtr.data(), SIGNAL(openBinarySignal(Header,bool)), this,
+//                         SLOT(openBinary(Header,bool)));
+//        std::string mask = sd.getText().toStdString();
+//        Headers::iterator it;
+//        for(it = m_headers.begin(); it != m_headers.end(); ++it) {
+//            std::string subjectLine = it->subject;
+//            if(subjectLine.find(mask) != std::string::npos) {
+//                m_bulkDownloaderPtr->addHeader(&(*it));
+//                qDebug() << "added header with subjectline "<<(it->subject).c_str();
+//            }
+//        }
+//        m_bulkDownloaderPtr->bulkDownload();
+//    }
+//}

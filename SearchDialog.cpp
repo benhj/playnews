@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include "SearchDialog.h"
-#include "ui_searchdialog.h"
+#include "ui_SearchDialog.h"
 #include <QPainter>
 
 SearchDialog::SearchDialog(QWidget *parent) :

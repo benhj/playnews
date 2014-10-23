@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "PostMaster.h"
 #include "PostWidget.h"
 #include "NNTPConnector.h"
-#include "ui_postwidget.h"
+#include "ui_PostWidget.h"
 
 PostMaster::PostMaster(ConnectionInfo const &connectionInfo, QString const &groupName, QObject *callbackObject) :
     m_connectionInfo(connectionInfo),

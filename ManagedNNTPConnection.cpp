@@ -29,7 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "CompositeSelectAndReadStructure.h"
 
 #include <QDir>
-#include <QApplication>
+#include <QtWidgets/QApplication>
 #include <sstream>
 #include <fstream>
 

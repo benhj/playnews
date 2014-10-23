@@ -27,9 +27,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef PREFSWIDGET_H
 #define PREFSWIDGET_H
 
-#include <QWidget>
+#include <QtWidgets/QWidget>
 #include <QScopedPointer>
-#include <QPushButton>
+#include <QtWidgets/QPushButton>
 
 namespace Ui {
 class PrefsWidget;

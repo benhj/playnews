@@ -162,7 +162,6 @@ HeaderExtractor::processXOverData(NNTPConnector &connector)
                     //
                     header.isComposite =false;
                     header.index = index;
-
                     index++;
                     m_headers.push_back(header);
                 }
@@ -191,13 +190,10 @@ HeaderExtractor::processXOverData(NNTPConnector &connector)
 
     }
 
-
     HeadersData hd;
     hd.headers = m_headers;
     hd.status = status;
     emit headersReadFinishedSignal(hd);
-
-
 }
 
 

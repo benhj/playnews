@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include "ArticleCountDialog.h"
-#include "ui_articlecountdialog.h"
+#include "ui_ArticleCountDialog.h"
 #include <QPainter>
 
 ArticleCountDialog::ArticleCountDialog(QWidget *parent) :

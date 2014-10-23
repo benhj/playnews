@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef POSTMASTER_H
 #define POSTMASTER_H
 
-#include "managednntpconnection.h"
+#include "ManagedNNTPConnection.h"
 #include "ConnectionInfo.h"
 #include <QObject>
 #include <QThread>

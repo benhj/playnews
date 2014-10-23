@@ -23,13 +23,13 @@
 // OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "QsKineticScroller.h"
-#include <QApplication>
-#include <QScrollBar>
-#include <QLineEdit>
-#include <QTextEdit>
-#include <QComboBox>
-#include <QAbstractScrollArea>
+#include "QSKineticScroller.h"
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QScrollBar>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QTextEdit>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QAbstractScrollArea>
 #include <QMouseEvent>
 #include <QEvent>
 #include <QTimer>

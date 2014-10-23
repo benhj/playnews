@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include "MainWidget.h"
-#include "ui_mainwidget.h"
+#include "ui_MainWidget.h"
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),

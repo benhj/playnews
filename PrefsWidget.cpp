@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include "PrefsWidget.h"
-#include "ui_prefswidget.h"
+#include "ui_PrefsWidget.h"
 #include <sstream>
 
 PrefsWidget::PrefsWidget(QWidget *parent) :
