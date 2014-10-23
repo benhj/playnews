@@ -131,8 +131,8 @@ MainApplication::connectSignalsToSlots()
 
     // When group headers have been read
     QObject::connect(m_connectionPtr.data(),
-                     SIGNAL(headersReadFinishedSignal(HeadersData)), this,
-                     SLOT(headersReadFinishedSlot(HeadersData)));
+                     SIGNAL(headersReadFinishedSignal(core::HeadersData)), this,
+                     SLOT(headersReadFinishedSlot(core::HeadersData)));
 
     // When a group is selected, add it to pane
     QObject::connect(m_connectionPtr.data(),

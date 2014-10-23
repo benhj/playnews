@@ -195,9 +195,9 @@ ManagedGroupTab::readArticleSlot()
         if(m_articleCode > -1) {
             qDebug() << "no, not composite..";
             QObject::connect(m_connection.data(),
-                             SIGNAL(articleDataReadSignal(ArticleData&)),
+                             SIGNAL(articleDataReadSignal(core::ArticleData&)),
                              this,
-                             SLOT(displayArticleSlot(ArticleData&)));
+                             SLOT(displayArticleSlot(core::ArticleData&)));
 
             m_subject = m_headers[m_headerIndices[currentRow]].subject;
             m_author = m_headers[m_headerIndices[currentRow]].author;
@@ -295,9 +295,9 @@ ManagedGroupTab::displayArticleSlot(core::ArticleData &articleData)
 
     }
     QObject::disconnect(m_connection.data(),
-                     SIGNAL(articleDataReadSignal(ArticleData&)),
+                     SIGNAL(articleDataReadSignal(core::ArticleData&)),
                      this,
-                     SLOT(displayArticleSlot(ArticleData&)));
+                     SLOT(displayArticleSlot(core::ArticleData&)));
 }
 
 //bool copyFile_(const QString& sourceFile, const QString& destinationDir)

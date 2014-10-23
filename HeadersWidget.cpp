@@ -41,8 +41,6 @@ HeadersWidget::HeadersWidget(QWidget *parent) :
     ui->headersTableWidget->horizontalHeader()->setStretchLastSection(true);
 }
 
-
-
 HeadersWidget::~HeadersWidget()
 {
     delete ui;

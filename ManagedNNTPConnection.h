@@ -74,11 +74,11 @@ namespace core {
         // for indicating when all groups have been loaded
         void groupsLoadFinishedSignal();
         // for indicating when group headers have been read
-        void headersReadFinishedSignal(HeadersData);
+        void headersReadFinishedSignal(core::HeadersData);
         void singleArticleExtractedSignal();
         void loginFinishedSignal(int);
         void authorizedSignal(bool);
-        void articleDataReadSignal(ArticleData&);
+        void articleDataReadSignal(core::ArticleData&);
         void issuedLASTCommandSignal();
         void finishedIssuingLASTCommandsSignal();
         void finishedPostingSignal(int status);

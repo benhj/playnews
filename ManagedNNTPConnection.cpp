@@ -85,8 +85,11 @@ namespace core {
                                       m_password);
 
         m_headerExtractorPtr.reset(new HeaderExtractor(groupName, connectionInfo, headerCount, this));
-        QObject::connect(m_headerExtractorPtr.data(), SIGNAL(headersReadFinishedSignal(HeadersData)),
-                         this, SLOT(headersReadFinishedSlot(HeadersData)), Qt::QueuedConnection);
+        QObject::connect(m_headerExtractorPtr.data(),
+                         SIGNAL(headersReadFinishedSignal(HeadersData)),
+                         this,
+                         SLOT(headersReadFinishedSlot(HeadersData)),
+                         Qt::QueuedConnection);
         m_headerExtractorPtr->process();
     }
 
@@ -143,7 +146,7 @@ namespace core {
         emit articleDataReadSignal(data);
         qDebug() << "finished reading";
         QObject::disconnect(m_articleReaderPtr.data(), SIGNAL(articleDataReadSignal(ArticleData&)),
-                         this, SLOT(finishedReadingArticle(ArticleData&)));
+                            this, SLOT(finishedReadingArticle(ArticleData&)));
     }
 
     void
