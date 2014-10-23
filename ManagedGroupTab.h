@@ -53,7 +53,7 @@ public:
                     ConnectionInfo const& connectionInfo,
                     QThread &worker,
                     StatusMessageDisplayer &statusMessageDisplayer,
-                    Headers &headers);
+                    core::Headers &headers);
     virtual ~ManagedGroupTab();
     void addGroupTab();
 
@@ -72,7 +72,7 @@ public slots:
     void showAllSlot();
     void partDecodedSlot();
     void pictureSavedSlot(QString message);
-    void openBinary(Header header, bool const autoSave = false);
+    void openBinary(core::Header header, bool const autoSave = false);
     void updateProgressBar(int const val);
     void setProgressBarMaximum(int const val);
     void updateBytesDisplay(double const val);
@@ -84,7 +84,7 @@ private:
     QString m_groupName;
     MainWidget &m_w;
     core::ConnectionPtr m_connection;
-    Headers m_headers;
+    core::Headers m_headers;
     QWidget *m_selectedGroupTab;
     QGridLayout *m_gridLayout;
     HeadersWidget *m_headersWidget;

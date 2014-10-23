@@ -30,69 +30,71 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QString>
 #include <vector>
 
-typedef std::vector<CompositeMessagePart> CompositeMessageParts;
+namespace core {
 
-struct Header;
+    typedef std::vector<CompositeMessagePart> CompositeMessageParts;
 
-typedef std::vector<Header> Headers;
+    struct Header;
 
-typedef std::vector<Header*> HeaderPtrs;
+    typedef std::vector<Header> Headers;
 
-struct HeadersData
-{
-    Headers headers;
-    int status;
-};
+    typedef std::vector<Header*> HeaderPtrs;
 
-/**
- * @brief The Header struct stores data related to an article's header
- */
-struct Header
-{
-    int messageId;
-    std::string subject;
-    std::string date;
-    std::string author;
-
-    std::string getSubject()
+    struct HeadersData
     {
-        return std::string(subject.begin() + 9, subject.end());
-    }
+        Headers headers;
+        int status;
+    };
 
-    std::string getDate()
+    /**
+     * @brief The Header struct stores data related to an article's header
+     */
+    struct Header
     {
-        return std::string(date.begin() + 6, date.end());
-    }
+        int messageId;
+        std::string subject;
+        std::string date;
+        std::string author;
 
-    std::string getAuthor()
-    {
-        return std::string(author.begin() + 8, author.end());
-    }
+        std::string getSubject()
+        {
+            return std::string(subject.begin() + 9, subject.end());
+        }
 
-    //
-    // For consecutive ordering of headers
-    //
-    int index;
+        std::string getDate()
+        {
+            return std::string(date.begin() + 6, date.end());
+        }
 
-    //
-    // For display in list, what row does header reside in? (Populated in
-    // ManagedGroupTab)
-    //
-    int row;
+        std::string getAuthor()
+        {
+            return std::string(author.begin() + 8, author.end());
+        }
 
-    //
-    // If the message is composite (composed of multiple parts)
-    // also store its composite messages
-    //
-    bool isComposite;
-    CompositeMessageParts compositeMessageParts;
+        //
+        // For consecutive ordering of headers
+        //
+        int index;
 
-    bool hasBeenSelected;
+        //
+        // For display in list, what row does header reside in? (Populated in
+        // ManagedGroupTab)
+        //
+        int row;
 
-    //
-    // For storing where item is downloaded
-    //
-    QString downloadPath;
+        //
+        // If the message is composite (composed of multiple parts)
+        // also store its composite messages
+        //
+        bool isComposite;
+        CompositeMessageParts compositeMessageParts;
 
+        bool hasBeenSelected;
 
-};
+        //
+        // For storing where item is downloaded
+        //
+        QString downloadPath;
+    };
+
+}

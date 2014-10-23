@@ -54,17 +54,17 @@ ManagedGroupTab::ManagedGroupTab(QObject *parent,
                                  ConnectionInfo const& connectionInfo,
                                  QThread &worker,
                                  StatusMessageDisplayer &statusMessageDisplayer,
-                                 Headers &headers) :
-                                    QObject(parent),
-                                    m_groupName(groupName),
-                                    m_w(w),
-                                    m_connection(connection),
-                                    m_connectionInfo(connectionInfo),
-                                    m_worker(worker),
-                                    m_statusMessageDisplayer(statusMessageDisplayer),
-                                    m_articleLoaderThread(NULL),
-                                    m_parentWidget((QTabWidget*)parent),
-                                    m_headers(headers)
+                                 core::Headers &headers)
+  : QObject(parent)
+  , m_groupName(groupName)
+  , m_w(w)
+  , m_connection(connection)
+  , m_connectionInfo(connectionInfo)
+  , m_worker(worker)
+  , m_statusMessageDisplayer(statusMessageDisplayer)
+  , m_articleLoaderThread(NULL)
+  , m_parentWidget((QTabWidget*)parent)
+  , m_headers(headers)
 {
     this->addGroupTab();
 }
@@ -91,7 +91,7 @@ ManagedGroupTab::~ManagedGroupTab()
     //
     // (5) Clear headers vector
     //
-    Headers().swap(m_headers);
+    core::Headers().swap(m_headers);
 }
 
 void
@@ -145,7 +145,7 @@ ManagedGroupTab::addGroupTab()
     //
     // Add headers to tab
     //
-    Headers::reverse_iterator headerIterator;
+    core::Headers::reverse_iterator headerIterator;
     for(headerIterator = m_headers.rbegin() ;
         headerIterator != m_headers.rend() ;
         ++headerIterator) {
@@ -308,7 +308,7 @@ ManagedGroupTab::displayArticleSlot(core::ArticleData &articleData)
 //    return result;
 //}
 
-void ManagedGroupTab::openBinary(Header header, bool const autoSave)
+void ManagedGroupTab::openBinary(core::Header header, bool const autoSave)
 {
 
     QString fileName = header.downloadPath;
@@ -390,7 +390,7 @@ ManagedGroupTab::searchSlot()
         QString returned = sd.getText();
         m_headersWidget->removeAllItems();
         int row = 0;
-        for(Headers::reverse_iterator it = m_headers.rbegin(); it != m_headers.rend(); ++it) {
+        for(core::Headers::reverse_iterator it = m_headers.rbegin(); it != m_headers.rend(); ++it) {
             if(std::string(returned.toStdString()).empty()) {
                 m_headerIndices.push_back(it->index);
                 m_headersWidget->addItem(*it, row);
@@ -440,7 +440,7 @@ ManagedGroupTab::showAllSlot()
     m_headersWidget->removeAllItems();
     std::vector<int>().swap(m_headerIndices);
     int row = 0;
-    for(Headers::reverse_iterator it = m_headers.rbegin(); it != m_headers.rend(); ++it) {
+    for(core::Headers::reverse_iterator it = m_headers.rbegin(); it != m_headers.rend(); ++it) {
         m_headerIndices.push_back(it->index);
         m_headersWidget->addItem(*it, row);
         if(it->hasBeenSelected) {

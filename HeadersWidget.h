@@ -43,7 +43,7 @@ public:
     explicit HeadersWidget(QWidget *parent = 0);
     ~HeadersWidget();
     void removeAllItems();
-    void addItem(Header &item, int const index);
+    void addItem(core::Header &item, int const index);
     void setBoldFontForItem(int const index);
     void setLightFontForItem(int const index);
     void makeGreen(int const index);

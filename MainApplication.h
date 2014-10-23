@@ -64,7 +64,7 @@ public slots:
     void groupAddedSlot(QString str);
     void groupSelectedEvent(QListWidgetItem* itme);
     void extractHeadersSlot();
-    void headersReadFinishedSlot(HeadersData hd);
+    void headersReadFinishedSlot(core::HeadersData hd);
     void singleArticleExtractedSlot();
     void loginFinishedSlot(bool);
     void issuedLASTCommandSlot();

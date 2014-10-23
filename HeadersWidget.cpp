@@ -55,7 +55,7 @@ HeadersWidget::removeAllItems()
 }
 
 void
-HeadersWidget::addItem(Header &header, int const index)
+HeadersWidget::addItem(core::Header &header, int const index)
 {
     auto rowCount = ui->headersTableWidget->rowCount();
     ui->headersTableWidget->setRowCount(rowCount + 1);

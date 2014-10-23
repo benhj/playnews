@@ -103,7 +103,7 @@ MainApplication::MainApplication(QObject *parent):
 {
     connectSignalsToSlots();
     qRegisterMetaType<core::ArticleData>("ArticleData&");
-    qRegisterMetaType<HeadersData>("HeadersData");
+    qRegisterMetaType<core::HeadersData>("HeadersData");
     displayLoginDialog();
     loginFinishedSlot(true);
 }
@@ -290,7 +290,7 @@ MainApplication::singleArticleExtractedSlot()
 // the article headers in a list ready to be selected
 // by user :-)
 void
-MainApplication::headersReadFinishedSlot(HeadersData hd)
+MainApplication::headersReadFinishedSlot(core::HeadersData hd)
 {
     // Stop progress bar busy status
     qDebug() << "finihsed headers!!";
