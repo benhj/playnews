@@ -34,8 +34,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ArticleCountDialog.h"
 #include "ui_ArticleCountDialog.h"
 #include "ManagedGroupTab.h"
-#include "ConnectionThread.h"
-#include "LoginThread.h"
 #include "SearchDialog.h"
 #include "StatusMessageDisplayer.h"
 #include "ArticleReader.h"
@@ -97,8 +95,6 @@ MainApplication::MainApplication(QObject *parent):
     m_authorized(false),
     m_prefsRead(false),
     m_connectionPtr(new core::ManagedNNTPConnection),
-    m_connectionThread(NULL),
-    m_loginThread(NULL),
     m_groupsAdded(false)
 {
     connectSignalsToSlots();

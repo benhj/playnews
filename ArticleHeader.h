@@ -96,5 +96,4 @@ namespace core {
         //
         QString downloadPath;
     };
-
 }

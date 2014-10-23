@@ -40,8 +40,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <deque>
 
 class ManagedGroupTab;
-class ConnectionThread;
-class LoginThread;
 
 typedef QScopedPointer<QTimer> TimerPtr;
 
@@ -88,8 +86,6 @@ private:
 
     core::ConnectionPtr m_connectionPtr;
     QString m_selectedGroup;
-    ConnectionThread *m_connectionThread;
-    LoginThread *m_loginThread;
     LoginDialogPtr m_loginDialogPtr;
     bool m_connected;
     bool m_authorized;

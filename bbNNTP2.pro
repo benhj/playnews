@@ -25,8 +25,6 @@ SOURCES += main.cpp MainWidget.cpp \
     HeadersWidget.cpp \
     ArticleCountDialog.cpp \
     PostWidget.cpp \
-    ConnectionThread.cpp \
-    LoginThread.cpp \
     PostMaster.cpp \
     YencDecoder.cpp \
     SearchDialog.cpp \
@@ -55,8 +53,6 @@ HEADERS += MainWidget.h \
     HeadersWidget.h \
     ArticleCountDialog.h \
     PostWidget.h \
-    ConnectionThread.h \
-    LoginThread.h \
     PostMaster.h \
     YencDecoder.h \
     SearchDialog.h \
