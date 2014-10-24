@@ -56,7 +56,6 @@ public:
                              MainWidget &w,
                              core::ManagedConnectionPtr &connection,
                              core::ConnectionInfo const& connectionInfo,
-                             QThread &worker,
                              StatusMessageDisplayer &statusMessageDisplayer,
                              core::Headers &headers);
     virtual ~ManagedGroupTab();
@@ -93,7 +92,7 @@ private:
     QWidget *m_selectedGroupTab;
     QGridLayout *m_gridLayout;
     HeadersWidget *m_headersWidget;
-    QThread &m_worker;
+    QThread m_worker;
     std::vector<int> m_headerIndices;
     StatusMessageDisplayer &m_statusMessageDisplayer;
     QTabWidget *m_parentWidget;

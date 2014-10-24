@@ -52,7 +52,6 @@ ManagedGroupTab::ManagedGroupTab(QObject *parent,
                                  MainWidget &w,
                                  core::ManagedConnectionPtr &connection,
                                  core::ConnectionInfo const& connectionInfo,
-                                 QThread &worker,
                                  StatusMessageDisplayer &statusMessageDisplayer,
                                  core::Headers &headers)
   : QObject(parent)
@@ -60,7 +59,7 @@ ManagedGroupTab::ManagedGroupTab(QObject *parent,
   , m_w(w)
   , m_connection(connection)
   , m_connectionInfo(connectionInfo)
-  , m_worker(worker)
+  , m_worker()
   , m_statusMessageDisplayer(statusMessageDisplayer)
   , m_articleLoaderThread(NULL)
   , m_parentWidget((QTabWidget*)parent)

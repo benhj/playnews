@@ -34,12 +34,12 @@ namespace core {
     {
 
         ConnectionInfo(QString const &server, int const port, bool const ssl,
-                       QString const &username, QString const& password) :
-            m_server(server),
-            m_port(port),
-            m_ssl(ssl),
-            m_username(username),
-            m_password(password){}
+                       QString const &username, QString const& password)
+          : m_server(server)
+          , m_port(port)
+          , m_ssl(ssl)
+          , m_username(username)
+          , m_password(password){}
 
         QString m_server;
         int m_port;

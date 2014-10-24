@@ -45,7 +45,7 @@ class LoginDialog : public QDialog
 {
     Q_OBJECT
 
-private:
+  private:
     /*!
       * A label for the username component.
       */
@@ -84,7 +84,7 @@ private:
       */
     void setUpGUI();
 
-public:
+  public:
     explicit LoginDialog(QWidget *parent = 0);
 
     void setServer(QString &server);
@@ -104,7 +104,7 @@ public:
     void setPassword( QString& password );
 
 
-signals:
+  signals:
 
     /*!
       * A signal emitted when the login is performed.
@@ -113,13 +113,13 @@ signals:
       */
     void acceptLogin( QString server, QString username, QString password );
 
-public slots:
+  public slots:
     /*!
       * A lot to adjust the emitting of the signal.
       */
     void slotAcceptLogin();
 
-protected:
+  protected:
     void paintEvent(QPaintEvent *e);
 
 };

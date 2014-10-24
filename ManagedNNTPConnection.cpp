@@ -112,7 +112,6 @@ namespace core {
     void
     ManagedNNTPConnection::headersReadFinishedSlot(HeadersData hd)
     {
-        qDebug() << "finished reading headers";
         emit headersReadFinishedSignal(hd);
         QObject::disconnect(m_headerExtractorPtr.data(), SIGNAL(headersReadFinishedSignal(HeadersData)),
                          this, SLOT(headersReadFinishedSlot(HeadersData)));
@@ -123,7 +122,6 @@ namespace core {
     {
 
         emit articleDataReadSignal(data);
-        qDebug() << "finished reading";
         QObject::disconnect(m_articleReaderPtr.data(), SIGNAL(articleDataReadSignal(ArticleData&)),
                             this, SLOT(finishedReadingArticle(ArticleData&)));
     }
@@ -132,7 +130,6 @@ namespace core {
     ManagedNNTPConnection::readArticle(QString const &groupName,
                                          int const articleId)
     {
-        qDebug() << "Reading article...";
         this->doReadArticle(groupName, articleId);
     }
 
@@ -141,15 +138,11 @@ namespace core {
                                                 std::vector<int> const &articleIDs)
     {
         this->doReadCompositeArticle(groupName, articleIDs);
-
     }
 
     void
     ManagedNNTPConnection::doReadArticle(QString const &group, int const articleId)
     {
-        qDebug() << m_server << "\t" << m_port << "\t" << m_ssl;
-        qDebug() << "Resetting article reader";
-
         emit resetBytesReadSignal();
 
         ConnectionInfo connectionInfo(m_server,
@@ -160,10 +153,9 @@ namespace core {
         int isBinary = 0;
         m_articleReaderPtr.reset(new ArticleReader(connectionInfo, group, articleId, isBinary, this));
 
-        // return in a struct the article data together with the binaryData int
-        qDebug() << "Reading...";
         QObject::connect(m_articleReaderPtr.data(), SIGNAL(articleDataReadSignal(ArticleData&)),
                          this, SLOT(finishedReadingArticle(ArticleData&)));
+
         m_articleReaderPtr->process();
     }
 
@@ -171,8 +163,6 @@ namespace core {
                                                        std::vector<int> const &articleIDs)
     {
         emit resetBytesReadSignal();
-
-        qDebug() << "yes collection";
 
         ConnectionInfo connectionInfo(m_server,
                                       m_port,
@@ -193,7 +183,6 @@ namespace core {
     void
     ManagedNNTPConnection::compositeReadFinishedSlot()
     {
-        qDebug() << "in compositeReadSlot";
         QObject::disconnect(m_compositeCheckerPtr.data(), SIGNAL(compositeFinishedSignal()),
                          this, SLOT(compositeReadFinishedSlot()));
         emit compositeDataReadSignal();

@@ -50,20 +50,13 @@ namespace core {
                               QString const &username,
                               QString const &password);
 
-        /**
-         * @brief loadGroups does what it says
-         */
+        /// retrieves a list of groups from the server
         void loadGroups();
 
-        /**
-         * @brief getLoadedGroups
-         * @return a vector of loaded groups
-         */
+        /// retrieves list of loaded groups
         Groups getLoadedGroups();
 
-        /**
-         * @brief extractNHeadersUsingXOverCommand more efficient way of getting header data
-         */
+        /// loads headers for given group
         void extractNHeadersUsingXOverCommand(QString const &groupName, int const headerCount);
 
         /// reads a single-part article

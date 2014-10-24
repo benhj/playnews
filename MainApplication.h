@@ -32,7 +32,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "LoginDialog.h"
 #include "StatusMessageDisplayer.h"
 
-
 #include <QObject>
 #include <QThread>
 #include <QListWidgetItem>
@@ -50,7 +49,7 @@ class MainApplication : public QObject
   public:
     explicit MainApplication(QObject *parent = 0);
     ~MainApplication();
-    MainWidget m_w;
+    MainWidget m_mainWidget;
 
   signals:
     void statusMessageSignal(QString);
@@ -58,48 +57,91 @@ class MainApplication : public QObject
   public slots:
     void displayLoginDialog();
     void groupsLoadFinishedSlot();
-    void groupSelectedEvent(QListWidgetItem* itme);
+
+    /// stores the currently selected group so that
+    /// headers for group can be later loaded if desired
+    void groupSelectedEvent(QListWidgetItem* item);
+
+    /// called after the group load button has been pressed
     void extractHeadersSlot();
+
+    /// indicates that header data for a given group has been downloaded
+    /// can therefore populate a new group tab with data
     void headersReadFinishedSlot(core::HeadersData hd);
-    void loginFinishedSlot(bool);
+
     void closeTabSlot(int index);
+
+    /// allow searching of particular group in list of groups
     void searchButtonSlot();
+
+    /// show all groups (e.g. after having searched for specific ones)
     void showAllButtonSlot();
+
+    /// flashes up server status messages on screen
     void statusMessageSlot(QString);
+
+    /// when the status display flasher has timed out, this
+    /// slot is triggered to hide it
     void hideStatusDisplaySlot();
+
+    /// for updateing how many bytes have been read from the server
     void bytesReadSlot(int const);
+
+    /// puts bytes read back to zero
     void resetBytesReadSlot();
 
-    void acceptLoginSlot(QString server, QString username, QString password);
+    /// after login dialog has popped up and the user has accepted
+    /// the input credentials, this function is triggered
+    void loginDialogAcceptedSlot(QString server,
+                                 QString username,
+                                 QString password);
 
   private:
 
-    core::ManagedConnectionPtr m_managedConPtr;
-    QString m_selectedGroup;
-    LoginDialogPtr m_loginDialogPtr;
-    bool m_connected;
-    bool m_authorized;
-    bool m_prefsRead;
-    GroupTabs m_groupTabs;
-    core::Groups m_groups;
+    /// core server parameters
     QString m_server;
     QString m_username;
     QString m_password;
-    QString m_from;
-    QString m_org;
-    bool m_ssl;
-    bool m_deleteCacheOnExit;
-    QThread m_workerThread;
-    StatusMessageDisplayer m_statusMessageDisplayer;
-    TimerPtr m_timerPtr;
-    std::deque<QString> m_messageBuffer;
     int m_port;
-    bool m_groupsAdded;
+    bool m_ssl;
+    core::ManagedConnectionPtr m_managedConPtr;
 
-    void disableButtons();
+    /// The loaded groups
+    core::Groups m_groups;
+
+    /// currently selected group
+    QString m_selectedGroup;
+
+    /// A pop-up asking for server, username and pw etc.
+    LoginDialogPtr m_loginDialogPtr;
+
+    /// Holds headers of loaded groups
+    GroupTabs m_groupTabs;
+
+    /// Flashes up messages coming back from the server
+    StatusMessageDisplayer m_statusMessageDisplayer;
+
+    /// For setting a timer on how long message flasher
+    /// should stay open for
+    TimerPtr m_timerPtr;
+
+    /// connects the different gui components to this components
     void connectSignalsToSlots();
-    void updateGroupTabProgressBars(int const val);
-    void setGroupTabProgressBarMaximums(int const val);
-    void resetGroupTabProgressBars();
+
+    /// connects managed connection to this gui component
     void setManagedConSignalsAndSlots();
+
+    /// ensures that progress bars in all other tabs are
+    /// also updated
+    void updateGroupTabProgressBars(int const val);
+
+    /// sets upper limit on all other tabs' progress bars
+    void setGroupTabProgressBarMaximums(int const val);
+
+    /// puts group tab progress bars back to zero
+    void resetGroupTabProgressBars();
+
+    /// connect and load groups
+    void connectAndLoadGroups();
+
 };

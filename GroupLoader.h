@@ -53,7 +53,7 @@ namespace core {
     class GroupLoader : public QObject
     {
         Q_OBJECT
-    public:
+      public:
         GroupLoader(ConnectionInfo const &connectionInfo, QObject *callbackObject);
 
         ~GroupLoader();
@@ -66,14 +66,14 @@ namespace core {
 
         void process();
 
-    public slots:
+      public slots:
 
         void loadGroups();
 
-    signals:
+      signals:
         void groupsLoadFinishedSignal();
 
-    private:
+      private:
         ConnectionInfo m_connectionInfo;
         QObject *m_callbackObject;
         Groups m_groups;

@@ -48,8 +48,10 @@ namespace core {
                                       ConnectionInfo &connectionInfo,
                                       QString const &groupName,
                                       QObject* callBackObject)
-          : m_articleIDs(articleIDs), m_connectionInfo(connectionInfo)
-          , m_groupName(groupName), m_callback(callBackObject)
+          : m_articleIDs(articleIDs)
+          , m_connectionInfo(connectionInfo)
+          , m_groupName(groupName)
+          , m_callback(callBackObject)
           , m_partsGrabbed(0)
           , m_articleReaders()
           , m_counterMutex()
@@ -59,16 +61,16 @@ namespace core {
         void readArticle(int const articleId)
         {
             int isBinary = 1;
-            SharedArticleReader arp(new ArticleReader(m_connectionInfo,
-                                                      m_groupName,
-                                                      articleId,
-                                                      isBinary,
-                                                      m_callback));
-            m_articleReaders.push_back(arp);
-            QObject::connect(arp.data(), SIGNAL(articleDataReadSignal(ArticleData&)),
+            SharedArticleReader articleReader(new ArticleReader(m_connectionInfo,
+                                                                 m_groupName,
+                                                                 articleId,
+                                                                 isBinary,
+                                                                 m_callback));
+            m_articleReaders.push_back(articleReader);
+            QObject::connect(articleReader.data(), SIGNAL(articleDataReadSignal(ArticleData&)),
                              this, SLOT(partDownloaded(ArticleData&)), Qt::QueuedConnection);
 
-            arp->process();
+            articleReader->process();
         }
 
         void doLoad()

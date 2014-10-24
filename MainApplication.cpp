@@ -88,19 +88,25 @@ namespace {
 
 }
 
-MainApplication::MainApplication(QObject *parent):
-    QObject(parent),
-    m_connected(false),
-    m_authorized(false),
-    m_prefsRead(false),
-    m_managedConPtr(),
-    m_groupsAdded(false)
+MainApplication::MainApplication(QObject *parent)
+  : QObject(parent)
+  , m_server()
+  , m_username()
+  , m_password()
+  , m_port(119)
+  , m_ssl(false)
+  , m_managedConPtr()
+  , m_groups()
+  , m_selectedGroup()
+  , m_loginDialogPtr()
+  , m_groupTabs()
+  , m_statusMessageDisplayer()
+  , m_timerPtr()
 {
     connectSignalsToSlots();
     qRegisterMetaType<core::ArticleData>("ArticleData&");
     qRegisterMetaType<core::HeadersData>("HeadersData");
     displayLoginDialog();
-    loginFinishedSlot(true);
 }
 
 void
@@ -111,30 +117,24 @@ MainApplication::connectSignalsToSlots()
                      this, SLOT(statusMessageSlot(QString)),
                      Qt::QueuedConnection);
 
-    QObject::connect(m_w.ui->groupWidget->ui->connectButton, SIGNAL(clicked()),
+    QObject::connect(m_mainWidget.ui->groupWidget->ui->connectButton, SIGNAL(clicked()),
                      this, SLOT(displayLoginDialog()));
 
     // For pulling in headers of particular group
-    QObject::connect(m_w.ui->groupWidget->ui->groupLoadButton, SIGNAL(clicked()),
+    QObject::connect(m_mainWidget.ui->groupWidget->ui->groupLoadButton, SIGNAL(clicked()),
                      this, SLOT(extractHeadersSlot()));
 
-    QObject::connect(m_w.ui->tabWidget, SIGNAL(tabCloseRequested(int)),
+    QObject::connect(m_mainWidget.ui->tabWidget, SIGNAL(tabCloseRequested(int)),
                      this, SLOT(closeTabSlot(int)));
 
-    QObject::connect(m_w.ui->groupWidget->ui->searchButton, SIGNAL(clicked()),
+    QObject::connect(m_mainWidget.ui->groupWidget->ui->searchButton, SIGNAL(clicked()),
                      this, SLOT(searchButtonSlot()));
 
-    QObject::connect(m_w.ui->groupWidget->ui->showAllButton, SIGNAL(clicked()),
+    QObject::connect(m_mainWidget.ui->groupWidget->ui->showAllButton, SIGNAL(clicked()),
                      this, SLOT(showAllButtonSlot()));
 
-    QObject::connect(m_w.ui->groupWidget->ui->groupsView, SIGNAL(itemClicked(QListWidgetItem*)),
+    QObject::connect(m_mainWidget.ui->groupWidget->ui->groupsView, SIGNAL(itemClicked(QListWidgetItem*)),
                      this, SLOT(groupSelectedEvent(QListWidgetItem*)));
-}
-
-void
-MainApplication::disableButtons()
-{
-    m_w.ui->groupWidget->ui->searchButton->setEnabled(false);
 }
 
 void
@@ -145,7 +145,7 @@ MainApplication::displayLoginDialog()
     QObject::connect(m_loginDialogPtr.data(),
                      SIGNAL(acceptLogin(QString, QString, QString)),
                      this,
-                     SLOT(acceptLoginSlot(QString , QString , QString )));
+                     SLOT(loginDialogAcceptedSlot(QString , QString , QString )));
 
     m_loginDialogPtr->show();
 }
@@ -158,20 +158,18 @@ MainApplication::groupsLoadFinishedSlot()
     core::Groups().swap(m_groups);
     m_groups = m_managedConPtr->getLoadedGroups();
     for(auto const & it : m_groups) {
-         m_w.addItem(QString(it.groupName.c_str()));
+         m_mainWidget.addItem(QString(it.groupName.c_str()));
     }
 
-    m_groupsAdded = true;
-
     // Turn off busy status of progress bar
-    m_w.ui->groupWidget->ui->progressBar->setMaximum(1);
+    m_mainWidget.ui->groupWidget->ui->progressBar->setMaximum(1);
     this->bytesReadSlot(0);
     this->setGroupTabProgressBarMaximums(1);
     this->updateGroupTabProgressBars(1);
 
     // Activate group-centric buttons
-    m_w.ui->groupWidget->ui->connectButton->setEnabled(true);
-    m_w.ui->groupWidget->ui->searchButton->setEnabled(true);
+    m_mainWidget.ui->groupWidget->ui->connectButton->setEnabled(true);
+    m_mainWidget.ui->groupWidget->ui->searchButton->setEnabled(true);
 }
 
 void
@@ -185,36 +183,30 @@ MainApplication::groupSelectedEvent(QListWidgetItem* item)
 void
 MainApplication::extractHeadersSlot()
 {
-    if(m_groupsAdded) {
-        QWidget widget;
-        ArticleCountDialog acd(&widget);
-        std::stringstream ss;
-        int articlesToExtract = 500;
-        ss << 500;
-        acd.ui->articleCountEdit->setText(QString(ss.str().c_str()));
-        if(acd.exec() == QDialog::Accepted) {
-            auto returned = acd.ui->articleCountEdit->text();
-            articlesToExtract = atoi(returned.toStdString().c_str());
-            m_managedConPtr->extractNHeadersUsingXOverCommand(m_selectedGroup, articlesToExtract);
+    QWidget widget;
+    ArticleCountDialog acd(&widget);
+    std::stringstream ss;
+    int articlesToExtract = 500;
+    ss << 500;
+    acd.ui->articleCountEdit->setText(QString(ss.str().c_str()));
+    if(acd.exec() == QDialog::Accepted) {
+        auto returned = acd.ui->articleCountEdit->text();
+        articlesToExtract = atoi(returned.toStdString().c_str());
+        m_managedConPtr->extractNHeadersUsingXOverCommand(m_selectedGroup, articlesToExtract);
 
-            // Setting maximum of progress bar
-            m_w.ui->groupWidget->ui->progressBar->setMaximum(articlesToExtract);
-            this->setGroupTabProgressBarMaximums(articlesToExtract);
-        }
+        // Setting maximum of progress bar
+        m_mainWidget.ui->groupWidget->ui->progressBar->setMaximum(articlesToExtract);
+        this->setGroupTabProgressBarMaximums(articlesToExtract);
     }
 }
 
-// For when group headers have finished loading, we
-// can do whatever. E.g. open a new tab and display
-// the article headers in a list ready to be selected
-// by user :-)
 void
 MainApplication::headersReadFinishedSlot(core::HeadersData hd)
 {
     // Stop progress bar busy status
     qDebug() << "finihsed headers!!";
-    m_w.ui->groupWidget->ui->progressBar->reset();
-    m_w.ui->groupWidget->ui->progressBar->setMaximum(1);
+    m_mainWidget.ui->groupWidget->ui->progressBar->reset();
+    m_mainWidget.ui->groupWidget->ui->progressBar->setMaximum(1);
     this->setGroupTabProgressBarMaximums(1);
 
     if(hd.status == 224)
@@ -227,51 +219,34 @@ MainApplication::headersReadFinishedSlot(core::HeadersData hd)
                                             m_ssl,
                                             m_username,
                                             m_password);
-        ManagedGroupTabPtr managedGroupTab(new ManagedGroupTab(m_w.ui->tabWidget,
+        ManagedGroupTabPtr managedGroupTab(new ManagedGroupTab(m_mainWidget.ui->tabWidget,
                                                                m_selectedGroup,
-                                                               m_w,
+                                                               m_mainWidget,
                                                                m_managedConPtr,
                                                                connectionInfo,
-                                                               m_workerThread,
                                                                m_statusMessageDisplayer,
                                                                hd.headers));
-        QObject::connect(managedGroupTab.data(), SIGNAL(pictureSavedSignal(QString)), this, SLOT(statusMessageSlot(QString)));
-        QObject::connect(managedGroupTab.data(), SIGNAL(loadingMediaSignal(QString)), this, SLOT(statusMessageSlot(QString)));
-        QObject::connect(managedGroupTab.data(), SIGNAL(resetHeadersList(QString)), this, SLOT(statusMessageSlot(QString)));
+        QObject::connect(managedGroupTab.data(), SIGNAL(pictureSavedSignal(QString)),
+                         this, SLOT(statusMessageSlot(QString)));
+        QObject::connect(managedGroupTab.data(), SIGNAL(loadingMediaSignal(QString)),
+                         this, SLOT(statusMessageSlot(QString)));
+        QObject::connect(managedGroupTab.data(), SIGNAL(resetHeadersList(QString)),
+                         this, SLOT(statusMessageSlot(QString)));
         m_groupTabs.push_back(managedGroupTab);
     }
 }
 
 void
-MainApplication::loginFinishedSlot(bool authorized) {
+MainApplication::connectAndLoadGroups()
+{
+    qDebug() << "MainApplication: authenticated";
 
-    m_authorized = authorized;
-    if(authorized && m_prefsRead) {
+    // automatically commits suicide on finish
+    m_managedConPtr->loadGroups();
 
-        qDebug() << "MainApplication: authenticated";
-
-        // Create a new group load thread while transferring thread ownsership
-        // of m_connectionPtr to the thread and start the thread
-        if(!m_groupsAdded) {
-            // automatically commits suicide on finish
-            m_managedConPtr->loadGroups();
-
-            // Setting maximum of progress bar to 0 swicthes on its busy status
-            m_w.ui->groupWidget->ui->progressBar->setMaximum(0);
-            this->setGroupTabProgressBarMaximums(0);
-        } else {
-
-            // Turn off busy status of progress bar
-            qDebug() << "Turning off busy status..";
-            m_w.ui->groupWidget->ui->progressBar->setMaximum(1);
-            this->setGroupTabProgressBarMaximums(1);
-
-
-            // Activate group-centric buttons
-            m_w.ui->groupWidget->ui->connectButton->setEnabled(true);
-            m_w.ui->groupWidget->ui->searchButton->setEnabled(true);
-        }
-    }
+    // Setting maximum of progress bar to 0 swicthes on its busy status
+    m_mainWidget.ui->groupWidget->ui->progressBar->setMaximum(0);
+    this->setGroupTabProgressBarMaximums(0);
 }
 
 void
@@ -279,7 +254,7 @@ MainApplication::closeTabSlot(int index)
 {
     // Never allow closing of tab 0 which is the groups tab
     if(index > 0) {
-        m_w.ui->tabWidget->removeTab(index);
+        m_mainWidget.ui->tabWidget->removeTab(index);
     }
 }
 
@@ -290,12 +265,12 @@ MainApplication::searchButtonSlot()
     SearchDialog sd(&widget);
     if(sd.exec() == QDialog::Accepted) {
         QString returned = sd.getText();
-        m_w.removeAllItems();
+        m_mainWidget.removeAllItems();
         for(auto const & it : m_groups) {
             if(std::string(returned.toStdString()).empty()) {
-                m_w.addItem(QString(it.groupName.c_str()));
+                m_mainWidget.addItem(QString(it.groupName.c_str()));
             } else if(std::string(it.groupName).find(returned.toStdString()) != std::string::npos) {
-                m_w.addItem(QString(it.groupName.c_str()));
+                m_mainWidget.addItem(QString(it.groupName.c_str()));
             }
         }
     }
@@ -305,9 +280,9 @@ void
 MainApplication::showAllButtonSlot()
 {
     emit statusMessageSignal("Showing all groups...");
-    m_w.removeAllItems();
+    m_mainWidget.removeAllItems();
     for(auto const & it : m_groups) {
-        m_w.addItem(QString(it.groupName.c_str()));
+        m_mainWidget.addItem(QString(it.groupName.c_str()));
     }
 }
 
@@ -323,12 +298,12 @@ MainApplication::statusMessageSlot(QString statusMessage)
 
     m_statusMessageDisplayer.setMessage(statusMessage);
     m_statusMessageDisplayer.showMaximized();
-    centerWidget(&m_w, &m_statusMessageDisplayer);
+    centerWidget(&m_mainWidget, &m_statusMessageDisplayer);
     m_statusMessageDisplayer.setFocus();
     m_statusMessageDisplayer.setVisible(true);
     m_statusMessageDisplayer.raise();
 
-
+    // display message for a short time as indicated by timer
     m_timerPtr.reset(new QTimer);
     QObject::connect(m_timerPtr.data(),
                      SIGNAL(timeout()),
@@ -346,7 +321,7 @@ MainApplication::hideStatusDisplaySlot()
     if(m_statusMessageDisplayer.isVisible()) {
         qDebug() << "Hiding...";
         m_statusMessageDisplayer.hide();
-        m_w.update();
+        m_mainWidget.update();
     }
 }
 
@@ -406,10 +381,11 @@ void MainApplication::setManagedConSignalsAndSlots()
 void
 MainApplication::bytesReadSlot(int const bytesRead)
 {
+    // following magic number converts bytes to MB
     double d = (double)(bytesRead / 1048576.0);
-    double orig = m_w.ui->groupWidget->ui->byteDisplay->value();
+    double orig = m_mainWidget.ui->groupWidget->ui->byteDisplay->value();
     auto temp = QString::number(d+orig, 'f', 2);
-    m_w.ui->groupWidget->ui->byteDisplay->display(temp);
+    m_mainWidget.ui->groupWidget->ui->byteDisplay->display(temp);
 
     for(auto const & it : m_groupTabs) {
         (*it).updateBytesDisplay(d+orig);
@@ -419,15 +395,15 @@ MainApplication::bytesReadSlot(int const bytesRead)
 void
 MainApplication::resetBytesReadSlot()
 {
-    m_w.ui->groupWidget->ui->byteDisplay->display(0);
+    m_mainWidget.ui->groupWidget->ui->byteDisplay->display(0);
     for(auto const & it : m_groupTabs) {
         (*it).updateBytesDisplay(0);
     }
 }
 
-void MainApplication::acceptLoginSlot(QString server,
-                                      QString username,
-                                      QString password)
+void MainApplication::loginDialogAcceptedSlot(QString server,
+                                              QString username,
+                                              QString password)
 {
     m_loginDialogPtr->hide();
     m_server = getServerFromString(server);
@@ -435,10 +411,6 @@ void MainApplication::acceptLoginSlot(QString server,
     m_ssl = (m_port == 563); // TODO
     m_username = username;
     m_password = password;
-    //m_from = m_prefsWidgetPtr->getFrom();
-    //m_org = m_prefsWidgetPtr->getOrg();
-    //m_deleteCacheOnExit = m_prefsWidgetPtr->deleteCacheOnExit();
-    //ConnectorBuilder::setAllowedConnections(m_prefsWidgetPtr->allowedConnections()); 
     m_managedConPtr = core::ManagedConnectionPtr(new core::ManagedNNTPConnection(m_server,
                                                                                  m_port,
                                                                                  m_ssl,
@@ -446,11 +418,11 @@ void MainApplication::acceptLoginSlot(QString server,
                                                                                  m_password));
     this->setManagedConSignalsAndSlots();
 
-    m_prefsRead = true;
-    loginFinishedSlot(true);
-    if(!m_w.isVisible()) {
-        m_w.resize(1024,600);
-        m_w.show();
+    this->connectAndLoadGroups();
+
+    if(!m_mainWidget.isVisible()) {
+        m_mainWidget.resize(1024,600);
+        m_mainWidget.show();
     }
 }
 

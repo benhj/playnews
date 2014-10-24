@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
     doConfigFileDirCheck();
 
     auto mainApp = new MainApplication(new QObject);
-    splash.finish(&mainApp->m_w);
+    splash.finish(&mainApp->m_mainWidget);
     return a.exec();
 }
 

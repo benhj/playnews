@@ -38,14 +38,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QDebug>
 #include <QScrollBar>
 
-class RemoveSelectionDelegate : public QStyledItemDelegate {
-public:
+class RemoveSelectionDelegate : public QStyledItemDelegate
+{
+  public:
     RemoveSelectionDelegate(QObject *parent = 0)
-        : QStyledItemDelegate(parent) {
+      : QStyledItemDelegate(parent)
+    {
     }
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
-               const QModelIndex &index) const {
+               const QModelIndex &index) const
+    {
         // Call the original paint method with the selection state cleared
         // to prevent painting the original selection background
         QStyleOptionViewItemV4 optionV4 =
@@ -55,14 +58,16 @@ public:
     }
 };
 
-class ListWidget : public QListWidget {
+class ListWidget : public QListWidget
+{
     Q_OBJECT
-public:
+  public:
     ListWidget(QWidget *parent = 0)
-        : QListWidget(parent)
-        , selectionFrame(this)
-        , animation(&selectionFrame, "geometry")
-        , kineticScroller(this){
+      : QListWidget(parent)
+      , selectionFrame(this)
+      , animation(&selectionFrame, "geometry")
+      , kineticScroller(this)
+    {
         // Create a semi-transparent frame that doesn't interact with anything
         selectionFrame.setAttribute(Qt::WA_TransparentForMouseEvents);
         setAttribute(Qt::WA_AcceptTouchEvents);
@@ -92,13 +97,14 @@ public:
 
     }
 
-private slots:
+  private slots:
     void resizeEvent(QResizeEvent *e) {
         QListWidget::resizeEvent(e);
         updateSelection(currentItem());
     }
 
-    void updateSelection(QListWidgetItem* current) {
+    void updateSelection(QListWidgetItem* current)
+    {
         animation.stop();
         if (!current) {
             selectionFrame.hide();
@@ -113,23 +119,22 @@ private slots:
         animation.setEndValue(visualItemRect(current));
         animation.start();
     }
-private:
+  private:
     QFrame selectionFrame;
     QPropertyAnimation animation;
     QsKineticScroller kineticScroller;
 
     bool gestureEvent(QGestureEvent *event)
-     {
-
-         if (QGesture *tapandhold = event->gesture(Qt::TapAndHoldGesture))
-         {
-             tapandholdTriggered(static_cast<QTapAndHoldGesture *>(tapandhold));
-          }
-         return true;
-     }
+    {
+        if (QGesture *tapandhold = event->gesture(Qt::TapAndHoldGesture))
+        {
+            tapandholdTriggered(static_cast<QTapAndHoldGesture *>(tapandhold));
+        }
+        return true;
+    }
 
     void  tapandholdTriggered(QTapAndHoldGesture *tapandhold)
-     {
-         qDebug() << "TAPANDHOLD";
-     }
+    {
+        qDebug() << "TAPANDHOLD";
+    }
 };
