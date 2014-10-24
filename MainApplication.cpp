@@ -221,7 +221,6 @@ MainApplication::headersReadFinishedSlot(core::HeadersData hd)
                                             m_password);
         ManagedGroupTabPtr managedGroupTab(new ManagedGroupTab(m_mainWidget.ui->tabWidget,
                                                                m_selectedGroup,
-                                                               m_mainWidget,
                                                                m_managedConPtr,
                                                                connectionInfo,
                                                                m_statusMessageDisplayer,
@@ -417,7 +416,6 @@ void MainApplication::loginDialogAcceptedSlot(QString server,
                                                                                  m_username,
                                                                                  m_password));
     this->setManagedConSignalsAndSlots();
-
     this->connectAndLoadGroups();
 
     if(!m_mainWidget.isVisible()) {

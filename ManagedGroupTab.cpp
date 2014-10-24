@@ -47,21 +47,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sstream>
 #include <fstream>
 
+// for grabbing the tab widget parent from the parent QObject
+#define TAB_WIDGET static_cast<QTabWidget*>(this->parent())
+
 ManagedGroupTab::ManagedGroupTab(QObject *parent,
                                  QString const &groupName,
-                                 MainWidget &w,
                                  core::ManagedConnectionPtr &connection,
                                  core::ConnectionInfo const& connectionInfo,
                                  StatusMessageDisplayer &statusMessageDisplayer,
                                  core::Headers &headers)
   : QObject(parent)
   , m_groupName(groupName)
-  , m_w(w)
   , m_connection(connection)
   , m_connectionInfo(connectionInfo)
   , m_worker()
   , m_statusMessageDisplayer(statusMessageDisplayer)
-  , m_articleLoaderThread(NULL)
   , m_parentWidget((QTabWidget*)parent)
   , m_headers(headers)
 {
@@ -74,8 +74,8 @@ ManagedGroupTab::~ManagedGroupTab()
     //
     // (1) Remove tab from tab widget
     //
-    int tabIndex = m_w.ui->tabWidget->indexOf(m_selectedGroupTab);
-    m_w.ui->tabWidget->removeTab(tabIndex);
+    int tabIndex = TAB_WIDGET->indexOf(m_selectedGroupTab);
+    TAB_WIDGET->removeTab(tabIndex);
 
     //
     // (2) Delete grid layout
@@ -96,12 +96,9 @@ ManagedGroupTab::~ManagedGroupTab()
 void
 ManagedGroupTab::addGroupTab()
 {
-    //
+
     // Create a new tab with selected group name and a ListWidget
-    // for displaying the actual headers. Note
-    // I'm sure there's an easier way to set name of
-    // tab; method here ripped from exported designer code
-    //
+    // for displaying the actual headers.
     m_selectedGroupTab = new QWidget();
     m_selectedGroupTab->setAttribute(Qt::WA_DeleteOnClose);
     m_gridLayout = new QGridLayout(m_selectedGroupTab);
@@ -109,17 +106,17 @@ ManagedGroupTab::addGroupTab()
     m_gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
     m_headersWidget = new HeadersWidget(m_selectedGroupTab);
 
-    //
     // When a given article is selected, read it
-    //
     QObject::connect(m_headersWidget->ui->readButton, SIGNAL(clicked()), this,
                      SLOT(readArticleSlot()));
 
     //
     // For posting a new article to the group
     //
-//    QObject::connect(m_headersWidget->ui->postButton, SIGNAL(clicked()), this,
-//                     SLOT(postSlot()));
+    /*
+    QObject::connect(m_headersWidget->ui->postButton, SIGNAL(clicked()), this,
+                     SLOT(postSlot()));
+                     */
 
     QObject::connect(m_headersWidget->ui->searchButton, SIGNAL(clicked()), this,
                      SLOT(searchSlot()));
@@ -127,23 +124,24 @@ ManagedGroupTab::addGroupTab()
     QObject::connect(m_headersWidget->ui->showAllButton, SIGNAL(clicked()), this,
                      SLOT(showAllSlot()));
 
-//    QObject::connect(m_headersWidget->ui->bulkDLButton, SIGNAL(clicked()), this,
-//                     SLOT(bulkDownloadSlot()));
-
+    /*
+    QObject::connect(m_headersWidget->ui->bulkDLButton, SIGNAL(clicked()), this,
+                     SLOT(bulkDownloadSlot()));
+    */
 
     m_headersWidget->setObjectName(QString::fromUtf8("headersWidget"));
     m_headersWidget->setStyleSheet(QString::fromUtf8("border: none"));
     m_gridLayout->addWidget(m_headersWidget, 1, 0, 1, 1);
-    m_w.ui->tabWidget->addTab(m_selectedGroupTab, QString());
 
-    m_w.ui->tabWidget->setTabText(m_w.ui->tabWidget->indexOf(m_selectedGroupTab),
+    TAB_WIDGET->addTab(m_selectedGroupTab, QString());
+
+    TAB_WIDGET->setTabText(TAB_WIDGET->indexOf(m_selectedGroupTab),
                                   QApplication::translate("MainWidget",
                                                           m_groupName.toStdString().c_str(),
                                                           0));
 
-    //
+
     // Add headers to tab
-    //
     core::Headers::reverse_iterator headerIterator;
     for(headerIterator = m_headers.rbegin() ;
         headerIterator != m_headers.rend() ;

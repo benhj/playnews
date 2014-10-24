@@ -53,7 +53,6 @@ class ManagedGroupTab : public QObject
 public:
     explicit ManagedGroupTab(QObject *parent,
                              QString const &groupName,
-                             MainWidget &w,
                              core::ManagedConnectionPtr &connection,
                              core::ConnectionInfo const& connectionInfo,
                              StatusMessageDisplayer &statusMessageDisplayer,
@@ -84,9 +83,7 @@ public slots:
     //void bulkDownloadSlot();
 
 private:
-    ArticleLoaderThread *m_articleLoaderThread;
     QString m_groupName;
-    MainWidget &m_w;
     core::ManagedConnectionPtr m_connection;
     core::Headers m_headers;
     QWidget *m_selectedGroupTab;
