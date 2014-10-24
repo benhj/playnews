@@ -67,8 +67,10 @@ namespace core {
         Header &m_header;
         QThread &m_worker;
         bool m_compositeReadMode;
+
         YencDecoder m_yencDecoder;
         bool m_finished;
+
         void handleComposite();
         void handleSingle();
         void decodeHeadPart(int const id, std::ofstream &out);

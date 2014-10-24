@@ -32,13 +32,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace core {
 
-    typedef std::vector<CompositeMessagePart> CompositeMessageParts;
-
     struct Header;
-
     typedef std::vector<Header> Headers;
-
     typedef std::vector<Header*> HeaderPtrs;
+    typedef std::vector<CompositeMessagePart> CompositeMessageParts;
 
     struct HeadersData
     {

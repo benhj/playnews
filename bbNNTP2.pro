@@ -37,8 +37,7 @@ SOURCES += main.cpp MainWidget.cpp \
     BulkDownloader.cpp \
     BinaryGrabber.cpp \
     HeadersExtractorStructure.cpp \
-    ArticleSelectAndReadStructure.cpp \
-    CompositeSelectAndReadStructure.cpp
+    ArticleSelectAndReadStructure.cpp
 HEADERS += MainWidget.h \
     MainApplication.h \
     LoginDialog.h \
@@ -68,7 +67,6 @@ HEADERS += MainWidget.h \
     BinaryGrabber.h \
     HeadersExtractorStructure.h \
     ArticleSelectAndReadStructure.h \
-    CompositeSelectAndReadStructure.h \
     TableWidget.h \
     CompositeArticleLoaderChecker.h \
     ConnectorBuilder.h \

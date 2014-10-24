@@ -60,8 +60,8 @@ namespace core {
       , m_articleId(articleId)
       , m_isBinary(isBinary)
       , m_callbackObject(callbackObject)
+      , m_worker()
     {
-
     }
 
     void
@@ -70,7 +70,6 @@ namespace core {
         this->moveToThread(&m_worker);
         QObject::connect(&m_worker, SIGNAL(started()), this, SLOT(readArticle()));
         m_worker.start();
-
     }
 
     void

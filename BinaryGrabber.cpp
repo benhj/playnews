@@ -41,6 +41,7 @@ namespace core {
       , m_header(header)
       , m_worker(worker)
       , m_compositeReadMode(compositeReadMode)
+      , m_yencDecoder()
       , m_finished(false)
     {
         QObject::connect(&m_yencDecoder, SIGNAL(partDecoded()), this, SLOT(partDecodedSlot()));

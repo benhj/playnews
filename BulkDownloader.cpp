@@ -36,6 +36,9 @@ namespace core {
       : m_connection(connection)
       , m_groupName(groupName)
       , m_worker(worker)
+      , m_headers()
+      , m_binaryGrabberPtr()
+      , m_headerIterator()
     {
     }
 
@@ -48,10 +51,8 @@ namespace core {
     void
     BulkDownloader::bulkDownload()
     {
-
         m_headerIterator = m_headers.begin();
         this->downloadAndIterate();
-
     }
 
     void

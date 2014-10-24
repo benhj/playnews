@@ -26,7 +26,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "ManagedNNTPConnection.h"
 #include "ArticleSelectAndReadStructure.h"
-#include "CompositeSelectAndReadStructure.h"
 
 #include <QDir>
 #include <QApplication>
@@ -51,7 +50,11 @@ namespace core {
     ManagedNNTPConnection::loadGroups()
     {
 
-        qDebug() << m_server << "\t" << m_port << "\t" << m_ssl << "\t" << m_username << "\t" << m_password;
+        qDebug() << m_server << "\t"
+                 << m_port << "\t"
+                 << m_ssl << "\t"
+                 << m_username << "\t"
+                 << m_password;
 
         emit resetBytesReadSignal();
 

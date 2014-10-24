@@ -34,11 +34,11 @@ ArticleSelectAndReadStructure::ArticleSelectAndReadStructure(const QString &grou
   , m_articleId(articleId_)
 {
 }
+
 QString ArticleSelectAndReadStructure::groupName()
 {
     return m_groupName;
 }
-
 
 int ArticleSelectAndReadStructure::articleId()
 {

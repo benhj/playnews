@@ -1,6 +1,6 @@
-#include "tapandholdgesture.h"
+#include "tapandholdgesture.hpp"
 
-#include <QtGui/qevent.h>
+#include <QtGui/qevent.hpp>
 
 /*!
     \class TapAndHoldGesture

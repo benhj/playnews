@@ -70,11 +70,11 @@ namespace core {
 
     private:
         ConnectionInfo m_connectionInfo;
-        int m_articleId;
-        QThread m_worker;
         QString m_group;
-        QObject *m_callbackObject;
+        int m_articleId;
         int m_isBinary;
+        QObject *m_callbackObject;
+        QThread m_worker;    
     };
 
 }

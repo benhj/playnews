@@ -37,7 +37,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace core {
 
     class CompositeArticleLoaderChecker;
-
     typedef QScopedPointer<CompositeArticleLoaderChecker> CompositeCheckerPtr;
     typedef std::vector<SharedArticleReader> ArticleReaders;
 
@@ -45,22 +44,27 @@ namespace core {
     {
         Q_OBJECT
     public:
-        CompositeArticleLoaderChecker(std::vector<int> codes,
+        CompositeArticleLoaderChecker(std::vector<int> articleIDs,
                                       ConnectionInfo &connectionInfo,
                                       QString const &groupName,
                                       QObject* callBackObject)
-      : m_codes(codes), m_connectionInfo(connectionInfo)
-      , m_groupName(groupName), m_callback(callBackObject)
-      , m_partsGrabbed(0)
-      {
-            it = m_codes.begin();
-      }
+          : m_articleIDs(articleIDs), m_connectionInfo(connectionInfo)
+          , m_groupName(groupName), m_callback(callBackObject)
+          , m_partsGrabbed(0)
+          , m_articleReaders()
+          , m_counterMutex()
+        {
+        }
 
         void readArticle(int const articleId)
         {
             int isBinary = 1;
-            SharedArticleReader arp(new ArticleReader(m_connectionInfo, m_groupName, articleId, isBinary, m_callback));
-            m_arps.push_back(arp);
+            SharedArticleReader arp(new ArticleReader(m_connectionInfo,
+                                                      m_groupName,
+                                                      articleId,
+                                                      isBinary,
+                                                      m_callback));
+            m_articleReaders.push_back(arp);
             QObject::connect(arp.data(), SIGNAL(articleDataReadSignal(ArticleData&)),
                              this, SLOT(partDownloaded(ArticleData&)), Qt::QueuedConnection);
 
@@ -69,38 +73,43 @@ namespace core {
 
         void doLoad()
         {
-            for(it = m_codes.begin() ; it != m_codes.end(); ++it) {
-                readArticle(*it);
+            for(auto const & it : m_articleIDs) {
+                readArticle(it);
             }
         }
 
     public slots:
         void partDownloaded(ArticleData&)
         {
-            m_mutex.lock();
+            m_counterMutex.lock();
             qDebug() << "part downloaded!";
             ++m_partsGrabbed;
 
-            if(m_partsGrabbed == m_codes.size()) {
+            if(m_partsGrabbed == m_articleIDs.size()) {
                 qDebug() << "yes finished comp";
                 emit compositeFinishedSignal();
-            } else {
             }
-            m_mutex.unlock();
+            m_counterMutex.unlock();
         }
 
     signals:
         void compositeFinishedSignal();
 
     private:
-        std::vector<int> m_codes;
-        ArticleReaders m_arps;
-        int m_partsGrabbed;
+        std::vector<int> m_articleIDs;
         ConnectionInfo m_connectionInfo;
         QString m_groupName;
-        QMutex m_mutex;
         QObject *m_callback;
-        std::vector<int>::iterator it;
+
+        /// so that we know whole binary has finished downloading
+        size_t m_partsGrabbed;
+
+        /// hold on to these so that articles parts don't get
+        /// lost while reading is still occurring
+        ArticleReaders m_articleReaders;
+
+        /// lock on the counter var
+        QMutex m_counterMutex;
     };
 
 }

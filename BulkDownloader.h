@@ -61,12 +61,13 @@ namespace core {
         void partDecodedSignal();
 
     private:
-        HeaderPtrs m_headers;
         ManagedConnectionPtr &m_connection;
         QString m_groupName;
+        QThread &m_worker;
+        HeaderPtrs m_headers;
         BinaryGrabberPtr m_binaryGrabberPtr;
         HeaderPtrs::iterator m_headerIterator;
-        QThread &m_worker;
+
     };
 
 }

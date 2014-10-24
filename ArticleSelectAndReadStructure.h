@@ -31,17 +31,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 class ArticleSelectAndReadStructure : public QObject
 {
     Q_OBJECT
-public:
-    explicit ArticleSelectAndReadStructure(QString const &groupName_, int const articleId_, QObject *parent = 0);
+  public:
+    explicit ArticleSelectAndReadStructure(QString const &groupName, int const articleId, QObject *parent = 0);
     QString groupName();
     int articleId();
-signals:
+  signals:
     
-public slots:
+  public slots:
 
-private:
+  private:
     QString m_groupName;
     int m_articleId;
-    
 };
 
