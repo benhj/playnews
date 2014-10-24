@@ -34,8 +34,9 @@ namespace core {
                              QObject *callbackObject)
       : m_connectionInfo(connectionInfo)
       , m_callbackObject(callbackObject)
+      , m_groups()
+      , m_worker()
     {
-
     }
 
     GroupLoader::~GroupLoader()

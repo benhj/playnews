@@ -85,7 +85,7 @@ namespace core {
                 //
                 QObject::connect(m_connection.data(), SIGNAL(compositeDataReadSignal()), this,
                                  SLOT(handleBinaryData()));
-                m_connection->selectAndReadCollection(m_groupName, compositeCodes);
+                m_connection->readCompositeArticle(m_groupName, compositeCodes);
             } else {
                 //
                 // Not all parts present

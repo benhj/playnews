@@ -36,7 +36,6 @@ SOURCES += main.cpp MainWidget.cpp \
     ArticleReader.cpp \
     BulkDownloader.cpp \
     BinaryGrabber.cpp \
-    HeadersExtractorStructure.cpp \
     ArticleSelectAndReadStructure.cpp
 HEADERS += MainWidget.h \
     MainApplication.h \
@@ -65,7 +64,6 @@ HEADERS += MainWidget.h \
     BulkDownloader.h \
     ArticleHeader.h \
     BinaryGrabber.h \
-    HeadersExtractorStructure.h \
     ArticleSelectAndReadStructure.h \
     TableWidget.h \
     CompositeArticleLoaderChecker.h \

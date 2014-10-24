@@ -38,7 +38,9 @@ class PostMaster : public QObject
 {
     Q_OBJECT
 public:
-    explicit PostMaster(ConnectionInfo const &connectionInfo, QString const &groupName, QObject *m_callbackObject);
+    explicit PostMaster(core::ConnectionInfo const &connectionInfo,
+                        QString const &groupName,
+                        QObject *m_callbackObject);
     void displayPostWidget(QString const &data = "");
     ~PostMaster();
     
@@ -53,7 +55,7 @@ private:
     QThread m_worker;
     QString m_groupName;
     QObject *m_callbackObject;
-    ConnectionInfo m_connectionInfo;
+    core::ConnectionInfo m_connectionInfo;
 
 
 };

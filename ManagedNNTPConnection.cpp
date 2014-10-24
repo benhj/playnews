@@ -34,16 +34,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace core {
 
-    ManagedNNTPConnection::ManagedNNTPConnection()
+    ManagedNNTPConnection::ManagedNNTPConnection(QString const &server,
+                                                 int const port,
+                                                 bool const ssl,
+                                                 QString const &username,
+                                                 QString const &password)
+      : m_server(server)
+      , m_port(port)
+      , m_ssl(ssl)
+      , m_username(username)
+      , m_password(password)
+      , m_headerExtractorPtr()
+      , m_groupLoaderPtr()
+      , m_articleReaderPtr()
+      , m_compositeCheckerPtr()
     {
-    }
-
-
-    void
-    ManagedNNTPConnection::setUsernameAndPassword(QString const &username, QString const &password)
-    {
-        m_username = username;
-        m_password = password;
     }
 
     void
@@ -120,29 +125,6 @@ namespace core {
     }
 
     void
-    ManagedNNTPConnection::readArticle(QString const &group, int const articleId)
-    {
-        qDebug() << m_server << "\t" << m_port << "\t" << m_ssl;
-        qDebug() << "Resetting article reader";
-
-        emit resetBytesReadSignal();
-
-        ConnectionInfo connectionInfo(m_server,
-                                      m_port,
-                                      m_ssl,
-                                      m_username,
-                                      m_password);
-        int isBinary = 0;
-        m_articleReaderPtr.reset(new ArticleReader(connectionInfo, group, articleId, isBinary, this));
-
-        // return in a struct the article data together with the binaryData int
-        qDebug() << "Reading...";
-        QObject::connect(m_articleReaderPtr.data(), SIGNAL(articleDataReadSignal(ArticleData&)),
-                         this, SLOT(finishedReadingArticle(ArticleData&)));
-        m_articleReaderPtr->process();
-    }
-
-    void
     ManagedNNTPConnection::finishedReadingArticle(ArticleData &data)
     {
 
@@ -172,16 +154,46 @@ namespace core {
 
 
     void
-    ManagedNNTPConnection::selectAndRead(QString const &groupName, int const articleId)
+    ManagedNNTPConnection::readArticle(QString const &groupName,
+                                         int const articleId)
     {
         qDebug() << "Reading article...";
-        readArticle(groupName, articleId);
+        this->doReadArticle(groupName, articleId);
     }
 
     void
-    ManagedNNTPConnection::selectAndReadCollection(QString const &groupName, std::vector<int> codes)
+    ManagedNNTPConnection::readCompositeArticle(QString const &groupName, std::vector<int> articleIDs)
     {
+        this->doReadCompositeArticle(groupName, articleIDs);
 
+    }
+
+    void
+    ManagedNNTPConnection::doReadArticle(QString const &group, int const articleId)
+    {
+        qDebug() << m_server << "\t" << m_port << "\t" << m_ssl;
+        qDebug() << "Resetting article reader";
+
+        emit resetBytesReadSignal();
+
+        ConnectionInfo connectionInfo(m_server,
+                                      m_port,
+                                      m_ssl,
+                                      m_username,
+                                      m_password);
+        int isBinary = 0;
+        m_articleReaderPtr.reset(new ArticleReader(connectionInfo, group, articleId, isBinary, this));
+
+        // return in a struct the article data together with the binaryData int
+        qDebug() << "Reading...";
+        QObject::connect(m_articleReaderPtr.data(), SIGNAL(articleDataReadSignal(ArticleData&)),
+                         this, SLOT(finishedReadingArticle(ArticleData&)));
+        m_articleReaderPtr->process();
+    }
+
+    void ManagedNNTPConnection::doReadCompositeArticle(const QString &groupName,
+                                                       std::vector<int> articleIDs)
+    {
         emit resetBytesReadSignal();
 
         qDebug() << "yes collection";
@@ -192,7 +204,10 @@ namespace core {
                                       m_username,
                                       m_password);
 
-        m_compositeCheckerPtr.reset(new CompositeArticleLoaderChecker(codes, connectionInfo, groupName, this));
+        m_compositeCheckerPtr.reset(new CompositeArticleLoaderChecker(articleIDs,
+                                                                      connectionInfo,
+                                                                      groupName,
+                                                                      this));
         QObject::connect(m_compositeCheckerPtr.data(), SIGNAL(compositeFinishedSignal()),
                          this, SLOT(compositeReadSlot()));
 
@@ -208,42 +223,10 @@ namespace core {
         emit compositeDataReadSignal();
     }
 
-    QString
-    ManagedNNTPConnection::getCompositeData()
-    {
-        return m_compositeData;
-    }
-
-    void
-    ManagedNNTPConnection::setServerAndPort(QString const &server, int const port, bool const ssl)
-    {
-        m_server = server;
-        m_port = port;
-        m_ssl = ssl;
-    }
-
-    void
-    ManagedNNTPConnection::doPost()
-    {
-        //connection.doPost(m_postData, m_postGroup, m_postFrom, m_postSubject);
-    }
-
     void
     ManagedNNTPConnection::finishedPostingSlot(int const status)
     {
         emit finishedPostingSignal(status);
-    }
-
-    void
-    ManagedNNTPConnection::setPostStuff(QString const &postData,
-                                        QString const &postGroup,
-                                        QString const &postFrom,
-                                        QString const &postSubject)
-    {
-        m_postData = postData;
-        m_postGroup = postGroup;
-        m_postFrom = postFrom;
-        m_postSubject = postSubject;
     }
 
     void

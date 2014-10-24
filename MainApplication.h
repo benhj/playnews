@@ -108,4 +108,5 @@ class MainApplication : public QObject
     void updateGroupTabProgressBars(int const val);
     void setGroupTabProgressBarMaximums(int const val);
     void resetGroupTabProgressBars();
+    void setManagedConSignalsAndSlots();
 };

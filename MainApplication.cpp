@@ -93,7 +93,7 @@ MainApplication::MainApplication(QObject *parent):
     m_connected(false),
     m_authorized(false),
     m_prefsRead(false),
-    m_managedConPtr(new core::ManagedNNTPConnection),
+    m_managedConPtr(),
     m_groupsAdded(false)
 {
     connectSignalsToSlots();
@@ -115,37 +115,6 @@ MainApplication::connectSignalsToSlots()
     QObject::connect(m_w.ui->groupWidget->ui->groupLoadButton, SIGNAL(clicked()), this,
                      SLOT(extractHeadersSlot()));
 
-    // Once active group list has been read from server
-    QObject::connect(m_managedConPtr.data(),
-                     SIGNAL(groupsLoadFinishedSignal()), this,
-                     SLOT(groupsLoadFinishedSlot()));
-
-    // Not really used in practice (for future imp if required)
-    QObject::connect(m_w.ui->groupWidget->ui->groupsView, SIGNAL(itemClicked(QListWidgetItem*)),
-                     this, SLOT(groupSelectedEvent(QListWidgetItem*)));
-
-    // When group headers have been read
-    QObject::connect(m_managedConPtr.data(),
-                     SIGNAL(headersReadFinishedSignal(core::HeadersData)), this,
-                     SLOT(headersReadFinishedSlot(core::HeadersData)));
-
-    // When a group is selected, add it to pane
-    QObject::connect(m_managedConPtr.data(),
-                     SIGNAL(groupAddedSignal(QString)), this,
-                     SLOT(groupAddedSlot(QString)));
-
-    QObject::connect(m_managedConPtr.data(),
-                     SIGNAL(singleArticleExtractedSignal()), this,
-                     SLOT(singleArticleExtractedSlot()));
-
-    QObject::connect(m_managedConPtr.data(),
-                     SIGNAL(issuedLASTCommandSignal()), this,
-                     SLOT(issuedLASTCommandSlot()));
-
-    QObject::connect(m_managedConPtr.data(),
-                     SIGNAL(finishedIssuingLASTCommandsSignal()), this,
-                     SLOT(finishedIssuingLASTCommandsSlot()));
-
     QObject::connect(m_w.ui->tabWidget,
                      SIGNAL(tabCloseRequested(int)),
                      this,
@@ -160,34 +129,6 @@ MainApplication::connectSignalsToSlots()
                      SIGNAL(clicked()),
                      this,
                      SLOT(showAllButtonSlot()));
-
-    QObject::connect(m_managedConPtr.data(),
-                     SIGNAL(statusSignal(QString)),
-                     this,
-                     SLOT(statusMessageSlot(QString)));
-
-    QObject::connect(m_managedConPtr.data(),
-                     SIGNAL(headCommandsIssuedSignal()),
-                     this,
-                     SLOT(headCommandsIssuedSlot()));
-
-    QObject::connect(m_managedConPtr.data(),
-                     SIGNAL(bytesReadSignal(int)),
-                     this,
-                     SLOT(bytesReadSlot(int)));
-
-    QObject::connect(m_managedConPtr.data(),
-                     SIGNAL(readBeginSignal(int)),
-                     this,
-                     SLOT(readBeginSlot(int)));
-
-    QObject::connect(m_managedConPtr.data(),
-                     SIGNAL(readBitOfDataSignal()),
-                     this,
-                     SLOT(readBitOfDataSlot()), Qt::QueuedConnection);
-
-    QObject::connect(m_managedConPtr.data(), SIGNAL(resetBytesReadSignal()),
-                     this, SLOT(resetBytesReadSlot()), Qt::QueuedConnection);
 }
 
 void
@@ -298,11 +239,11 @@ MainApplication::headersReadFinishedSlot(core::HeadersData hd)
 
         // Create a new tab with selected group name and push back
         // into managed group tab vector
-        ConnectionInfo connectionInfo(m_server,
-                                      m_port,
-                                      m_ssl,
-                                      m_username,
-                                      m_password);
+        core::ConnectionInfo connectionInfo(m_server,
+                                            m_port,
+                                            m_ssl,
+                                            m_username,
+                                            m_password);
         ManagedGroupTabPtr managedGroupTab(new ManagedGroupTab(m_w.ui->tabWidget,
                                                                m_selectedGroup,
                                                                m_w,
@@ -473,6 +414,68 @@ MainApplication::resetGroupTabProgressBars()
     }
 }
 
+void MainApplication::setManagedConSignalsAndSlots()
+{
+    // Once active group list has been read from server
+    QObject::connect(m_managedConPtr.data(),
+                     SIGNAL(groupsLoadFinishedSignal()), this,
+                     SLOT(groupsLoadFinishedSlot()));
+
+    // Not really used in practice (for future imp if required)
+    QObject::connect(m_w.ui->groupWidget->ui->groupsView, SIGNAL(itemClicked(QListWidgetItem*)),
+                     this, SLOT(groupSelectedEvent(QListWidgetItem*)));
+
+    // When group headers have been read
+    QObject::connect(m_managedConPtr.data(),
+                     SIGNAL(headersReadFinishedSignal(core::HeadersData)), this,
+                     SLOT(headersReadFinishedSlot(core::HeadersData)));
+
+    // When a group is selected, add it to pane
+    QObject::connect(m_managedConPtr.data(),
+                     SIGNAL(groupAddedSignal(QString)), this,
+                     SLOT(groupAddedSlot(QString)));
+
+    QObject::connect(m_managedConPtr.data(),
+                     SIGNAL(singleArticleExtractedSignal()), this,
+                     SLOT(singleArticleExtractedSlot()));
+
+    QObject::connect(m_managedConPtr.data(),
+                     SIGNAL(issuedLASTCommandSignal()), this,
+                     SLOT(issuedLASTCommandSlot()));
+
+    QObject::connect(m_managedConPtr.data(),
+                     SIGNAL(finishedIssuingLASTCommandsSignal()), this,
+                     SLOT(finishedIssuingLASTCommandsSlot()));
+
+    QObject::connect(m_managedConPtr.data(),
+                     SIGNAL(statusSignal(QString)),
+                     this,
+                     SLOT(statusMessageSlot(QString)));
+
+    QObject::connect(m_managedConPtr.data(),
+                     SIGNAL(headCommandsIssuedSignal()),
+                     this,
+                     SLOT(headCommandsIssuedSlot()));
+
+    QObject::connect(m_managedConPtr.data(),
+                     SIGNAL(bytesReadSignal(int)),
+                     this,
+                     SLOT(bytesReadSlot(int)));
+
+    QObject::connect(m_managedConPtr.data(),
+                     SIGNAL(readBeginSignal(int)),
+                     this,
+                     SLOT(readBeginSlot(int)));
+
+    QObject::connect(m_managedConPtr.data(),
+                     SIGNAL(readBitOfDataSignal()),
+                     this,
+                     SLOT(readBitOfDataSlot()), Qt::QueuedConnection);
+
+    QObject::connect(m_managedConPtr.data(), SIGNAL(resetBytesReadSignal()),
+                     this, SLOT(resetBytesReadSlot()), Qt::QueuedConnection);
+}
+
 void
 MainApplication::bytesReadSlot(int const bytesRead)
 {
@@ -515,9 +518,15 @@ void MainApplication::acceptLoginSlot(QString server,
     //m_from = m_prefsWidgetPtr->getFrom();
     //m_org = m_prefsWidgetPtr->getOrg();
     //m_deleteCacheOnExit = m_prefsWidgetPtr->deleteCacheOnExit();
-    //ConnectorBuilder::setAllowedConnections(m_prefsWidgetPtr->allowedConnections());
-    m_managedConPtr->setServerAndPort(m_server, m_port, m_ssl);
-    m_managedConPtr->setUsernameAndPassword(m_username, m_password);
+    //ConnectorBuilder::setAllowedConnections(m_prefsWidgetPtr->allowedConnections()); 
+    m_managedConPtr = core::ManagedConnectionPtr(new core::ManagedNNTPConnection(m_server,
+                                                                                 m_port,
+                                                                                 m_ssl,
+                                                                                 m_username,
+                                                                                 m_password));
+
+    this->setManagedConSignalsAndSlots();
+
     m_prefsRead = true;
     loginFinishedSlot(true);
     if(!m_w.isVisible()) {

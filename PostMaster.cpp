@@ -29,7 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "NNTPConnector.h"
 #include "ui_PostWidget.h"
 
-PostMaster::PostMaster(ConnectionInfo const &connectionInfo,
+PostMaster::PostMaster(core::ConnectionInfo const &connectionInfo,
                        QString const &groupName,
                        QObject *callbackObject)
   : m_connectionInfo(connectionInfo)

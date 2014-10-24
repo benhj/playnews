@@ -55,7 +55,7 @@ public:
                              QString const &groupName,
                              MainWidget &w,
                              core::ManagedConnectionPtr &connection,
-                             ConnectionInfo const& connectionInfo,
+                             core::ConnectionInfo const& connectionInfo,
                              QThread &worker,
                              StatusMessageDisplayer &statusMessageDisplayer,
                              core::Headers &headers);
@@ -104,5 +104,5 @@ private:
     int m_selectedArticleIndex;
     core::BinaryGrabberPtr m_binaryGrabberPtr;
     core::BulkDownloaderPtr m_bulkDownloaderPtr;
-    ConnectionInfo m_connectionInfo;
+    core::ConnectionInfo m_connectionInfo;
 };

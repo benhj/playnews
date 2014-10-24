@@ -30,7 +30,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "HeaderExtractor.h"
 #include "GroupLoader.h"
 #include "ArticleReader.h"
-#include "HeadersExtractorStructure.h"
 #include "CompositeArticleLoaderChecker.h"
 #include <QObject>
 #include <QSharedPointer>
@@ -45,28 +44,17 @@ namespace core {
     {
         Q_OBJECT
     public:
-        explicit ManagedNNTPConnection();
-
-
-        void setServerAndPort(QString const &server, int const port, bool const ssl);
-
-
-        void setUsernameAndPassword(QString const &username, QString const &password);
-
+        ManagedNNTPConnection(QString const &server,
+                              int const port,
+                              bool const ssl,
+                              QString const &username,
+                              QString const &password);
 
         /**
          * @brief getLoadedGroups
          * @return a vector of loaded groups
          */
         Groups getLoadedGroups();
-
-        //QString getArticleData();
-        QString getCompositeData();
-
-        void setPostStuff(QString const &postData,
-                          QString const &postGroup,
-                          QString const &postFrom,
-                          QString const &postSubject);
 
     signals:
         // for resending added group back up to main application
@@ -107,19 +95,10 @@ namespace core {
          */
         void extractNHeadersUsingXOverCommand(QString const &groupName, int const headerCount);
 
-        /**
-         * @brief readArticle
-         */
-        void readArticle(QString const &group, int const articleId);
         void finishedReadingArticle(ArticleData &data);
 
-        void selectAndRead(QString const &groupName, int const articleId);
-        void selectAndReadCollection(QString const &groupName, std::vector<int> codes);
-
-        /**
-         * @brief doPost posts article data
-         */
-        void doPost();
+        void readArticle(QString const &groupName, int const articleId);
+        void readCompositeArticle(QString const &groupName, std::vector<int> articleIDs);
 
         void issuedLASTCommandSlot();
 
@@ -139,20 +118,30 @@ namespace core {
         void compositeReadSlot();
 
     private:
-        Groups groups;
+
         QString m_server;
         int m_port;
         bool m_ssl;
         QString m_username;
         QString m_password;
-        QString m_postData;
-        QString m_postGroup;
-        QString m_postFrom;
-        QString m_postSubject;
-        QString m_compositeData;
+
+        /// for grabbing headers
         HeaderExtractorPtr m_headerExtractorPtr;
+
+        /// for building group list
         GroupLoaderPtr m_groupLoaderPtr;
+
+        /// for reading a single, 'simple' article
         ArticleReaderPtr m_articleReaderPtr;
+
+        /// for reading a collection of articles in the form
+        /// of a composite multi-part message
         CompositeCheckerPtr m_compositeCheckerPtr;
+
+        /// called from selectAndRead, for reading a single, 'simple' article
+        void doReadArticle(QString const &group, int const articleId);
+
+        /// for reading a multi-part article
+        void doReadCompositeArticle(QString const &groupName, std::vector<int> articleIDs);
     };
 }

@@ -75,9 +75,9 @@ namespace core {
 
     private:
         ConnectionInfo m_connectionInfo;
-        Groups m_groups;
-        QThread m_worker;
         QObject *m_callbackObject;
+        Groups m_groups;
+        QThread m_worker;     
     };
 
 }

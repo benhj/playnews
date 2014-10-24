@@ -30,19 +30,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <map>
 #include <iostream>
 
-struct CompositeMessagePart;
+namespace core {
 
-typedef boost::optional<CompositeMessagePart> OptionalCompositeMessagePart;
-typedef std::pair<std::string, int> NameToID;
-typedef std::map<int, NameToID > PartMap;
+    struct CompositeMessagePart;
 
-struct CompositeMessagePart
-{
-    int articleId;              // id of this article
-    int totalParts;             // in (a/b) totalParts is b
-    int thisPart;               // in (a/b) thisPart is a
-    std::string baseName;       // subject line without part descriptor
-    std::string originalName;   // subject line with part descriptor
-    std::string author;
-    std::string date;
-};
+    typedef boost::optional<CompositeMessagePart> OptionalCompositeMessagePart;
+    typedef std::pair<std::string, int> NameToID;
+    typedef std::map<int, NameToID > PartMap;
+
+    struct CompositeMessagePart
+    {
+        int articleId;              // id of this article
+        int totalParts;             // in (a/b) totalParts is b
+        int thisPart;               // in (a/b) thisPart is a
+        std::string baseName;       // subject line without part descriptor
+        std::string originalName;   // subject line with part descriptor
+        std::string author;
+        std::string date;
+    };
+}

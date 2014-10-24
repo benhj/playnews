@@ -43,7 +43,9 @@ namespace core {
     {
         Q_OBJECT
     public:
-        BulkDownloader(ManagedConnectionPtr &connection, QString const &groupName, QThread &worker);
+        BulkDownloader(ManagedConnectionPtr &connection,
+                       QString const &groupName,
+                       QThread &worker);
         void addHeader(Header * header);
         void bulkDownload();
         void downloadAndIterate();

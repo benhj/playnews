@@ -49,7 +49,9 @@ namespace core {
          * @param groupName the name of the group from which to extract
          * @param connection an NNTPConnector that wraps around a QTcpSocket
          */
-        HeaderExtractor(QString const& groupName, ConnectionInfo const &connectionInfo, int const count,
+        HeaderExtractor(QString const& groupName,
+                        ConnectionInfo const &connectionInfo,
+                        int const thisManyToLoad,
                         QObject *callbackObject);
 
         ~HeaderExtractor();
@@ -76,12 +78,12 @@ namespace core {
         void headersReadFinishedSignal(HeadersData);
 
     private:
-        QThread m_worker;
         QString m_groupName;
         ConnectionInfo m_connectionInfo;
-        Headers m_headers;
-        int m_count;
+        int m_thisManyToLoad;
         QObject *m_callbackObject;
+        Headers m_headers;
+        QThread m_worker;
 
         /**
          * @brief articleIsComposite based on the subject line of the header, determines whether the

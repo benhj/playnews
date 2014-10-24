@@ -39,7 +39,9 @@ class GroupWidget : public QWidget
 public:
     explicit GroupWidget(QWidget *parent = 0);
     ~GroupWidget();
+
     void removeAllItems();
     void addItem(QString const &item);
+
     Ui::GroupWidget *ui;
 };

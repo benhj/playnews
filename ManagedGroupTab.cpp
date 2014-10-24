@@ -51,7 +51,7 @@ ManagedGroupTab::ManagedGroupTab(QObject *parent,
                                  QString const &groupName,
                                  MainWidget &w,
                                  core::ManagedConnectionPtr &connection,
-                                 ConnectionInfo const& connectionInfo,
+                                 core::ConnectionInfo const& connectionInfo,
                                  QThread &worker,
                                  StatusMessageDisplayer &statusMessageDisplayer,
                                  core::Headers &headers)
@@ -202,7 +202,7 @@ ManagedGroupTab::readArticleSlot()
             m_subject = m_headers[m_headerIndices[currentRow]].subject;
             m_author = m_headers[m_headerIndices[currentRow]].author;
             m_date = m_headers[m_headerIndices[currentRow]].date;
-            m_connection->selectAndRead(m_groupName, m_articleCode);
+            m_connection->readArticle(m_groupName, m_articleCode);
         }
     } else {
 

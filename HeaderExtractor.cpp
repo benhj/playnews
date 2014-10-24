@@ -30,12 +30,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace core {
 
-    HeaderExtractor::HeaderExtractor(QString const& groupName, ConnectionInfo const &connectionInfo,
-                                    int const count, QObject *callbackObject)
+    HeaderExtractor::HeaderExtractor(QString const& groupName,
+                                     ConnectionInfo const &connectionInfo,
+                                     int const thisManyToLoad,
+                                     QObject *callbackObject)
       : m_groupName(groupName)
       , m_connectionInfo(connectionInfo)
-      , m_count(count)
+      , m_thisManyToLoad(thisManyToLoad)
       , m_callbackObject(callbackObject)
+      , m_headers()
+      , m_worker()
     {
 
     }
@@ -75,7 +79,7 @@ namespace core {
                 qDebug() << statId;
 
                 if(statId > -1) {
-                    int lower = statId - m_count;
+                    int lower = statId - m_thisManyToLoad;
                     if(lower < 1) {
                         lower = 1;
                     }
@@ -206,8 +210,10 @@ namespace core {
      * @return an OptionalCompositeMessagePart if the message is found to include (a/b_
      */
     OptionalCompositeMessagePart
-    HeaderExtractor::articleIsComposite(std::string &subjectLine, int const articleId,
-                                        std::string &author, std::string &date )
+    HeaderExtractor::articleIsComposite(std::string &subjectLine,
+                                        int const articleId,
+                                        std::string &author,
+                                        std::string &date )
     {
         std::string::reverse_iterator rit;
         bool firstBracketFound = false;

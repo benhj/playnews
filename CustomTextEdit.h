@@ -32,14 +32,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 class CustomTextEdit : public QPlainTextEdit
 {
     Q_OBJECT
-public:
+  public:
     explicit CustomTextEdit(QWidget *parent = 0);
     
-signals:
+  signals:
     
-protected slots:
-    void 	mouseMoveEvent ( QMouseEvent * event );
-    void 	mousePressEvent ( QMouseEvent * event );
-    void    highlightLine();
-    
+  protected slots:
+    void mouseMoveEvent ( QMouseEvent * event );
+    void mousePressEvent ( QMouseEvent * event );
+    void highlightLine();
 };
