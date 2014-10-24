@@ -102,12 +102,6 @@ namespace core {
     }
 
     void
-    ManagedNNTPConnection::groupAddedSlot(QString str)
-    {
-        emit groupAddedSignal(str);
-    }
-
-    void
     ManagedNNTPConnection::groupsLoadFinishedSlot()
     {
         emit groupsLoadFinishedSignal();
@@ -135,25 +129,6 @@ namespace core {
     }
 
     void
-    ManagedNNTPConnection::singleArticleExtractedSlot()
-    {
-        emit singleArticleExtractedSignal();
-    }
-
-    void
-    ManagedNNTPConnection::issuedLASTCommandSlot()
-    {
-        emit issuedLASTCommandSignal();
-    }
-
-    void
-    ManagedNNTPConnection::finishedIssuingLASTCommandsSlot()
-    {
-        emit finishedIssuingLASTCommandsSignal();
-    }
-
-
-    void
     ManagedNNTPConnection::readArticle(QString const &groupName,
                                          int const articleId)
     {
@@ -162,7 +137,8 @@ namespace core {
     }
 
     void
-    ManagedNNTPConnection::readCompositeArticle(QString const &groupName, std::vector<int> articleIDs)
+    ManagedNNTPConnection::readCompositeArticle(QString const &groupName,
+                                                std::vector<int> const &articleIDs)
     {
         this->doReadCompositeArticle(groupName, articleIDs);
 
@@ -192,7 +168,7 @@ namespace core {
     }
 
     void ManagedNNTPConnection::doReadCompositeArticle(const QString &groupName,
-                                                       std::vector<int> articleIDs)
+                                                       std::vector<int> const &articleIDs)
     {
         emit resetBytesReadSignal();
 
@@ -209,24 +185,18 @@ namespace core {
                                                                       groupName,
                                                                       this));
         QObject::connect(m_compositeCheckerPtr.data(), SIGNAL(compositeFinishedSignal()),
-                         this, SLOT(compositeReadSlot()));
+                         this, SLOT(compositeReadFinishedSlot()));
 
         m_compositeCheckerPtr->doLoad();
     }
 
     void
-    ManagedNNTPConnection::compositeReadSlot()
+    ManagedNNTPConnection::compositeReadFinishedSlot()
     {
         qDebug() << "in compositeReadSlot";
         QObject::disconnect(m_compositeCheckerPtr.data(), SIGNAL(compositeFinishedSignal()),
-                         this, SLOT(compositeReadSlot()));
+                         this, SLOT(compositeReadFinishedSlot()));
         emit compositeDataReadSignal();
-    }
-
-    void
-    ManagedNNTPConnection::finishedPostingSlot(int const status)
-    {
-        emit finishedPostingSignal(status);
     }
 
     void
@@ -236,26 +206,8 @@ namespace core {
     }
 
     void
-    ManagedNNTPConnection::headCommandsIssuedSlot()
-    {
-        emit headCommandsIssuedSignal();
-    }
-
-    void
     ManagedNNTPConnection::bytesReadSlot(int const bytesRead)
     {
         emit bytesReadSignal(bytesRead);
-    }
-
-    void
-    ManagedNNTPConnection::readBeginSlot(int const count)
-    {
-        emit readBeginSignal(count);
-    }
-
-    void
-    ManagedNNTPConnection::readBitOfDataSlot()
-    {
-        emit readBitOfDataSignal();
     }
 }

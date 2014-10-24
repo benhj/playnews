@@ -58,23 +58,16 @@ class MainApplication : public QObject
   public slots:
     void displayLoginDialog();
     void groupsLoadFinishedSlot();
-    void groupAddedSlot(QString str);
     void groupSelectedEvent(QListWidgetItem* itme);
     void extractHeadersSlot();
     void headersReadFinishedSlot(core::HeadersData hd);
-    void singleArticleExtractedSlot();
     void loginFinishedSlot(bool);
-    void issuedLASTCommandSlot();
-    void finishedIssuingLASTCommandsSlot();
     void closeTabSlot(int index);
     void searchButtonSlot();
     void showAllButtonSlot();
     void statusMessageSlot(QString);
     void hideStatusDisplaySlot();
-    void headCommandsIssuedSlot();
     void bytesReadSlot(int const);
-    void readBeginSlot(int const count);
-    void readBitOfDataSlot();
     void resetBytesReadSlot();
 
     void acceptLoginSlot(QString server, QString username, QString password);

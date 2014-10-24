@@ -121,31 +121,9 @@ namespace core {
 
     signals:
         /**
-         * @brief groupAddedSignal signals when a new group has been added
-         */
-        void groupAddedSignal(QString);
-
-        /**
          * @brief singleArticleExtractedSignal signals when one header has been read
          */
         void singleArticleExtractedSignal();
-
-        /**
-         * @brief issuedLASTCommandSignal indicates when a LAST command has been issues
-         */
-        void issuedLASTCommandSignal();
-
-        /**
-         * @brief finishedIssuingLASTCommandsSignal indicates when all LAST commands
-         * have been issued
-         */
-        void finishedIssuingLASTCommandsSignal();
-
-        /**
-         * @brief finishedPostingSignal indicates when article has been posted
-         * @param status status of posting
-         */
-        void finishedPostingSignal(int status);
 
         /**
          * @brief statusSignal a signal reporting the status string returned by the server
@@ -154,21 +132,10 @@ namespace core {
         void statusSignal(QString statusString);
 
         /**
-         * @brief headCommandsIssuedSignal indicates when all head commands have been issued
-         */
-        void headCommandsIssuedSignal();
-
-        /**
          * @brief bytesReadSignal indicates bytes read
          * @param bytesRead
          */
         void bytesReadSignal(int bytesRead);
-
-        /**
-         * @brief readBeginSignal indicates that a server read is about to begin
-         * @param count the number of escape sequences to account for in read operation
-         */
-        void readBeginSignal(int count);
 
         /**
          * @brief readOneBitOfDataSignal when a single item of data has been read

@@ -106,29 +106,29 @@ MainApplication::MainApplication(QObject *parent):
 void
 MainApplication::connectSignalsToSlots()
 {
-
-    QObject::connect(this, SIGNAL(statusMessageSignal(QString)), this, SLOT(statusMessageSlot(QString)),
+    // display status messages emitted by 'this'
+    QObject::connect(this, SIGNAL(statusMessageSignal(QString)),
+                     this, SLOT(statusMessageSlot(QString)),
                      Qt::QueuedConnection);
 
-    QObject::connect(m_w.ui->groupWidget->ui->connectButton, SIGNAL(clicked()), this,
-                     SLOT(displayLoginDialog()));
-    QObject::connect(m_w.ui->groupWidget->ui->groupLoadButton, SIGNAL(clicked()), this,
-                     SLOT(extractHeadersSlot()));
+    QObject::connect(m_w.ui->groupWidget->ui->connectButton, SIGNAL(clicked()),
+                     this, SLOT(displayLoginDialog()));
 
-    QObject::connect(m_w.ui->tabWidget,
-                     SIGNAL(tabCloseRequested(int)),
-                     this,
-                     SLOT(closeTabSlot(int)));
+    // For pulling in headers of particular group
+    QObject::connect(m_w.ui->groupWidget->ui->groupLoadButton, SIGNAL(clicked()),
+                     this, SLOT(extractHeadersSlot()));
 
-    QObject::connect(m_w.ui->groupWidget->ui->searchButton,
-                     SIGNAL(clicked()),
-                     this,
-                     SLOT(searchButtonSlot()));
+    QObject::connect(m_w.ui->tabWidget, SIGNAL(tabCloseRequested(int)),
+                     this, SLOT(closeTabSlot(int)));
 
-    QObject::connect(m_w.ui->groupWidget->ui->showAllButton,
-                     SIGNAL(clicked()),
-                     this,
-                     SLOT(showAllButtonSlot()));
+    QObject::connect(m_w.ui->groupWidget->ui->searchButton, SIGNAL(clicked()),
+                     this, SLOT(searchButtonSlot()));
+
+    QObject::connect(m_w.ui->groupWidget->ui->showAllButton, SIGNAL(clicked()),
+                     this, SLOT(showAllButtonSlot()));
+
+    QObject::connect(m_w.ui->groupWidget->ui->groupsView, SIGNAL(itemClicked(QListWidgetItem*)),
+                     this, SLOT(groupSelectedEvent(QListWidgetItem*)));
 }
 
 void
@@ -174,15 +174,6 @@ MainApplication::groupsLoadFinishedSlot()
     m_w.ui->groupWidget->ui->searchButton->setEnabled(true);
 }
 
-
-// Probably should show non-deterministic progress bar as groups
-// are being loaded
-void
-MainApplication::groupAddedSlot(QString str)
-{
-    m_w.ui->groupWidget->ui->groupsView->addItem(str);
-}
-
 void
 MainApplication::groupSelectedEvent(QListWidgetItem* item)
 {
@@ -211,14 +202,6 @@ MainApplication::extractHeadersSlot()
             this->setGroupTabProgressBarMaximums(articlesToExtract);
         }
     }
-}
-
-void
-MainApplication::singleArticleExtractedSlot()
-{
-    int const oldValue = m_w.ui->groupWidget->ui->progressBar->value();
-    m_w.ui->groupWidget->ui->progressBar->setValue(oldValue + 1);
-    this->updateGroupTabProgressBars(oldValue + 1);
 }
 
 // For when group headers have finished loading, we
@@ -289,22 +272,6 @@ MainApplication::loginFinishedSlot(bool authorized) {
             m_w.ui->groupWidget->ui->searchButton->setEnabled(true);
         }
     }
-}
-
-void
-MainApplication::issuedLASTCommandSlot()
-{
-    int const oldValue = m_w.ui->groupWidget->ui->progressBar->value();
-    m_w.ui->groupWidget->ui->progressBar->setValue(oldValue + 1);
-    this->updateGroupTabProgressBars(oldValue + 1);
-}
-
-void
-MainApplication::finishedIssuingLASTCommandsSlot()
-{
-    m_w.ui->groupWidget->ui->progressBar->reset();
-    m_w.ui->groupWidget->ui->progressBar->setMaximum(0);
-    this->setGroupTabProgressBarMaximums(0);
 }
 
 void
@@ -384,13 +351,6 @@ MainApplication::hideStatusDisplaySlot()
 }
 
 void
-MainApplication::headCommandsIssuedSlot()
-{
-    m_w.ui->groupWidget->ui->progressBar->setValue(0);
-    this->updateGroupTabProgressBars(0);
-}
-
-void
 MainApplication::updateGroupTabProgressBars(int const val)
 {
     for(auto const & it : m_groupTabs) {
@@ -421,57 +381,24 @@ void MainApplication::setManagedConSignalsAndSlots()
                      SIGNAL(groupsLoadFinishedSignal()), this,
                      SLOT(groupsLoadFinishedSlot()));
 
-    // Not really used in practice (for future imp if required)
-    QObject::connect(m_w.ui->groupWidget->ui->groupsView, SIGNAL(itemClicked(QListWidgetItem*)),
-                     this, SLOT(groupSelectedEvent(QListWidgetItem*)));
-
     // When group headers have been read
     QObject::connect(m_managedConPtr.data(),
                      SIGNAL(headersReadFinishedSignal(core::HeadersData)), this,
                      SLOT(headersReadFinishedSlot(core::HeadersData)));
 
-    // When a group is selected, add it to pane
-    QObject::connect(m_managedConPtr.data(),
-                     SIGNAL(groupAddedSignal(QString)), this,
-                     SLOT(groupAddedSlot(QString)));
-
-    QObject::connect(m_managedConPtr.data(),
-                     SIGNAL(singleArticleExtractedSignal()), this,
-                     SLOT(singleArticleExtractedSlot()));
-
-    QObject::connect(m_managedConPtr.data(),
-                     SIGNAL(issuedLASTCommandSignal()), this,
-                     SLOT(issuedLASTCommandSlot()));
-
-    QObject::connect(m_managedConPtr.data(),
-                     SIGNAL(finishedIssuingLASTCommandsSignal()), this,
-                     SLOT(finishedIssuingLASTCommandsSlot()));
-
+    // When a status message is flashed up on screen
     QObject::connect(m_managedConPtr.data(),
                      SIGNAL(statusSignal(QString)),
                      this,
                      SLOT(statusMessageSlot(QString)));
 
-    QObject::connect(m_managedConPtr.data(),
-                     SIGNAL(headCommandsIssuedSignal()),
-                     this,
-                     SLOT(headCommandsIssuedSlot()));
-
+    // Captures when bytes have been read by the connector
     QObject::connect(m_managedConPtr.data(),
                      SIGNAL(bytesReadSignal(int)),
                      this,
                      SLOT(bytesReadSlot(int)));
 
-    QObject::connect(m_managedConPtr.data(),
-                     SIGNAL(readBeginSignal(int)),
-                     this,
-                     SLOT(readBeginSlot(int)));
-
-    QObject::connect(m_managedConPtr.data(),
-                     SIGNAL(readBitOfDataSignal()),
-                     this,
-                     SLOT(readBitOfDataSlot()), Qt::QueuedConnection);
-
+    // For putting the bytes read back in to a ground state
     QObject::connect(m_managedConPtr.data(), SIGNAL(resetBytesReadSignal()),
                      this, SLOT(resetBytesReadSlot()), Qt::QueuedConnection);
 }
@@ -487,13 +414,6 @@ MainApplication::bytesReadSlot(int const bytesRead)
     for(auto const & it : m_groupTabs) {
         (*it).updateBytesDisplay(d+orig);
     }
-}
-
-void
-MainApplication::readBeginSlot(int const count)
-{
-    m_w.ui->groupWidget->ui->progressBar->setMaximum(count);
-    this->setGroupTabProgressBarMaximums(count);
 }
 
 void
@@ -524,7 +444,6 @@ void MainApplication::acceptLoginSlot(QString server,
                                                                                  m_ssl,
                                                                                  m_username,
                                                                                  m_password));
-
     this->setManagedConSignalsAndSlots();
 
     m_prefsRead = true;
@@ -532,18 +451,6 @@ void MainApplication::acceptLoginSlot(QString server,
     if(!m_w.isVisible()) {
         m_w.resize(1024,600);
         m_w.show();
-    }
-}
-
-void
-MainApplication::readBitOfDataSlot()
-{
-    int oldValue = m_w.ui->groupWidget->ui->progressBar->value();
-    m_w.ui->groupWidget->ui->progressBar->setValue(oldValue + 1);
-    this->updateGroupTabProgressBars(oldValue + 1);
-    if(oldValue + 1 == m_w.ui->groupWidget->ui->progressBar->maximum()) {
-        m_w.ui->groupWidget->ui->progressBar->reset();
-        this->resetGroupTabProgressBars();
     }
 }
 

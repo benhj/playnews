@@ -83,8 +83,8 @@ namespace core {
                 // 26th May 2013 -- m_connection now starts threading process as
                 // m_connection is the connection manager
                 //
-                QObject::connect(m_connection.data(), SIGNAL(compositeDataReadSignal()), this,
-                                 SLOT(handleBinaryData()));
+                QObject::connect(m_connection.data(), SIGNAL(compositeDataReadSignal()),
+                                 this, SLOT(handleBinaryData()));
                 m_connection->readCompositeArticle(m_groupName, compositeCodes);
             } else {
                 //

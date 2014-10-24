@@ -51,71 +51,70 @@ namespace core {
                               QString const &password);
 
         /**
+         * @brief loadGroups does what it says
+         */
+        void loadGroups();
+
+        /**
          * @brief getLoadedGroups
          * @return a vector of loaded groups
          */
         Groups getLoadedGroups();
-
-    signals:
-        // for resending added group back up to main application
-        void groupAddedSignal(QString);
-        // for indicating when all groups have been loaded
-        void groupsLoadFinishedSignal();
-        // for indicating when group headers have been read
-        void headersReadFinishedSignal(core::HeadersData);
-        void singleArticleExtractedSignal();
-        void loginFinishedSignal(int);
-        void authorizedSignal(bool);
-        void articleDataReadSignal(core::ArticleData&);
-        void issuedLASTCommandSignal();
-        void finishedIssuingLASTCommandsSignal();
-        void finishedPostingSignal(int status);
-        void statusSignal(QString);
-        void headCommandsIssuedSignal();
-        void compositeDataReadSignal();
-        void bytesReadSignal(int const bytesRead);
-        void resetBytesReadSignal();
-        void readBeginSignal(int const count);
-        void readBitOfDataSignal();
-
-    public slots:
-        // catches from nntpconnector
-        void groupAddedSlot(QString);
-        void groupsLoadFinishedSlot();
-        void headersReadFinishedSlot(HeadersData);
-        void singleArticleExtractedSlot();
-
-        /**
-         * @brief loadGroups does what it says
-         */
-        void loadGroups();
 
         /**
          * @brief extractNHeadersUsingXOverCommand more efficient way of getting header data
          */
         void extractNHeadersUsingXOverCommand(QString const &groupName, int const headerCount);
 
+        /// reads a single-part article
+        void readArticle(QString const &groupName, int const articleId);
+
+        /// reads a multi-part article
+        void readCompositeArticle(QString const &groupName,
+                                  std::vector<int> const &articleIDs);
+
+    signals:
+        // for indicating when all groups have been loaded
+        void groupsLoadFinishedSignal();
+
+        // for indicating when group headers have been read
+        void headersReadFinishedSignal(core::HeadersData);
+
+        // indicate that article data has been read and is up for grabs
+        void articleDataReadSignal(core::ArticleData&);
+
+        // for sending messages back to process
+        void statusSignal(QString);
+
+        // used by BinaryGrabber to indicate that binary data
+        // has been read
+        void compositeDataReadSignal();
+
+        // to signify that data has been read from the server
+        void bytesReadSignal(int const bytesRead);
+
+        // to signify that we are at the end of bytes having been read
+        void resetBytesReadSignal();
+
+    public slots:
+        /// all groups from server have been loaded
+        void groupsLoadFinishedSlot();
+
+        /// all headers for a specific group have been read
+        /// HeadersData containers the header data for the group
+        void headersReadFinishedSlot(HeadersData);
+
+        /// signifies that article has been read
         void finishedReadingArticle(ArticleData &data);
 
-        void readArticle(QString const &groupName, int const articleId);
-        void readCompositeArticle(QString const &groupName, std::vector<int> articleIDs);
-
-        void issuedLASTCommandSlot();
-
-        void finishedIssuingLASTCommandsSlot();
-
-        void finishedPostingSlot(int const status);
-
+        /// passing back status messages
         void statusMessageSlot(QString);
 
-        void headCommandsIssuedSlot();
-
+        /// signifies that bytes have been read by the connector
         void bytesReadSlot(int const bytesRead);
 
-        void readBeginSlot(int const count);
-        void readBitOfDataSlot();
-
-        void compositeReadSlot();
+        /// signified that reading of composite data has finished
+        void compositeReadFinishedSlot();
 
     private:
 
@@ -142,6 +141,7 @@ namespace core {
         void doReadArticle(QString const &group, int const articleId);
 
         /// for reading a multi-part article
-        void doReadCompositeArticle(QString const &groupName, std::vector<int> articleIDs);
+        void doReadCompositeArticle(QString const &groupName,
+                                    std::vector<int> const &articleIDs);
     };
 }

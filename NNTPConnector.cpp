@@ -434,8 +434,6 @@ namespace core {
             std::string response = getResponseString(1, "\n");
             status = getStatus(response);
         }
-
-        emit finishedPostingSignal(status);
     }
 
     std::string
