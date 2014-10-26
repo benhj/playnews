@@ -141,10 +141,9 @@ namespace core {
         auto articleId = m_header.compositeMessageParts.at(0).articleId;
         std::ofstream out;
         this->decodeHeadPart(articleId, out);
-
-        CompositeMessageParts::iterator codeIt;
-        for(auto const &it : m_header.compositeMessageParts) {
-            this->decodePart(it.articleId, out);
+        auto it = m_header.compositeMessageParts.begin() + 1;
+        for(; it != m_header.compositeMessageParts.end(); ++it) {
+            this->decodePart(it->articleId, out);
         }
         out.close();
     }
@@ -167,6 +166,7 @@ namespace core {
         } else {
             this->handleSingle();
         }
+        qDebug() << "handleBinaryData()";
         emit binaryHasBeenReadSignal(m_header, false);
     }
 
@@ -179,6 +179,7 @@ namespace core {
     void
     BinaryGrabber::partDecodedSlot()
     {
+        qDebug() << "partDecodedSlot()";
         emit partDecodedSignal();
     }
 

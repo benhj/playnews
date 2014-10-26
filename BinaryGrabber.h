@@ -58,7 +58,7 @@ namespace core {
     signals:
         void resetProgressBarSignal();
         void setProgressBarMaximum(int maximum);
-        void binaryHasBeenReadSignal(Header, bool autoSave);
+        void binaryHasBeenReadSignal(core::Header, bool autoSave);
         void partDecodedSignal();
 
     private:

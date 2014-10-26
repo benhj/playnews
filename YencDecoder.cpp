@@ -182,7 +182,7 @@ YencDecoder::decode(std::istream &inputStream, std::ostream &outputStream)
 
                 std::string::iterator it;
                 std::vector<char> buf;
-                for(it = line.begin(); it < line.end(); it++) {
+                for(it = line.begin(); it != line.end(); ++it) {
 
                     if( *it == '.' && (it - line.begin() == 0)) {
 
@@ -213,6 +213,9 @@ YencDecoder::decode(std::istream &inputStream, std::ostream &outputStream)
             emit partDecoded();
         }
     }
+
+    std::cout<<"sizes equal? "<<(m_fileSize == m_fileSizeTail)<<std::endl;
+    std::cout<<m_fileSize<<"\t"<<m_fileSizeTail<<std::endl;
 }
 
 void

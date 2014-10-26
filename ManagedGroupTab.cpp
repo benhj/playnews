@@ -211,8 +211,8 @@ ManagedGroupTab::readArticleSlot()
                                                          compositeReadMode));
 
 
-        QObject::connect(m_binaryGrabberPtr.data(), SIGNAL(binaryHasBeenReadSignal(Header, bool)),
-                         this, SLOT(openBinary(Header, bool)));
+        QObject::connect(m_binaryGrabberPtr.data(), SIGNAL(binaryHasBeenReadSignal(core::Header, bool)),
+                         this, SLOT(openBinary(core::Header, bool)));
 
         QObject::connect(m_binaryGrabberPtr.data(), SIGNAL(resetProgressBarSignal()),
                          this, SLOT(resetProgressBar()));
@@ -286,8 +286,8 @@ ManagedGroupTab::displayArticleSlot(core::ArticleData &articleData)
                                                          m_headers[m_selectedArticleIndex],
                                                          m_worker,
                                                          compositeReadMode));
-        QObject::connect(m_binaryGrabberPtr.data(), SIGNAL(binaryHasBeenReadSignal(Header, bool)),
-                         this, SLOT(openBinary(Header, bool)));
+        QObject::connect(m_binaryGrabberPtr.data(), SIGNAL(binaryHasBeenReadSignal(core::Header, bool)),
+                         this, SLOT(openBinary(core::Header, bool)));
         m_binaryGrabberPtr->handleBinaryData();
 
     }
@@ -337,8 +337,8 @@ void ManagedGroupTab::openBinary(core::Header header, bool const autoSave)
     this->setProgressBarMaximum(1);
 
     if(!autoSave) {
-        QObject::disconnect(m_binaryGrabberPtr.data(), SIGNAL(binaryHasBeenReadSignal(Header, bool)),
-                            this, SLOT(openBinary(Header, bool)));
+        QObject::disconnect(m_binaryGrabberPtr.data(), SIGNAL(binaryHasBeenReadSignal(core::Header, bool)),
+                            this, SLOT(openBinary(core::Header, bool)));
         QObject::disconnect(m_binaryGrabberPtr.data(), SIGNAL(resetProgressBarSignal()),
                          this, SLOT(resetProgressBar()));
         QObject::disconnect(m_binaryGrabberPtr.data(), SIGNAL(setProgressBarMaximum(int)),
